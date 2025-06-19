@@ -6,3 +6,5 @@ numpy==2.2.6
 pandas==2.2.3 
 seaborn==0.13.2 
 xarray==2025.4.0
+zarr==3.0.8
+gcsfs==2025.5.1
