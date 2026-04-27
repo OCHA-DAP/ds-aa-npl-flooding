@@ -1,0 +1,125 @@
+# GEOGloWS Overview
+
+```{python}
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+## What is GEOGloWS?
+
+GEOGloWS (Group on Earth Observations Global Water Sustainability) is a GEO initiative that provides a global streamflow forecasting and historical simulation service. The flagship product is the **GEOGloWS ECMWF Streamflow Service**, a partnership between GEO, ECMWF, and Brigham Young University (BYU).
+
+The service aims to give every country access to hydrological forecasts, particularly countries that lack national forecasting infrastructure. Version 2 was released in 2024 with significant improvements to the river network and data access infrastructure.
+
+## Model Architecture
+
+The system has two components:
+
+### Forecasts
+- **Meteorological forcing**: ECMWF IFS (Integrated Forecasting System) ensemble weather forecasts provide runoff inputs
+- **Routing model**: RAPID (Routing Application for Parallel computation of Discharge) routes runoff through the global river network
+- **River network**: TDX-Hydro — derived from TanDEM-X 90m DEM, approximately 6.8 million river reaches globally
+- **Ensemble members**: 52 (51 perturbed + 1 high-resolution control)
+- **Forecast lead time**: 15 days
+- **Temporal resolution**: Hourly (3-hourly for ensemble members, hourly for high-res)
+- **Update frequency**: Daily
+
+### Retrospective Simulation
+- **Meteorological forcing**: ERA5 reanalysis (ECMWF's global atmospheric reanalysis)
+- **Period**: **1940 to present** — this is substantially longer than GloFAS (1979–present)
+- **Temporal resolution**: Hourly (also available as daily, monthly, yearly aggregates)
+- **Return periods**: Pre-computed for 2, 5, 10, 25, 50, 100-year levels using Log-Pearson III distribution
+
+### Critical Conceptual Note: Retrospective vs Reforecast {#sec-retro-vs-reforecast}
+
+This distinction is fundamental to understanding what GEOGloWS can and cannot do for trigger calibration:
+
+**Retrospective** (what GEOGloWS has): A single deterministic time series of "what the model thinks happened" from 1940–present. It uses ERA5 reanalysis — essentially *observed weather run through the routing model after the fact*. There is no forecast uncertainty because the meteorological input is already known. You get one discharge value per timestep.
+
+**Reforecast** (what GloFAS has, GEOGloWS does not): For each historical date, the forecast system is re-run *as if standing on that date not knowing the future*. For example, for July 15 2015, you get an N-member ensemble forecast with multiple leadtime steps — and you can compare what it predicted at 3-day and 7-day lead against what actually happened.
+
+The retrospective is the **answer key**. The reforecast is the **student's exam papers**. You need both to grade forecast skill. For AA trigger calibration — where the question is "if X% of ensemble members exceed the threshold at 3-day lead, should we trigger?" — you need reforecasts to calibrate X%. The retrospective alone cannot answer this.
+
+GEOGloWS's forecast archive extends only ~2 months back, far too short for trigger calibration.
+
+## Comparison with Existing Data Sources
+
+| Feature | GloFAS | Google GRRR | GEOGloWS v2 |
+|---------|--------|-------------|-------------|
+| **Provider** | ECMWF/Copernicus | Google | GEO/BYU/ECMWF |
+| **Hydro model** | LISFLOOD | Proprietary | RAPID (routing only) |
+| **Met forcing** | ECMWF IFS + ERA5 | Proprietary | ECMWF IFS + ERA5 |
+| **Ensemble members** | 51 (reforecast: 11) | Ensemble | 52 |
+| **Forecast lead** | 30 days | Variable | 15 days |
+| **Retrospective** | 1979–present | Variable | **1940–present** |
+| **Reforecasts** | **Yes (2003–2023)** | **Yes** | **No** |
+| **Return periods** | Copernicus dashboard | Computed | Built-in API |
+| **RP distribution** | Gumbel | Empirical | Log-Pearson III |
+| **API auth** | CDS registration | GCS token | **None (free)** |
+| **River network** | ~0.05° grid | HydroBASINS | TDX-Hydro (~6.8M reaches) |
+| **Bias correction** | Manual | Manual | **Built-in (SFDC, FDC)** |
+
+## Python Package: `geoglows` v2.2.0
+
+The `geoglows` Python package provides access to all data products. Data is stored on AWS S3 as Zarr arrays (retrospective) and on a REST API (forecasts).
+
+### Key Functions
+
+```{python}
+import geoglows.data as gd
+import pandas as pd
+from pathlib import Path
+
+# Available data functions
+data_funcs = [
+    ("gd.forecast_ensembles(river_id)", "52-member ensemble forecast"),
+    ("gd.forecast_stats(river_id)", "Ensemble summary statistics"),
+    ("gd.retrospective(river_id)", "Full retrospective (hourly default)"),
+    ("gd.retro_daily(river_id)", "Daily retrospective"),
+    ("gd.return_periods(river_id)", "RP thresholds (2-100yr)"),
+    ("gd.fdc(river_id)", "Flow duration curve"),
+    ("gd.dates()", "Available forecast dates"),
+    ("gd.latlon_to_river(lat, lon)", "Find river ID from coordinates"),
+]
+
+import pandas as pd
+pd.DataFrame(data_funcs, columns=["Function", "Description"])
+```
+
+### Quick Demo: Return Periods
+
+```{python}
+rp = pd.read_parquet(Path(repo_root) / "data" / "geoglows_return_periods_441135650.parquet")
+print("Chatara (Koshi) — GEOGloWS Return Periods (m³/s):")
+rp
+```
+
+### Quick Demo: Forecast Ensemble Structure
+
+```python
+# Example: fetch today's forecast (not run at render time — requires S3 search)
+stats = gd.forecast_stats(river_id=441135650)
+# Returns DataFrame with columns:
+#   flow_min, flow_25p, flow_avg, flow_med, flow_75p, flow_max, high_res
+# Index: hourly timestamps over 15-day forecast window
+# Shape: ~280 rows x 7 columns
+```
+
+The forecast data has 52 ensemble members (51 perturbed + 1 high-resolution control). The `forecast_stats()` function returns summary statistics across the 51 perturbed members; `forecast_ensembles()` returns all 52 individual traces.
+
+## Data Storage
+
+- **Retrospective**: S3 Zarr at `s3://geoglows-v2/` (anonymous access)
+- **Forecasts**: S3 Zarr, organized by date (`YYYYMMDDHH.zarr`)
+- **REST API**: `https://geoglows.ecmwf.int/api/v2/` (backup access method)
+- **Metadata table**: Parquet file with all ~6.8M river reach properties
+
+### Known Issues
+
+- The `pytz` package is missing from the declared dependencies (must be installed manually)
+- `latlon_to_river()` requires downloading the full metadata table (~100MB+), which is slow on first call
+- The metadata table in v2.2.0 does not contain lat/lon columns despite the function trying to use them — the REST `getriverid` endpoint is more reliable

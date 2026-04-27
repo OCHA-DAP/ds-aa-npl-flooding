@@ -1,0 +1,36 @@
+# GEOGloWS Evaluation {.unnumbered}
+
+## Purpose
+
+This book evaluates the [GEOGloWS River Forecast System](https://www.geoglows.org/) (v2) as a potential data source for Nepal's flood anticipatory action (AA) trigger framework.
+
+The existing framework relies on:
+
+- **GloFAS** (ECMWF/Copernicus) — reanalysis and reforecast data for discharge thresholds and trigger calibration
+- **DHM** (Department of Hydrology and Meteorology, Nepal) — observed water level data from gauge stations
+- **Google GRRR** — experimental streamflow reforecast and reanalysis from Google Cloud
+
+GEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation investigates whether and how GEOGloWS data can strengthen the trigger framework.
+
+## Key Finding
+
+**GEOGloWS does not provide reforecasts (hindcasts).** The forecast archive extends only ~2 months. This means it cannot be used for the lead-time-dependent skill assessment and trigger calibration that the AA framework requires. However, the long retrospective record and built-in bias correction tools make it valuable for validation and as a complementary real-time signal.
+
+## Structure
+
+1. **GEOGloWS Overview** — what the system is, how it works, API walkthrough
+2. **Spatial Matching** — finding the correct river reaches for Nepal stations
+3. **Return Period Comparison** — cross-source return period analysis
+4. **Retrospective Comparison** — time series overlay across all data sources
+5. **Event Detection** — validating against observed DHM danger level crossings
+6. **Bias Correction** — applying GEOGloWS's built-in correction tools
+7. **Assessment** — summary findings and recommendations
+
+## Stations
+
+The evaluation focuses on two primary stations:
+
+| Station | River | DHM Danger Level | GloFAS RP2 | GEOGloWS River ID |
+|---------|-------|-----------------|------------|-------------------|
+| Chatara | Koshi | 7.0 m | 8,113 m³/s | 441135650 |
+| Chisapani | Karnali | 10.5 m | 5,664 m³/s | 441112306 |

@@ -1,0 +1,238 @@
+# Event Detection {#sec-event-detection}
+
+```{python}
+#| eval: true
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+This chapter replicates the DHM danger level crossing analysis from notebook `01.0` using GEOGloWS retrospective data, and compares the results side-by-side with GloFAS.
+
+The core question: **when DHM observed a danger level crossing at a station, did the model also show an extreme event?**
+
+::: {.callout-note}
+This chapter requires `AA_DATA_DIR` to be set and pointing to the shared data directory with DHM observed water level data. Set `eval: true` in the code cells below when data is available.
+:::
+
+```{python}
+#| eval: true
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+from datetime import timedelta
+
+from src.constants import STATIONS
+from src.utils import match_events
+
+DATA_DIR = Path(repo_root) / "data"
+AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
+```
+
+## Load DHM Observed Data
+
+```{python}
+#| eval: true
+dhm_path = (
+    AA_DATA_DIR / "private" / "exploration" / "npl" / "dhm"
+    / "processed" / "waterl_level_procssed.csv"
+)
+dhm = pd.read_csv(dhm_path)
+dhm["date"] = pd.to_datetime(dhm["date"])
+dhm = dhm.set_index("date")
+
+print(f"DHM data: {len(dhm)} days, "
+      f"{dhm.index.min().date()} to {dhm.index.max().date()}")
+print(f"Stations: {dhm.columns.tolist()}")
+```
+
+## Detect DHM Danger Level Crossings
+
+```{python}
+#| eval: true
+dhm_crossings = {}
+for key, station in STATIONS.items():
+    col = station.dhm_column
+    dl = station.danger_level
+    series = dhm[col].dropna()
+
+    # Detect upward crossings of danger level
+    exceed = series > dl
+    cross = exceed.astype(int).diff() == 1
+    crossing_dates = series[cross].index
+
+    dhm_crossings[key] = crossing_dates
+    print(f"{station.name}: {len(crossing_dates)} danger level crossings "
+          f"(>{dl}m)")
+    for d in crossing_dates:
+        print(f"  {d.date()}")
+```
+
+## GEOGloWS Retrospective: RP Exceedance Events
+
+```{python}
+#| eval: true
+geoglows_events = {}
+
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+
+    # Load retrospective
+    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
+    retro.columns = ["discharge"]
+
+    # Load return periods
+    rp = pd.read_parquet(DATA_DIR / f"geoglows_return_periods_{rid}.parquet")
+    rp2_threshold = rp.loc[2].values[0]
+    rp5_threshold = rp.loc[5].values[0]
+
+    # Trim to DHM data period
+    dhm_col = dhm[station.dhm_column].dropna()
+    max_date = dhm_col.index.max()
+    retro_trimmed = retro[retro.index <= max_date.tz_localize("UTC")]
+
+    # Find RP2 exceedance days
+    rp2_exceed = retro_trimmed[retro_trimmed["discharge"] > rp2_threshold]
+    rp5_exceed = retro_trimmed[retro_trimmed["discharge"] > rp5_threshold]
+
+    geoglows_events[key] = {
+        "rp2_dates": rp2_exceed.index,
+        "rp5_dates": rp5_exceed.index,
+        "rp2_threshold": rp2_threshold,
+        "rp5_threshold": rp5_threshold,
+    }
+
+    print(f"\n{station.name}:")
+    print(f"  RP2 threshold: {rp2_threshold:,.0f} m³/s → "
+          f"{len(rp2_exceed)} exceedance days")
+    print(f"  RP5 threshold: {rp5_threshold:,.0f} m³/s → "
+          f"{len(rp5_exceed)} exceedance days")
+```
+
+## Event Matching: GEOGloWS vs DHM
+
+Match GEOGloWS RP exceedance events against DHM danger level crossings using a ±7 day window.
+
+```{python}
+#| eval: true
+# Get unique event dates (collapse consecutive exceedance days into events)
+def collapse_to_events(dates, gap_days=7):
+    """Collapse consecutive/nearby dates into distinct events."""
+    if len(dates) == 0:
+        return pd.DatetimeIndex([])
+    dates = dates.sort_values()
+    events = [dates[0]]
+    for d in dates[1:]:
+        if (d - events[-1]).days > gap_days:
+            events.append(d)
+    return pd.DatetimeIndex(events)
+
+
+results_rows = []
+
+for key, station in STATIONS.items():
+    dhm_dates = dhm_crossings[key]
+    geo_ev = geoglows_events[key]
+
+    for rp_level, date_key in [(2, "rp2_dates"), (5, "rp5_dates")]:
+        # Collapse consecutive exceedance days into events
+        geo_event_dates = collapse_to_events(geo_ev[date_key])
+
+        # Strip timezone for matching
+        geo_event_dates_naive = geo_event_dates.tz_localize(None)
+
+        result = match_events(
+            source_events=geo_event_dates_naive,
+            reference_events=dhm_dates,
+            window_days=7,
+        )
+
+        results_rows.append({
+            "Station": station.name,
+            "RP Level": f"RP{rp_level}",
+            "DHM Events": result["n_reference"],
+            "GEOGloWS Events": result["n_source"],
+            "Matched (±7d)": result["n_matched"],
+            "DHM Only": len(result["reference_only"]),
+            "GEOGloWS Only": len(result["source_only"]),
+        })
+
+geoglows_results = pd.DataFrame(results_rows)
+geoglows_results
+```
+
+## Side-by-Side: GloFAS vs GEOGloWS
+
+The existing analysis in notebook `01.0` found:
+
+```{python}
+#| eval: true
+# GloFAS results from notebook 01.0
+glofas_results = pd.DataFrame([
+    {"Station": "Chatara", "RP Level": "RP2",
+     "DHM Events": 9, "GloFAS Events": 35,
+     "Matched (±7d)": 2, "DHM Only": 7, "GloFAS Only": 33},
+    {"Station": "Chisapani", "RP Level": "RP2",
+     "DHM Events": 7, "GloFAS Events": 100,
+     "Matched (±7d)": 5, "DHM Only": 2, "GloFAS Only": 95},
+    {"Station": "Chatara", "RP Level": "RP5",
+     "DHM Events": 9, "GloFAS Events": 5,
+     "Matched (±7d)": 1, "DHM Only": 8, "GloFAS Only": 4},
+    {"Station": "Chisapani", "RP Level": "RP5",
+     "DHM Events": 7, "GloFAS Events": 21,
+     "Matched (±7d)": 1, "DHM Only": 6, "GloFAS Only": 20},
+])
+
+print("=== GloFAS Results (from notebook 01.0) ===")
+print(glofas_results.to_string(index=False))
+print()
+print("=== GEOGloWS Results ===")
+print(geoglows_results.to_string(index=False))
+```
+
+## Event Timeline
+
+```{python}
+#| eval: true
+#| fig-cap: "Timeline of danger level crossings (DHM) vs RP2 exceedances (GEOGloWS)"
+
+fig, axes = plt.subplots(2, 1, figsize=(14, 6), sharex=False)
+
+for ax, (key, station) in zip(axes, STATIONS.items()):
+    dhm_dates = dhm_crossings[key]
+    geo_dates = collapse_to_events(
+        geoglows_events[key]["rp2_dates"]
+    ).tz_localize(None)
+
+    # DHM crossings
+    ax.vlines(dhm_dates, 0, 1, colors="#d62728",
+              linewidth=2, label="DHM Danger Level")
+
+    # GEOGloWS RP2 events
+    ax.vlines(geo_dates, -1, 0, colors="#1f77b4",
+              linewidth=1, alpha=0.7, label="GEOGloWS RP2")
+
+    ax.set_yticks([0.5, -0.5])
+    ax.set_yticklabels(["DHM", "GEOGloWS"])
+    ax.set_title(station.name)
+    ax.legend(loc="upper right", fontsize=8)
+    ax.grid(True, axis="x", alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+## Discussion
+
+Key observations from the event matching:
+
+1. **GloFAS at RP2 had extremely high false alarm rates** — 33 false alarms at Chatara, 95 at Chisapani. The GloFAS RP2 thresholds appear too low relative to DHM danger levels.
+
+2. **GEOGloWS RP2 thresholds are much higher** (14,459 vs 8,113 m³/s at Chatara), which should produce fewer false alarms — but potentially at the cost of missed events.
+
+3. The fundamental challenge is that **DHM measures water level (meters) while models produce discharge (m³/s)**. Without a rating curve, the comparison is indirect: we're checking whether the model's "extreme event" aligns with the observed "extreme event," not whether the magnitudes match.

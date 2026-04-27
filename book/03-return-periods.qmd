@@ -1,0 +1,148 @@
+# Return Period Comparison
+
+```{python}
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+Return period thresholds are central to the AA trigger framework — they define what constitutes a "significant" flood event. Different data sources compute return periods using different methods, distributional assumptions, and underlying data, producing notably different threshold values.
+
+## Data Sources and Methods
+
+| Source | Period | Distribution | Method |
+|--------|--------|-------------|--------|
+| GloFAS (Copernicus dashboard) | 1979–present | Gumbel Type I | Fitted to reanalysis annual maxima |
+| GloFAS (empirical, notebook 01.0) | 1979–2023 | Empirical quantile | Ranked annual maxima |
+| GEOGloWS v2 | 1940–present | Log-Pearson III | Fitted to retrospective annual maxima |
+
+The GEOGloWS retrospective covers 86 years vs GloFAS's 44 years. A longer record should produce more stable extreme value estimates, but the underlying hydrological model also differs (RAPID routing-only vs LISFLOOD full land surface).
+
+## Cross-Source Comparison
+
+```{python}
+import pandas as pd
+from src.constants import STATIONS
+
+DATA_DIR = Path(repo_root) / "data"
+
+# GloFAS empirical return levels computed from reanalysis (1979-2023)
+# Source: notebook 01.0 compute_return_levels() on GloFAS reanalysis NetCDF
+GLOFAS_EMPIRICAL = {
+    "Chatara": {2: 7831, 5: 9716, 10: 11408, 20: 14396, 50: 16951, 100: 16951},
+    "Chisapani": {2: 5847, 5: 6747, 10: 7424, 20: 7936, 50: 8816, 100: 8816},
+}
+
+rows = []
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+
+    # GEOGloWS return periods from downloaded parquet
+    rp_geo = pd.read_parquet(
+        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    )
+
+    glofas_emp = GLOFAS_EMPIRICAL[station.name]
+
+    for rp_level in [2, 5, 10, 25, 50, 100]:
+        geo_val = rp_geo.loc[rp_level].values[0]
+
+        row = {
+            "Station": station.name,
+            "Return Period": f"{rp_level}-yr",
+            "GEOGloWS (m³/s)": f"{geo_val:,.0f}",
+        }
+
+        # GloFAS Copernicus dashboard values
+        if rp_level == 2:
+            row["GloFAS Dashboard (m³/s)"] = f"{station.glofas_rp2:,}"
+        elif rp_level == 5:
+            row["GloFAS Dashboard (m³/s)"] = f"{station.glofas_rp5:,}"
+        else:
+            row["GloFAS Dashboard (m³/s)"] = "—"
+
+        # GloFAS empirical values (from reanalysis annual maxima)
+        if rp_level in glofas_emp:
+            row["GloFAS Empirical (m³/s)"] = f"{glofas_emp[rp_level]:,}"
+        else:
+            row["GloFAS Empirical (m³/s)"] = "—"
+
+        rows.append(row)
+
+comparison = pd.DataFrame(rows)
+comparison
+```
+
+## Key Observations
+
+### Chatara (Koshi)
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+for ax, (key, station) in zip(axes, STATIONS.items()):
+    rid = station.geoglows_river_id
+    rp_geo = pd.read_parquet(
+        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    )
+
+    rp_levels = rp_geo.index.values
+    geo_vals = rp_geo.iloc[:, 0].values
+
+    # GEOGloWS (Log-Pearson III)
+    ax.plot(rp_levels, geo_vals, "o-", label="GEOGloWS (Log-Pearson III)",
+            color="#1f77b4")
+
+    # GloFAS empirical (from reanalysis annual maxima)
+    glofas_emp = GLOFAS_EMPIRICAL[station.name]
+    emp_rps = sorted(glofas_emp.keys())
+    emp_vals = [glofas_emp[rp] for rp in emp_rps]
+    ax.plot(emp_rps, emp_vals, "s-", label="GloFAS Empirical",
+            color="#d62728")
+
+    # GloFAS dashboard (Gumbel) — just RP2 and RP5
+    ax.plot(2, station.glofas_rp2, "^", color="#ff7f0e",
+            markersize=10, label="GloFAS Dashboard (Gumbel)")
+    ax.plot(5, station.glofas_rp5, "^", color="#ff7f0e", markersize=10)
+
+    ax.set_xlabel("Return Period (years)")
+    ax.set_ylabel("Discharge (m³/s)")
+    ax.set_title(station.name)
+    ax.set_xscale("log")
+    ax.legend(fontsize=8)
+    ax.grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.show()
+```
+
+**GEOGloWS consistently produces higher return period values:**
+
+- **Chatara RP2**: GEOGloWS 14,459 vs GloFAS 8,113 — **78% higher**
+- **Chatara RP5**: GEOGloWS 18,433 vs GloFAS 10,306 — **79% higher**
+- **Chisapani RP2**: GEOGloWS 6,745 vs GloFAS 5,664 — **19% higher**
+- **Chisapani RP5**: GEOGloWS 10,005 vs GloFAS 6,797 — **47% higher**
+
+## Why the Difference?
+
+Several factors contribute to the divergence:
+
+1. **Different distributions**: Log-Pearson III (GEOGloWS) vs Gumbel (GloFAS). Log-Pearson III has a heavier tail which can produce higher extreme value estimates.
+
+2. **Different record lengths**: 86 years (GEOGloWS) vs 44 years (GloFAS). The longer GEOGloWS record may capture rarer extreme events that the GloFAS period misses.
+
+3. **Different hydrological models**: RAPID routes ECMWF runoff through a vector river network. LISFLOOD (GloFAS) is a full land-surface model with calibration against ~2,000+ gauges. The uncalibrated RAPID model may overestimate peak flows.
+
+4. **Different river delineation**: TDX-Hydro reaches vs GloFAS grid cells. The contributing area of the matched reach may differ between systems.
+
+5. **Different spatial representation**: The GEOGloWS river_id we matched may not correspond to the exact same point on the river as the GloFAS grid cell.
+
+## Implications for the AA Framework
+
+If GEOGloWS return periods were used directly as trigger thresholds, they would produce **fewer triggers** than GloFAS thresholds (higher bar to clear). However, this comparison is between return periods derived from different models — the forecast discharge magnitudes also differ. The meaningful comparison is event-level: does GEOGloWS flag the same flood events as actually observed? This is explored in @sec-event-detection.

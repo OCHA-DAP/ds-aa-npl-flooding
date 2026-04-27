@@ -1,0 +1,173 @@
+# Bias Correction
+
+```{python}
+#| eval: true
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+The `geoglows` package includes a bias correction module (`geoglows.bias`) with several methods. This chapter explores what's available and applies the methods that don't require observed discharge data (since DHM provides water level, not discharge).
+
+::: {.callout-note}
+This chapter requires the GEOGloWS SFDC data (fetched from S3 at runtime). Set `eval: true` in the code cells below when ready to run.
+:::
+
+```{python}
+#| eval: true
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
+
+from src.constants import STATIONS
+
+DATA_DIR = Path(repo_root) / "data"
+```
+
+## Available Methods
+
+The `geoglows.bias` module provides three approaches:
+
+| Method | Requires Observed Data? | Description |
+|--------|------------------------|-------------|
+| `correct_historical()` | Yes (discharge) | Monthly probability mapping between simulated and observed |
+| `correct_forecast()` | Yes (discharge) | Applies sim/obs correction to forecast data |
+| `sfdc_bias_correction()` | No (uses pre-computed scalars) | Scalar Flow Duration Curve correction using globally-derived correction factors |
+
+Since DHM data is water level (meters), not discharge (m³/s), we cannot directly use `correct_historical()`. The **SFDC method** is the primary option — it uses pre-computed correction scalars derived from the SABER (Statistical Adjustment By Empirical Regression) approach.
+
+## SFDC Bias Correction
+
+The SFDC method works by:
+
+1. Computing the simulated flow duration curve (FDC) for each month
+2. Looking up pre-computed scalar factors that map simulated FDC percentiles to bias-corrected values
+3. Applying these scalars to adjust the simulated discharge
+
+```{python}
+#| eval: true
+import geoglows.bias
+
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+    print(f"\n=== {station.name} (river_id={rid}) ===")
+
+    # Load retrospective
+    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
+    retro.columns = ["discharge"]
+
+    try:
+        corrected = geoglows.bias.sfdc_bias_correction(
+            sim_data=retro, river_id=rid
+        )
+        # Save corrected data
+        corrected.columns = [str(c) for c in corrected.columns]
+        out_path = DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet"
+        corrected.to_parquet(out_path)
+        print(f"  Corrected data saved: {out_path.name}")
+        print(f"  Original mean: {retro['discharge'].mean():,.1f} m³/s")
+        print(f"  Corrected mean: {corrected.iloc[:, 0].mean():,.1f} m³/s")
+        print(f"  Original max: {retro['discharge'].max():,.1f} m³/s")
+        print(f"  Corrected max: {corrected.iloc[:, 0].max():,.1f} m³/s")
+    except Exception as e:
+        print(f"  SFDC correction failed: {e}")
+        print("  This river may not have pre-computed SFDC scalars.")
+```
+
+## Before/After Comparison
+
+```{python}
+#| eval: true
+#| fig-cap: "Original vs bias-corrected GEOGloWS retrospective"
+
+fig, axes = plt.subplots(2, 1, figsize=(14, 8))
+
+for ax, (key, station) in zip(axes, STATIONS.items()):
+    rid = station.geoglows_river_id
+
+    # Original
+    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
+    retro.columns = ["discharge"]
+
+    # Corrected (if available)
+    corr_path = DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet"
+    if corr_path.exists():
+        corrected = pd.read_parquet(corr_path)
+        corrected.columns = ["discharge"]
+
+        ax.plot(retro.index, retro["discharge"],
+                color="#888888", alpha=0.4, linewidth=0.3, label="Original")
+        ax.plot(corrected.index, corrected["discharge"],
+                color="#1f77b4", alpha=0.6, linewidth=0.3, label="Corrected")
+    else:
+        ax.plot(retro.index, retro["discharge"],
+                color="#1f77b4", alpha=0.5, linewidth=0.3,
+                label="Original (no correction available)")
+
+    ax.axhline(station.glofas_rp2, color="#d62728", linestyle="--",
+               alpha=0.5, label=f"GloFAS RP2")
+    ax.set_ylabel("Discharge (m³/s)")
+    ax.set_title(station.name)
+    ax.legend(fontsize=8)
+    ax.grid(True, alpha=0.2)
+
+plt.tight_layout()
+plt.show()
+```
+
+## Return Periods: Corrected vs Original
+
+```{python}
+#| eval: true
+from src.utils import compute_return_levels
+from src.constants import RETURN_PERIODS
+
+rows = []
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+
+    # Original return periods (from GEOGloWS API — Log-Pearson III)
+    rp_orig = pd.read_parquet(
+        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    )
+
+    # Empirical return periods from corrected data
+    corr_path = DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet"
+    if corr_path.exists():
+        corrected = pd.read_parquet(corr_path)
+        corrected.columns = ["discharge"]
+        corrected.index = corrected.index.tz_localize(None)
+        rp_corr = compute_return_levels(
+            corrected["discharge"], RETURN_PERIODS
+        )
+
+        for rp in RETURN_PERIODS:
+            rows.append({
+                "Station": station.name,
+                "RP": f"{rp}-yr",
+                "Original (m³/s)": f"{rp_orig.loc[rp].values[0]:,.0f}",
+                "Corrected (m³/s)": f"{rp_corr[rp]:,.0f}",
+                "GloFAS Dashboard": (
+                    f"{station.glofas_rp2:,}" if rp == 2
+                    else f"{station.glofas_rp5:,}" if rp == 5
+                    else "—"
+                ),
+            })
+
+if rows:
+    print(pd.DataFrame(rows).to_string(index=False))
+else:
+    print("No corrected data available for return period comparison.")
+```
+
+## Limitations
+
+1. **SFDC scalars are not available for all rivers.** The pre-computed correction factors depend on having nearby observed data in the SABER database. Some rivers may not have coverage.
+
+2. **`correct_historical()` requires observed discharge**, not water level. If a rating curve for Chatara or Chisapani becomes available, this method could produce better results than SFDC.
+
+3. **Bias correction adjusts magnitudes but does not improve event timing.** If the model misses an event (wrong rainfall distribution in ERA5), no bias correction will fix that.

@@ -1,0 +1,125 @@
+# Spatial Matching
+
+```{python}
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+Mapping physical gauge stations to GEOGloWS river reach IDs is the first practical challenge. GEOGloWS uses the TDX-Hydro river network, where each reach has a unique 9-digit integer ID. The `geoglows` package and REST API provide tools to find reach IDs from coordinates — but they are surprisingly sensitive to small coordinate shifts.
+
+## The Sensitivity Problem
+
+The REST API's `getriverid` endpoint returns the nearest river reach outlet to a given lat/lon. But "nearest" can snap to a tiny tributary instead of the main stem if the coordinates are slightly off.
+
+We tested this at Chatara on the Koshi river. The code to reproduce:
+
+```python
+# Example: how we tested coordinate sensitivity (not run at render time)
+import requests
+import geoglows.data as gd
+
+offsets = [
+    ("Exact Chatara coords", 26.867, 87.160),
+    ("0.07° south", 26.80, 87.16),
+    ("+0.03° north", 26.90, 87.15),
+    ("-0.12° south", 26.75, 87.17),
+]
+
+for label, lat, lon in offsets:
+    url = f"https://geoglows.ecmwf.int/api/v2/getriverid?lat={lat}&lon={lon}"
+    r = requests.get(url)
+    rid = r.json()["river_id"]
+    rp = gd.return_periods(river_id=rid)
+    rp2 = rp.iloc[0].values[0]
+    print(f"{label}: river_id={rid}, RP2={rp2:,.0f} m³/s")
+```
+
+Results:
+
+```{python}
+import pandas as pd
+
+sensitivity_results = pd.DataFrame([
+    {"Coordinates": "Exact Chatara (26.867, 87.160)", "river_id": 441135650, "RP2 (m³/s)": "14,459"},
+    {"Coordinates": "0.07° south (26.80, 87.16)", "river_id": 440673317, "RP2 (m³/s)": "83"},
+    {"Coordinates": "0.03° north (26.90, 87.15)", "river_id": 441087488, "RP2 (m³/s)": "4,401"},
+    {"Coordinates": "0.12° south (26.75, 87.17)", "river_id": 440865959, "RP2 (m³/s)": "139"},
+])
+sensitivity_results
+```
+
+Moving just 0.07° south mapped to a completely different reach — RP2 dropped from 14,459 to 83 m³/s. The Koshi at Chatara carries thousands of cubic meters per second during monsoon; 83 m³/s is a small tributary.
+
+## Koshi at Chatara: Found via Coordinates
+
+For the Koshi, the exact coordinates (26.867, 87.160) successfully resolved to the main stem:
+
+```{python}
+from src.constants import CHATARA, CHISAPANI
+
+rp_chatara = pd.read_parquet(
+    Path(repo_root) / "data" / f"geoglows_return_periods_{CHATARA.geoglows_river_id}.parquet"
+)
+
+print(f"Koshi main stem: river_id = {CHATARA.geoglows_river_id}")
+print(f"Upstream area: {CHATARA.geoglows_upstream_area_km2:,.0f} km²")
+print(f"\nReturn periods (m³/s):")
+print(rp_chatara.to_string())
+```
+
+## Karnali at Chisapani: Required Metadata Table Query
+
+For the Karnali, all coordinate-based lookups returned small tributaries (~130–240 m³/s RP2), despite the Karnali being a major river with GloFAS RP2 of 5,664 m³/s.
+
+The solution was to query the metadata table by upstream contributing area. The Karnali basin at Chisapani is approximately 40,000–45,000 km².
+
+```python
+# Example: how we found the Karnali reach (not run at render time)
+meta = gd.metadata_table(
+    columns=["LINKNO", "USContArea", "strmOrder", "VPUCode"]
+)
+candidates = meta[
+    (meta["VPUCode"] == 409)
+    & (meta["USContArea"] > 3.8e10)
+    & (meta["USContArea"] < 4.5e10)
+    & (meta["strmOrder"] >= 7)
+].sort_values("USContArea")
+```
+
+We checked return periods for the top candidates:
+
+```{python}
+karnali_candidates = pd.DataFrame([
+    {"river_id": 441112306, "USContArea (km²)": "40,149", "RP2 (m³/s)": "6,745", "RP5 (m³/s)": "10,005"},
+    {"river_id": 441137073, "USContArea (km²)": "40,165", "RP2 (m³/s)": "6,739", "RP5 (m³/s)": "9,997"},
+    {"river_id": 441113682, "USContArea (km²)": "40,184", "RP2 (m³/s)": "6,731", "RP5 (m³/s)": "9,985"},
+    {"river_id": 441248454, "USContArea (km²)": "40,196", "RP2 (m³/s)": "6,894", "RP5 (m³/s)": "9,315"},
+])
+print("Karnali candidates (upstream area 40,000-45,000 km², stream order >= 7):")
+karnali_candidates
+```
+
+Selected reach:
+
+```{python}
+rp_chisapani = pd.read_parquet(
+    Path(repo_root) / "data" / f"geoglows_return_periods_{CHISAPANI.geoglows_river_id}.parquet"
+)
+
+print(f"Selected: river_id = {CHISAPANI.geoglows_river_id}")
+print(f"Upstream area: {CHISAPANI.geoglows_upstream_area_km2:,.0f} km²")
+print(f"\nReturn periods (m³/s):")
+print(rp_chisapani.to_string())
+print(f"\nGloFAS reference: RP2={CHISAPANI.glofas_rp2:,}, RP5={CHISAPANI.glofas_rp5:,}")
+```
+
+## Recommendations for Spatial Matching
+
+1. **Never trust `latlon_to_river()` or `getriverid` blindly** — always verify the return periods or upstream area of the matched reach make hydrological sense.
+2. **For large rivers, query the metadata table by upstream area** — this is more reliable than coordinate snapping.
+3. **Cross-reference with known discharge magnitudes** — if you have GloFAS or observed return periods, use them to validate the matched reach.
+4. **The REST `getriverid` endpoint is faster than `latlon_to_river()`** — the latter downloads a ~100MB metadata table.
