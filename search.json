@@ -1,0 +1,452 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "GEOGloWS Evaluation for Nepal Flood AA Framework",
+    "section": "",
+    "text": "GEOGloWS Evaluation",
+    "crumbs": [
+      "GEOGloWS Evaluation"
+    ]
+  },
+  {
+    "objectID": "index.html#purpose",
+    "href": "index.html#purpose",
+    "title": "GEOGloWS Evaluation for Nepal Flood AA Framework",
+    "section": "Purpose",
+    "text": "Purpose\nThis book evaluates the GEOGloWS River Forecast System (v2) as a potential data source for Nepal’s flood anticipatory action (AA) trigger framework.\nThe existing framework relies on:\n\nGloFAS (ECMWF/Copernicus) — reanalysis and reforecast data for discharge thresholds and trigger calibration\nDHM (Department of Hydrology and Meteorology, Nepal) — observed water level data from gauge stations\nGoogle GRRR — experimental streamflow reforecast and reanalysis from Google Cloud\n\nGEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation investigates whether and how GEOGloWS data can strengthen the trigger framework.",
+    "crumbs": [
+      "GEOGloWS Evaluation"
+    ]
+  },
+  {
+    "objectID": "index.html#key-finding",
+    "href": "index.html#key-finding",
+    "title": "GEOGloWS Evaluation for Nepal Flood AA Framework",
+    "section": "Key Finding",
+    "text": "Key Finding\nGEOGloWS does not provide reforecasts (hindcasts). The forecast archive extends only ~2 months. This means it cannot be used for the lead-time-dependent skill assessment and trigger calibration that the AA framework requires. However, the long retrospective record and built-in bias correction tools make it valuable for validation and as a complementary real-time signal.",
+    "crumbs": [
+      "GEOGloWS Evaluation"
+    ]
+  },
+  {
+    "objectID": "index.html#structure",
+    "href": "index.html#structure",
+    "title": "GEOGloWS Evaluation for Nepal Flood AA Framework",
+    "section": "Structure",
+    "text": "Structure\n\nGEOGloWS Overview — what the system is, how it works, API walkthrough\nSpatial Matching — finding the correct river reaches for Nepal stations\nReturn Period Comparison — cross-source return period analysis\nRetrospective Comparison — time series overlay across all data sources\nEvent Detection — validating against observed DHM danger level crossings\nBias Correction — applying GEOGloWS’s built-in correction tools\nAssessment — summary findings and recommendations",
+    "crumbs": [
+      "GEOGloWS Evaluation"
+    ]
+  },
+  {
+    "objectID": "index.html#stations",
+    "href": "index.html#stations",
+    "title": "GEOGloWS Evaluation for Nepal Flood AA Framework",
+    "section": "Stations",
+    "text": "Stations\nThe evaluation focuses on two primary stations:\n\n\n\nStation\nRiver\nDHM Danger Level\nGloFAS RP2\nGEOGloWS River ID\n\n\n\n\nChatara\nKoshi\n7.0 m\n8,113 m³/s\n441135650\n\n\nChisapani\nKarnali\n10.5 m\n5,664 m³/s\n441112306",
+    "crumbs": [
+      "GEOGloWS Evaluation"
+    ]
+  },
+  {
+    "objectID": "01-geoglows-overview.html",
+    "href": "01-geoglows-overview.html",
+    "title": "1  GEOGloWS Overview",
+    "section": "",
+    "text": "1.1 What is GEOGloWS?\nGEOGloWS (Group on Earth Observations Global Water Sustainability) is a GEO initiative that provides a global streamflow forecasting and historical simulation service. The flagship product is the GEOGloWS ECMWF Streamflow Service, a partnership between GEO, ECMWF, and Brigham Young University (BYU).\nThe service aims to give every country access to hydrological forecasts, particularly countries that lack national forecasting infrastructure. Version 2 was released in 2024 with significant improvements to the river network and data access infrastructure.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>GEOGloWS Overview</span>"
+    ]
+  },
+  {
+    "objectID": "01-geoglows-overview.html#model-architecture",
+    "href": "01-geoglows-overview.html#model-architecture",
+    "title": "1  GEOGloWS Overview",
+    "section": "1.2 Model Architecture",
+    "text": "1.2 Model Architecture\nThe system has two components:\n\n1.2.1 Forecasts\n\nMeteorological forcing: ECMWF IFS (Integrated Forecasting System) ensemble weather forecasts provide runoff inputs\nRouting model: RAPID (Routing Application for Parallel computation of Discharge) routes runoff through the global river network\nRiver network: TDX-Hydro — derived from TanDEM-X 90m DEM, approximately 6.8 million river reaches globally\nEnsemble members: 52 (51 perturbed + 1 high-resolution control)\nForecast lead time: 15 days\nTemporal resolution: Hourly (3-hourly for ensemble members, hourly for high-res)\nUpdate frequency: Daily\n\n\n\n1.2.2 Retrospective Simulation\n\nMeteorological forcing: ERA5 reanalysis (ECMWF’s global atmospheric reanalysis)\nPeriod: 1940 to present — this is substantially longer than GloFAS (1979–present)\nTemporal resolution: Hourly (also available as daily, monthly, yearly aggregates)\nReturn periods: Pre-computed for 2, 5, 10, 25, 50, 100-year levels using Log-Pearson III distribution\n\n\n\n1.2.3 Critical Conceptual Note: Retrospective vs Reforecast\nThis distinction is fundamental to understanding what GEOGloWS can and cannot do for trigger calibration:\nRetrospective (what GEOGloWS has): A single deterministic time series of “what the model thinks happened” from 1940–present. It uses ERA5 reanalysis — essentially observed weather run through the routing model after the fact. There is no forecast uncertainty because the meteorological input is already known. You get one discharge value per timestep.\nReforecast (what GloFAS has, GEOGloWS does not): For each historical date, the forecast system is re-run as if standing on that date not knowing the future. For example, for July 15 2015, you get an N-member ensemble forecast with multiple leadtime steps — and you can compare what it predicted at 3-day and 7-day lead against what actually happened.\nThe retrospective is the answer key. The reforecast is the student’s exam papers. You need both to grade forecast skill. For AA trigger calibration — where the question is “if X% of ensemble members exceed the threshold at 3-day lead, should we trigger?” — you need reforecasts to calibrate X%. The retrospective alone cannot answer this.\nGEOGloWS’s forecast archive extends only ~2 months back, far too short for trigger calibration.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>GEOGloWS Overview</span>"
+    ]
+  },
+  {
+    "objectID": "01-geoglows-overview.html#comparison-with-existing-data-sources",
+    "href": "01-geoglows-overview.html#comparison-with-existing-data-sources",
+    "title": "1  GEOGloWS Overview",
+    "section": "1.3 Comparison with Existing Data Sources",
+    "text": "1.3 Comparison with Existing Data Sources\n\n\n\n\n\n\n\n\n\nFeature\nGloFAS\nGoogle GRRR\nGEOGloWS v2\n\n\n\n\nProvider\nECMWF/Copernicus\nGoogle\nGEO/BYU/ECMWF\n\n\nHydro model\nLISFLOOD\nProprietary\nRAPID (routing only)\n\n\nMet forcing\nECMWF IFS + ERA5\nProprietary\nECMWF IFS + ERA5\n\n\nEnsemble members\n51 (reforecast: 11)\nEnsemble\n52\n\n\nForecast lead\n30 days\nVariable\n15 days\n\n\nRetrospective\n1979–present\nVariable\n1940–present\n\n\nReforecasts\nYes (2003–2023)\nYes\nNo\n\n\nReturn periods\nCopernicus dashboard\nComputed\nBuilt-in API\n\n\nRP distribution\nGumbel\nEmpirical\nLog-Pearson III\n\n\nAPI auth\nCDS registration\nGCS token\nNone (free)\n\n\nRiver network\n~0.05° grid\nHydroBASINS\nTDX-Hydro (~6.8M reaches)\n\n\nBias correction\nManual\nManual\nBuilt-in (SFDC, FDC)",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>GEOGloWS Overview</span>"
+    ]
+  },
+  {
+    "objectID": "01-geoglows-overview.html#python-package-geoglows-v2.2.0",
+    "href": "01-geoglows-overview.html#python-package-geoglows-v2.2.0",
+    "title": "1  GEOGloWS Overview",
+    "section": "1.4 Python Package: geoglows v2.2.0",
+    "text": "1.4 Python Package: geoglows v2.2.0\nThe geoglows Python package provides access to all data products. Data is stored on AWS S3 as Zarr arrays (retrospective) and on a REST API (forecasts).\n\n1.4.1 Key Functions\n\n\nCode\nimport geoglows.data as gd\nimport pandas as pd\nfrom pathlib import Path\n\n# Available data functions\ndata_funcs = [\n    (\"gd.forecast_ensembles(river_id)\", \"52-member ensemble forecast\"),\n    (\"gd.forecast_stats(river_id)\", \"Ensemble summary statistics\"),\n    (\"gd.retrospective(river_id)\", \"Full retrospective (hourly default)\"),\n    (\"gd.retro_daily(river_id)\", \"Daily retrospective\"),\n    (\"gd.return_periods(river_id)\", \"RP thresholds (2-100yr)\"),\n    (\"gd.fdc(river_id)\", \"Flow duration curve\"),\n    (\"gd.dates()\", \"Available forecast dates\"),\n    (\"gd.latlon_to_river(lat, lon)\", \"Find river ID from coordinates\"),\n]\n\nimport pandas as pd\npd.DataFrame(data_funcs, columns=[\"Function\", \"Description\"])\n\n\n\n\n\n\n\n\n\nFunction\nDescription\n\n\n\n\n0\ngd.forecast_ensembles(river_id)\n52-member ensemble forecast\n\n\n1\ngd.forecast_stats(river_id)\nEnsemble summary statistics\n\n\n2\ngd.retrospective(river_id)\nFull retrospective (hourly default)\n\n\n3\ngd.retro_daily(river_id)\nDaily retrospective\n\n\n4\ngd.return_periods(river_id)\nRP thresholds (2-100yr)\n\n\n5\ngd.fdc(river_id)\nFlow duration curve\n\n\n6\ngd.dates()\nAvailable forecast dates\n\n\n7\ngd.latlon_to_river(lat, lon)\nFind river ID from coordinates\n\n\n\n\n\n\n\n\n\n1.4.2 Quick Demo: Return Periods\n\n\nCode\nrp = pd.read_parquet(Path(repo_root) / \"data\" / \"geoglows_return_periods_441135650.parquet\")\nprint(\"Chatara (Koshi) — GEOGloWS Return Periods (m³/s):\")\nrp\n\n\nChatara (Koshi) — GEOGloWS Return Periods (m³/s):\n\n\n\n\n\n\n\n\n\n441135650\n\n\nreturn_period\n\n\n\n\n\n2\n14458.948\n\n\n5\n18433.434\n\n\n10\n21056.356\n\n\n25\n24379.680\n\n\n50\n26870.105\n\n\n100\n29378.284\n\n\n\n\n\n\n\n\n\n1.4.3 Quick Demo: Forecast Ensemble Structure\n# Example: fetch today's forecast (not run at render time — requires S3 search)\nstats = gd.forecast_stats(river_id=441135650)\n# Returns DataFrame with columns:\n#   flow_min, flow_25p, flow_avg, flow_med, flow_75p, flow_max, high_res\n# Index: hourly timestamps over 15-day forecast window\n# Shape: ~280 rows x 7 columns\nThe forecast data has 52 ensemble members (51 perturbed + 1 high-resolution control). The forecast_stats() function returns summary statistics across the 51 perturbed members; forecast_ensembles() returns all 52 individual traces.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>GEOGloWS Overview</span>"
+    ]
+  },
+  {
+    "objectID": "01-geoglows-overview.html#data-storage",
+    "href": "01-geoglows-overview.html#data-storage",
+    "title": "1  GEOGloWS Overview",
+    "section": "1.5 Data Storage",
+    "text": "1.5 Data Storage\n\nRetrospective: S3 Zarr at s3://geoglows-v2/ (anonymous access)\nForecasts: S3 Zarr, organized by date (YYYYMMDDHH.zarr)\nREST API: https://geoglows.ecmwf.int/api/v2/ (backup access method)\nMetadata table: Parquet file with all ~6.8M river reach properties\n\n\n1.5.1 Known Issues\n\nThe pytz package is missing from the declared dependencies (must be installed manually)\nlatlon_to_river() requires downloading the full metadata table (~100MB+), which is slow on first call\nThe metadata table in v2.2.0 does not contain lat/lon columns despite the function trying to use them — the REST getriverid endpoint is more reliable",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>GEOGloWS Overview</span>"
+    ]
+  },
+  {
+    "objectID": "02-spatial-matching.html",
+    "href": "02-spatial-matching.html",
+    "title": "2  Spatial Matching",
+    "section": "",
+    "text": "2.1 The Sensitivity Problem\nMapping physical gauge stations to GEOGloWS river reach IDs is the first practical challenge. GEOGloWS uses the TDX-Hydro river network, where each reach has a unique 9-digit integer ID. The geoglows package and REST API provide tools to find reach IDs from coordinates — but they are surprisingly sensitive to small coordinate shifts.\nThe REST API’s getriverid endpoint returns the nearest river reach outlet to a given lat/lon. But “nearest” can snap to a tiny tributary instead of the main stem if the coordinates are slightly off.\nWe tested this at Chatara on the Koshi river. The code to reproduce:\nResults:\nCode\nimport pandas as pd\n\nsensitivity_results = pd.DataFrame([\n    {\"Coordinates\": \"Exact Chatara (26.867, 87.160)\", \"river_id\": 441135650, \"RP2 (m³/s)\": \"14,459\"},\n    {\"Coordinates\": \"0.07° south (26.80, 87.16)\", \"river_id\": 440673317, \"RP2 (m³/s)\": \"83\"},\n    {\"Coordinates\": \"0.03° north (26.90, 87.15)\", \"river_id\": 441087488, \"RP2 (m³/s)\": \"4,401\"},\n    {\"Coordinates\": \"0.12° south (26.75, 87.17)\", \"river_id\": 440865959, \"RP2 (m³/s)\": \"139\"},\n])\nsensitivity_results\n\n\n\n\n\n\n\n\n\nCoordinates\nriver_id\nRP2 (m³/s)\n\n\n\n\n0\nExact Chatara (26.867, 87.160)\n441135650\n14,459\n\n\n1\n0.07° south (26.80, 87.16)\n440673317\n83\n\n\n2\n0.03° north (26.90, 87.15)\n441087488\n4,401\n\n\n3\n0.12° south (26.75, 87.17)\n440865959\n139\nMoving just 0.07° south mapped to a completely different reach — RP2 dropped from 14,459 to 83 m³/s. The Koshi at Chatara carries thousands of cubic meters per second during monsoon; 83 m³/s is a small tributary.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Matching</span>"
+    ]
+  },
+  {
+    "objectID": "02-spatial-matching.html#the-sensitivity-problem",
+    "href": "02-spatial-matching.html#the-sensitivity-problem",
+    "title": "2  Spatial Matching",
+    "section": "",
+    "text": "# Example: how we tested coordinate sensitivity (not run at render time)\nimport requests\nimport geoglows.data as gd\n\noffsets = [\n    (\"Exact Chatara coords\", 26.867, 87.160),\n    (\"0.07° south\", 26.80, 87.16),\n    (\"+0.03° north\", 26.90, 87.15),\n    (\"-0.12° south\", 26.75, 87.17),\n]\n\nfor label, lat, lon in offsets:\n    url = f\"https://geoglows.ecmwf.int/api/v2/getriverid?lat={lat}&lon={lon}\"\n    r = requests.get(url)\n    rid = r.json()[\"river_id\"]\n    rp = gd.return_periods(river_id=rid)\n    rp2 = rp.iloc[0].values[0]\n    print(f\"{label}: river_id={rid}, RP2={rp2:,.0f} m³/s\")",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Matching</span>"
+    ]
+  },
+  {
+    "objectID": "02-spatial-matching.html#koshi-at-chatara-found-via-coordinates",
+    "href": "02-spatial-matching.html#koshi-at-chatara-found-via-coordinates",
+    "title": "2  Spatial Matching",
+    "section": "2.2 Koshi at Chatara: Found via Coordinates",
+    "text": "2.2 Koshi at Chatara: Found via Coordinates\nFor the Koshi, the exact coordinates (26.867, 87.160) successfully resolved to the main stem:\n\n\nCode\nfrom src.constants import CHATARA, CHISAPANI\n\nrp_chatara = pd.read_parquet(\n    Path(repo_root) / \"data\" / f\"geoglows_return_periods_{CHATARA.geoglows_river_id}.parquet\"\n)\n\nprint(f\"Koshi main stem: river_id = {CHATARA.geoglows_river_id}\")\nprint(f\"Upstream area: {CHATARA.geoglows_upstream_area_km2:,.0f} km²\")\nprint(f\"\\nReturn periods (m³/s):\")\nprint(rp_chatara.to_string())\n\n\nKoshi main stem: river_id = 441135650\nUpstream area: 57,125 km²\n\nReturn periods (m³/s):\n               441135650\nreturn_period           \n2              14458.948\n5              18433.434\n10             21056.356\n25             24379.680\n50             26870.105\n100            29378.284",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Matching</span>"
+    ]
+  },
+  {
+    "objectID": "02-spatial-matching.html#karnali-at-chisapani-required-metadata-table-query",
+    "href": "02-spatial-matching.html#karnali-at-chisapani-required-metadata-table-query",
+    "title": "2  Spatial Matching",
+    "section": "2.3 Karnali at Chisapani: Required Metadata Table Query",
+    "text": "2.3 Karnali at Chisapani: Required Metadata Table Query\nFor the Karnali, all coordinate-based lookups returned small tributaries (~130–240 m³/s RP2), despite the Karnali being a major river with GloFAS RP2 of 5,664 m³/s.\nThe solution was to query the metadata table by upstream contributing area. The Karnali basin at Chisapani is approximately 40,000–45,000 km².\n# Example: how we found the Karnali reach (not run at render time)\nmeta = gd.metadata_table(\n    columns=[\"LINKNO\", \"USContArea\", \"strmOrder\", \"VPUCode\"]\n)\ncandidates = meta[\n    (meta[\"VPUCode\"] == 409)\n    & (meta[\"USContArea\"] &gt; 3.8e10)\n    & (meta[\"USContArea\"] &lt; 4.5e10)\n    & (meta[\"strmOrder\"] &gt;= 7)\n].sort_values(\"USContArea\")\nWe checked return periods for the top candidates:\n\n\nCode\nkarnali_candidates = pd.DataFrame([\n    {\"river_id\": 441112306, \"USContArea (km²)\": \"40,149\", \"RP2 (m³/s)\": \"6,745\", \"RP5 (m³/s)\": \"10,005\"},\n    {\"river_id\": 441137073, \"USContArea (km²)\": \"40,165\", \"RP2 (m³/s)\": \"6,739\", \"RP5 (m³/s)\": \"9,997\"},\n    {\"river_id\": 441113682, \"USContArea (km²)\": \"40,184\", \"RP2 (m³/s)\": \"6,731\", \"RP5 (m³/s)\": \"9,985\"},\n    {\"river_id\": 441248454, \"USContArea (km²)\": \"40,196\", \"RP2 (m³/s)\": \"6,894\", \"RP5 (m³/s)\": \"9,315\"},\n])\nprint(\"Karnali candidates (upstream area 40,000-45,000 km², stream order &gt;= 7):\")\nkarnali_candidates\n\n\nKarnali candidates (upstream area 40,000-45,000 km², stream order &gt;= 7):\n\n\n\n\n\n\n\n\n\nriver_id\nUSContArea (km²)\nRP2 (m³/s)\nRP5 (m³/s)\n\n\n\n\n0\n441112306\n40,149\n6,745\n10,005\n\n\n1\n441137073\n40,165\n6,739\n9,997\n\n\n2\n441113682\n40,184\n6,731\n9,985\n\n\n3\n441248454\n40,196\n6,894\n9,315\n\n\n\n\n\n\n\nSelected reach:\n\n\nCode\nrp_chisapani = pd.read_parquet(\n    Path(repo_root) / \"data\" / f\"geoglows_return_periods_{CHISAPANI.geoglows_river_id}.parquet\"\n)\n\nprint(f\"Selected: river_id = {CHISAPANI.geoglows_river_id}\")\nprint(f\"Upstream area: {CHISAPANI.geoglows_upstream_area_km2:,.0f} km²\")\nprint(f\"\\nReturn periods (m³/s):\")\nprint(rp_chisapani.to_string())\nprint(f\"\\nGloFAS reference: RP2={CHISAPANI.glofas_rp2:,}, RP5={CHISAPANI.glofas_rp5:,}\")\n\n\nSelected: river_id = 441112306\nUpstream area: 40,149 km²\n\nReturn periods (m³/s):\n               441112306\nreturn_period           \n2               6745.115\n5              10005.361\n10             12082.967\n25             14588.589\n50             16365.003\n100            18065.847\n\nGloFAS reference: RP2=5,664, RP5=6,797",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Matching</span>"
+    ]
+  },
+  {
+    "objectID": "02-spatial-matching.html#recommendations-for-spatial-matching",
+    "href": "02-spatial-matching.html#recommendations-for-spatial-matching",
+    "title": "2  Spatial Matching",
+    "section": "2.4 Recommendations for Spatial Matching",
+    "text": "2.4 Recommendations for Spatial Matching\n\nNever trust latlon_to_river() or getriverid blindly — always verify the return periods or upstream area of the matched reach make hydrological sense.\nFor large rivers, query the metadata table by upstream area — this is more reliable than coordinate snapping.\nCross-reference with known discharge magnitudes — if you have GloFAS or observed return periods, use them to validate the matched reach.\nThe REST getriverid endpoint is faster than latlon_to_river() — the latter downloads a ~100MB metadata table.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Spatial Matching</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html",
+    "href": "03-return-periods.html",
+    "title": "3  Return Period Comparison",
+    "section": "",
+    "text": "3.1 Data Sources and Methods\nReturn period thresholds are central to the AA trigger framework — they define what constitutes a “significant” flood event. Different data sources compute return periods using different methods, distributional assumptions, and underlying data, producing notably different threshold values.\nThe GEOGloWS retrospective covers 86 years vs GloFAS’s 44 years. A longer record should produce more stable extreme value estimates, but the underlying hydrological model also differs (RAPID routing-only vs LISFLOOD full land surface).",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html#data-sources-and-methods",
+    "href": "03-return-periods.html#data-sources-and-methods",
+    "title": "3  Return Period Comparison",
+    "section": "",
+    "text": "Source\nPeriod\nDistribution\nMethod\n\n\n\n\nGloFAS (Copernicus dashboard)\n1979–present\nGumbel Type I\nFitted to reanalysis annual maxima\n\n\nGloFAS (empirical, notebook 01.0)\n1979–2023\nEmpirical quantile\nRanked annual maxima\n\n\nGEOGloWS v2\n1940–present\nLog-Pearson III\nFitted to retrospective annual maxima",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html#cross-source-comparison",
+    "href": "03-return-periods.html#cross-source-comparison",
+    "title": "3  Return Period Comparison",
+    "section": "3.2 Cross-Source Comparison",
+    "text": "3.2 Cross-Source Comparison\n\n\nCode\nimport pandas as pd\nfrom src.constants import STATIONS\n\nDATA_DIR = Path(repo_root) / \"data\"\n\n# GloFAS empirical return levels computed from reanalysis (1979-2023)\n# Source: notebook 01.0 compute_return_levels() on GloFAS reanalysis NetCDF\nGLOFAS_EMPIRICAL = {\n    \"Chatara\": {2: 7831, 5: 9716, 10: 11408, 20: 14396, 50: 16951, 100: 16951},\n    \"Chisapani\": {2: 5847, 5: 6747, 10: 7424, 20: 7936, 50: 8816, 100: 8816},\n}\n\nrows = []\nfor key, station in STATIONS.items():\n    rid = station.geoglows_river_id\n\n    # GEOGloWS return periods from downloaded parquet\n    rp_geo = pd.read_parquet(\n        DATA_DIR / f\"geoglows_return_periods_{rid}.parquet\"\n    )\n\n    glofas_emp = GLOFAS_EMPIRICAL[station.name]\n\n    for rp_level in [2, 5, 10, 25, 50, 100]:\n        geo_val = rp_geo.loc[rp_level].values[0]\n\n        row = {\n            \"Station\": station.name,\n            \"Return Period\": f\"{rp_level}-yr\",\n            \"GEOGloWS (m³/s)\": f\"{geo_val:,.0f}\",\n        }\n\n        # GloFAS Copernicus dashboard values\n        if rp_level == 2:\n            row[\"GloFAS Dashboard (m³/s)\"] = f\"{station.glofas_rp2:,}\"\n        elif rp_level == 5:\n            row[\"GloFAS Dashboard (m³/s)\"] = f\"{station.glofas_rp5:,}\"\n        else:\n            row[\"GloFAS Dashboard (m³/s)\"] = \"—\"\n\n        # GloFAS empirical values (from reanalysis annual maxima)\n        if rp_level in glofas_emp:\n            row[\"GloFAS Empirical (m³/s)\"] = f\"{glofas_emp[rp_level]:,}\"\n        else:\n            row[\"GloFAS Empirical (m³/s)\"] = \"—\"\n\n        rows.append(row)\n\ncomparison = pd.DataFrame(rows)\ncomparison\n\n\n\n\n\n\n\n\n\nStation\nReturn Period\nGEOGloWS (m³/s)\nGloFAS Dashboard (m³/s)\nGloFAS Empirical (m³/s)\n\n\n\n\n0\nChatara\n2-yr\n14,459\n8,113\n7,831\n\n\n1\nChatara\n5-yr\n18,433\n10,306\n9,716\n\n\n2\nChatara\n10-yr\n21,056\n—\n11,408\n\n\n3\nChatara\n25-yr\n24,380\n—\n—\n\n\n4\nChatara\n50-yr\n26,870\n—\n16,951\n\n\n5\nChatara\n100-yr\n29,378\n—\n16,951\n\n\n6\nChisapani\n2-yr\n6,745\n5,664\n5,847\n\n\n7\nChisapani\n5-yr\n10,005\n6,797\n6,747\n\n\n8\nChisapani\n10-yr\n12,083\n—\n7,424\n\n\n9\nChisapani\n25-yr\n14,589\n—\n—\n\n\n10\nChisapani\n50-yr\n16,365\n—\n8,816\n\n\n11\nChisapani\n100-yr\n18,066\n—\n8,816",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html#key-observations",
+    "href": "03-return-periods.html#key-observations",
+    "title": "3  Return Period Comparison",
+    "section": "3.3 Key Observations",
+    "text": "3.3 Key Observations\n\n3.3.1 Chatara (Koshi)\n\n\nCode\nimport matplotlib.pyplot as plt\nimport numpy as np\n\nfig, axes = plt.subplots(1, 2, figsize=(12, 5))\n\nfor ax, (key, station) in zip(axes, STATIONS.items()):\n    rid = station.geoglows_river_id\n    rp_geo = pd.read_parquet(\n        DATA_DIR / f\"geoglows_return_periods_{rid}.parquet\"\n    )\n\n    rp_levels = rp_geo.index.values\n    geo_vals = rp_geo.iloc[:, 0].values\n\n    # GEOGloWS (Log-Pearson III)\n    ax.plot(rp_levels, geo_vals, \"o-\", label=\"GEOGloWS (Log-Pearson III)\",\n            color=\"#1f77b4\")\n\n    # GloFAS empirical (from reanalysis annual maxima)\n    glofas_emp = GLOFAS_EMPIRICAL[station.name]\n    emp_rps = sorted(glofas_emp.keys())\n    emp_vals = [glofas_emp[rp] for rp in emp_rps]\n    ax.plot(emp_rps, emp_vals, \"s-\", label=\"GloFAS Empirical\",\n            color=\"#d62728\")\n\n    # GloFAS dashboard (Gumbel) — just RP2 and RP5\n    ax.plot(2, station.glofas_rp2, \"^\", color=\"#ff7f0e\",\n            markersize=10, label=\"GloFAS Dashboard (Gumbel)\")\n    ax.plot(5, station.glofas_rp5, \"^\", color=\"#ff7f0e\", markersize=10)\n\n    ax.set_xlabel(\"Return Period (years)\")\n    ax.set_ylabel(\"Discharge (m³/s)\")\n    ax.set_title(station.name)\n    ax.set_xscale(\"log\")\n    ax.legend(fontsize=8)\n    ax.grid(True, alpha=0.3)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n\n\n\n\nGEOGloWS consistently produces higher return period values:\n\nChatara RP2: GEOGloWS 14,459 vs GloFAS 8,113 — 78% higher\nChatara RP5: GEOGloWS 18,433 vs GloFAS 10,306 — 79% higher\nChisapani RP2: GEOGloWS 6,745 vs GloFAS 5,664 — 19% higher\nChisapani RP5: GEOGloWS 10,005 vs GloFAS 6,797 — 47% higher",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html#why-the-difference",
+    "href": "03-return-periods.html#why-the-difference",
+    "title": "3  Return Period Comparison",
+    "section": "3.4 Why the Difference?",
+    "text": "3.4 Why the Difference?\nSeveral factors contribute to the divergence:\n\nDifferent distributions: Log-Pearson III (GEOGloWS) vs Gumbel (GloFAS). Log-Pearson III has a heavier tail which can produce higher extreme value estimates.\nDifferent record lengths: 86 years (GEOGloWS) vs 44 years (GloFAS). The longer GEOGloWS record may capture rarer extreme events that the GloFAS period misses.\nDifferent hydrological models: RAPID routes ECMWF runoff through a vector river network. LISFLOOD (GloFAS) is a full land-surface model with calibration against ~2,000+ gauges. The uncalibrated RAPID model may overestimate peak flows.\nDifferent river delineation: TDX-Hydro reaches vs GloFAS grid cells. The contributing area of the matched reach may differ between systems.\nDifferent spatial representation: The GEOGloWS river_id we matched may not correspond to the exact same point on the river as the GloFAS grid cell.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "03-return-periods.html#implications-for-the-aa-framework",
+    "href": "03-return-periods.html#implications-for-the-aa-framework",
+    "title": "3  Return Period Comparison",
+    "section": "3.5 Implications for the AA Framework",
+    "text": "3.5 Implications for the AA Framework\nIf GEOGloWS return periods were used directly as trigger thresholds, they would produce fewer triggers than GloFAS thresholds (higher bar to clear). However, this comparison is between return periods derived from different models — the forecast discharge magnitudes also differ. The meaningful comparison is event-level: does GEOGloWS flag the same flood events as actually observed? This is explored in Chapter 5.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Return Period Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html",
+    "href": "04-retrospective-comparison.html",
+    "title": "4  Retrospective Comparison",
+    "section": "",
+    "text": "4.1 Load All Data Sources\nThis chapter compares the GEOGloWS retrospective simulation against other available data sources for the same rivers. The goal is to understand how well GEOGloWS captures the timing and magnitude of flood events relative to GloFAS reanalysis, Google GRRR, and DHM observations.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#load-all-data-sources",
+    "href": "04-retrospective-comparison.html#load-all-data-sources",
+    "title": "4  Retrospective Comparison",
+    "section": "",
+    "text": "4.1.1 GEOGloWS Retrospective (1940–present)\n\n\nCode\ngeoglows = {}\nfor key, station in STATIONS.items():\n    rid = station.geoglows_river_id\n    df = pd.read_parquet(DATA_DIR / f\"geoglows_retro_daily_{rid}.parquet\")\n    df.columns = [\"discharge\"]\n    df.index = df.index.tz_localize(None)  # strip UTC for comparison with tz-naive GloFAS\n    geoglows[key] = df\n\nprint(\"GEOGloWS retrospective loaded:\")\nfor key, df in geoglows.items():\n    print(f\"  {STATIONS[key].name}: {len(df)} days, \"\n          f\"{df.index.min().date()} to {df.index.max().date()}\")\n\n\nGEOGloWS retrospective loaded:\n  Chatara: 31499 days, 1940-01-01 to 2026-03-28\n  Chisapani: 31499 days, 1940-01-01 to 2026-03-28\n\n\n\n\n4.1.2 GloFAS Reanalysis (1979–2023)\n\n\nCode\nglofas_path = (\n    AA_DATA_DIR / \"public\" / \"processed\" / \"npl\" / \"glofas\"\n    / \"npl_cems-glofas-historical_v4.nc\"\n)\nglofas_ds = xr.open_dataset(glofas_path)\nglofas_df = glofas_ds.to_dataframe().reset_index()\nglofas_df = glofas_df.set_index(\"time\")[[\"Chatara\", \"Chisapani\"]]\n\nprint(f\"GloFAS reanalysis: {len(glofas_df)} days, \"\n      f\"{glofas_df.index.min().date()} to {glofas_df.index.max().date()}\")\n\n\nGloFAS reanalysis: 16436 days, 1979-01-01 to 2023-12-31\n\n\n/var/folders/61/cp06zhcj4y76q7rfx0qlm06c0000gn/T/ipykernel_88011/3832291957.py:5: FutureWarning: In a future version, xarray will not decode the variable 'step' into a timedelta64 dtype based on the presence of a timedelta-like 'units' attribute by default. Instead it will rely on the presence of a timedelta64 'dtype' attribute, which is now xarray's default way of encoding timedelta64 values.\nTo continue decoding into a timedelta64 dtype, either set `decode_timedelta=True` when opening this dataset, or add the attribute `dtype='timedelta64[ns]'` to this variable on disk.\nTo opt-in to future behavior, set `decode_timedelta=False`.\n  glofas_ds = xr.open_dataset(glofas_path)\n\n\n\n\n4.1.3 Google GRRR Reanalysis\n\n\nCode\nfrom src.datasources.grrr import process_reanalysis\n\ngrrr = {}\nfor key, station in STATIONS.items():\n    if station.grrr_gauge_id:\n        df = process_reanalysis(gauge=station.grrr_gauge_id)\n        df = df.set_index(\"valid_time\")[[\"streamflow\"]]\n        grrr[key] = df\n        print(f\"GRRR {station.name}: {len(df)} days, \"\n              f\"{df.index.min().date()} to {df.index.max().date()}\")\n\n\nI0428 10:18:06.964207 5109725 fork_posix.cc:71] Other threads are currently calling into gRPC, skipping fork() handlers\nI0428 10:18:06.981013 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981067 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981071 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981074 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981076 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981080 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981082 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981084 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981086 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981091 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981093 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981096 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981098 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981100 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981102 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981104 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981106 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981108 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981111 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981113 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981115 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981117 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981119 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981121 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981123 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981125 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981127 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981129 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981131 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981133 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981135 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981137 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981138 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981140 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981142 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981144 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981148 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981150 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981152 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981154 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981156 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981158 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981160 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981162 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981164 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981166 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981167 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981169 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981171 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981173 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981175 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981177 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981179 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981181 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981183 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981185 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981187 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981189 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981190 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981192 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981194 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981196 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981198 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981200 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981202 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981204 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981206 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981207 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981209 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981211 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981213 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981215 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981220 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981222 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981224 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981226 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981228 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981230 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981231 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981233 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981235 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981237 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981239 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981241 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981346 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981371 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981375 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981378 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981381 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981384 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981386 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981389 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981391 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981394 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981396 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981399 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981401 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981404 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981407 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981409 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981412 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981415 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981417 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981420 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981422 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981425 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981427 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981430 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981432 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981435 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981437 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981440 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981442 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981445 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981447 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981449 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981452 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981454 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981457 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981459 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981462 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981464 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981467 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981469 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981471 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981474 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981476 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981479 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981481 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981484 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981486 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981489 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981491 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981494 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981496 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981498 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981501 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981503 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981506 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981508 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981511 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981513 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981516 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981540 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981543 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981546 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981548 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981551 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981554 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981556 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981559 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981561 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981564 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981566 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981568 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981571 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981573 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981576 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981579 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981581 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981584 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981586 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\nI0428 10:18:06.981589 5109742 ev_poll_posix.cc:593] FD from fork parent still in poll list: fd(110, generation: 1)\n\n\nGRRR Chatara: 16063 days, 1980-01-01 to 2023-12-23\nGRRR Chisapani: 16063 days, 1980-01-01 to 2023-12-23",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#full-time-series",
+    "href": "04-retrospective-comparison.html#full-time-series",
+    "title": "4  Retrospective Comparison",
+    "section": "4.2 Full Time Series",
+    "text": "4.2 Full Time Series\n\n\nCode\nfig, axes = plt.subplots(2, 1, figsize=(14, 8), sharex=False)\n\nfor i, (key, station) in enumerate(STATIONS.items()):\n    ax = axes[i]\n\n    # GEOGloWS\n    geo = geoglows[key]\n    ax.plot(geo.index, geo[\"discharge\"],\n            color=\"#888888\", alpha=0.5, linewidth=0.3, label=\"GEOGloWS\")\n\n    # GloFAS\n    gf = glofas_df[station.dhm_column]\n    ax.plot(gf.index, gf.values,\n            color=\"#1f77b4\", alpha=0.7, linewidth=0.3, label=\"GloFAS\")\n\n    # GRRR\n    if key in grrr:\n        gr = grrr[key]\n        ax.plot(gr.index, gr[\"streamflow\"],\n                color=\"#2ca02c\", alpha=0.7, linewidth=0.3, label=\"GRRR\")\n\n    # Return period lines\n    ax.axhline(station.glofas_rp2, color=\"#d62728\", linestyle=\"--\",\n               alpha=0.5, label=f\"GloFAS RP2 ({station.glofas_rp2:,})\")\n\n    ax.set_ylabel(\"Discharge (m³/s)\")\n    ax.set_title(station.name)\n    ax.legend(loc=\"upper left\", fontsize=8)\n    ax.grid(True, alpha=0.2)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nGEOGloWS retrospective spans 1940–present, much longer than GloFAS (1979–2023)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#overlapping-period-comparison-19792023",
+    "href": "04-retrospective-comparison.html#overlapping-period-comparison-19792023",
+    "title": "4  Retrospective Comparison",
+    "section": "4.3 Overlapping Period Comparison (1979–2023)",
+    "text": "4.3 Overlapping Period Comparison (1979–2023)\n\n\nCode\nfig, axes = plt.subplots(2, 1, figsize=(14, 8))\n\nfor i, (key, station) in enumerate(STATIONS.items()):\n    ax = axes[i]\n\n    # Trim GEOGloWS to GloFAS period\n    geo = geoglows[key]\n    geo_overlap = geo[\n        (geo.index &gt;= glofas_df.index.min())\n        & (geo.index &lt;= glofas_df.index.max())\n    ]\n\n    ax.plot(geo_overlap.index, geo_overlap[\"discharge\"],\n            color=\"#ff7f0e\", alpha=0.6, linewidth=0.4, label=\"GEOGloWS\")\n\n    gf = glofas_df[station.dhm_column]\n    ax.plot(gf.index, gf.values,\n            color=\"#1f77b4\", alpha=0.6, linewidth=0.4, label=\"GloFAS\")\n\n    ax.set_ylabel(\"Discharge (m³/s)\")\n    ax.set_title(f\"{station.name} — Overlapping Period\")\n    ax.legend(fontsize=8)\n    ax.grid(True, alpha=0.2)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nComparison during the overlapping period (1979–2023)",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#annual-maximum-comparison",
+    "href": "04-retrospective-comparison.html#annual-maximum-comparison",
+    "title": "4  Retrospective Comparison",
+    "section": "4.4 Annual Maximum Comparison",
+    "text": "4.4 Annual Maximum Comparison\n\n\nCode\nfig, axes = plt.subplots(1, 2, figsize=(12, 5))\n\nfor ax, (key, station) in zip(axes, STATIONS.items()):\n    # GEOGloWS annual maxima\n    geo = geoglows[key]\n    geo_annual = geo.groupby(geo.index.year)[\"discharge\"].max()\n\n    # GloFAS annual maxima\n    gf = glofas_df[station.dhm_column]\n    gf_annual = gf.groupby(gf.index.year).max()\n\n    # Overlapping years\n    common_years = geo_annual.index.intersection(gf_annual.index)\n    geo_common = geo_annual.loc[common_years]\n    gf_common = gf_annual.loc[common_years]\n\n    ax.scatter(gf_common, geo_common, alpha=0.6, s=30)\n\n    # 1:1 line\n    max_val = max(gf_common.max(), geo_common.max())\n    ax.plot([0, max_val], [0, max_val], \"k--\", alpha=0.3, label=\"1:1\")\n\n    # Correlation\n    corr = np.corrcoef(gf_common.values, geo_common.values)[0, 1]\n    ax.set_xlabel(\"GloFAS Annual Max (m³/s)\")\n    ax.set_ylabel(\"GEOGloWS Annual Max (m³/s)\")\n    ax.set_title(f\"{station.name} (r = {corr:.3f})\")\n    ax.legend()\n    ax.grid(True, alpha=0.3)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nAnnual maximum discharge comparison — GEOGloWS vs GloFAS",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#seasonal-patterns",
+    "href": "04-retrospective-comparison.html#seasonal-patterns",
+    "title": "4  Retrospective Comparison",
+    "section": "4.5 Seasonal Patterns",
+    "text": "4.5 Seasonal Patterns\n\n\nCode\nfig, axes = plt.subplots(1, 2, figsize=(12, 5))\n\nfor ax, (key, station) in zip(axes, STATIONS.items()):\n    geo = geoglows[key]\n    geo_monthly = geo.groupby(geo.index.month)[\"discharge\"].mean()\n\n    gf = glofas_df[station.dhm_column]\n    gf_monthly = gf.groupby(gf.index.month).mean()\n\n    months = range(1, 13)\n    ax.plot(months, geo_monthly.values, \"o-\", label=\"GEOGloWS\")\n    ax.plot(months, gf_monthly.values, \"s-\", label=\"GloFAS\")\n\n    if key in grrr:\n        gr = grrr[key]\n        gr_monthly = gr.groupby(gr.index.month)[\"streamflow\"].mean()\n        ax.plot(months, gr_monthly.values, \"^-\", label=\"GRRR\")\n\n    ax.set_xlabel(\"Month\")\n    ax.set_ylabel(\"Mean Discharge (m³/s)\")\n    ax.set_title(station.name)\n    ax.legend()\n    ax.grid(True, alpha=0.3)\n    ax.set_xticks(months)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nMean daily discharge by month — seasonal cycle comparison",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "04-retrospective-comparison.html#summary-statistics",
+    "href": "04-retrospective-comparison.html#summary-statistics",
+    "title": "4  Retrospective Comparison",
+    "section": "4.6 Summary Statistics",
+    "text": "4.6 Summary Statistics\n\n\nCode\nrows = []\nfor key, station in STATIONS.items():\n    geo = geoglows[key][\"discharge\"]\n    gf = glofas_df[station.dhm_column]\n\n    # Overlapping period stats\n    common_start = max(geo.index.min(), gf.index.min())\n    common_end = min(geo.index.max(), gf.index.max())\n    geo_o = geo[(geo.index &gt;= common_start) & (geo.index &lt;= common_end)]\n    gf_o = gf[(gf.index &gt;= common_start) & (gf.index &lt;= common_end)]\n\n    rows.append({\n        \"Station\": station.name,\n        \"Source\": \"GEOGloWS\",\n        \"Period\": f\"{geo.index.min().year}–{geo.index.max().year}\",\n        \"Mean (m³/s)\": f\"{geo.mean():,.0f}\",\n        \"Max (m³/s)\": f\"{geo.max():,.0f}\",\n        \"Overlap Mean\": f\"{geo_o.mean():,.0f}\",\n    })\n    rows.append({\n        \"Station\": station.name,\n        \"Source\": \"GloFAS\",\n        \"Period\": f\"{gf.index.min().year}–{gf.index.max().year}\",\n        \"Mean (m³/s)\": f\"{gf.mean():,.0f}\",\n        \"Max (m³/s)\": f\"{gf.max():,.0f}\",\n        \"Overlap Mean\": f\"{gf_o.mean():,.0f}\",\n    })\n\npd.DataFrame(rows)\n\n\n\n\n\n\n\n\n\nStation\nSource\nPeriod\nMean (m³/s)\nMax (m³/s)\nOverlap Mean\n\n\n\n\n0\nChatara\nGEOGloWS\n1940–2026\n2,258\n27,064\n2,180\n\n\n1\nChatara\nGloFAS\n1979–2023\n1,730\n16,951\n1,730\n\n\n2\nChisapani\nGEOGloWS\n1940–2026\n431\n15,335\n356\n\n\n3\nChisapani\nGloFAS\n1979–2023\n1,291\n8,816\n1,291",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Retrospective Comparison</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html",
+    "href": "05-event-detection.html",
+    "title": "5  Event Detection",
+    "section": "",
+    "text": "5.1 Load DHM Observed Data\nThis chapter replicates the DHM danger level crossing analysis from notebook 01.0 using GEOGloWS retrospective data, and compares the results side-by-side with GloFAS.\nThe core question: when DHM observed a danger level crossing at a station, did the model also show an extreme event?\nCode\ndhm_path = (\n    AA_DATA_DIR / \"private\" / \"exploration\" / \"npl\" / \"dhm\"\n    / \"processed\" / \"waterl_level_procssed.csv\"\n)\ndhm = pd.read_csv(dhm_path)\ndhm[\"date\"] = pd.to_datetime(dhm[\"date\"])\ndhm = dhm.set_index(\"date\")\n\nprint(f\"DHM data: {len(dhm)} days, \"\n      f\"{dhm.index.min().date()} to {dhm.index.max().date()}\")\nprint(f\"Stations: {dhm.columns.tolist()}\")\n\n\nDHM data: 19185 days, 1962-02-23 to 2015-12-31\nStations: ['Chatara', 'Chisapani', 'Asaraghat', 'Chepang', 'Kusum']",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#detect-dhm-danger-level-crossings",
+    "href": "05-event-detection.html#detect-dhm-danger-level-crossings",
+    "title": "5  Event Detection",
+    "section": "5.2 Detect DHM Danger Level Crossings",
+    "text": "5.2 Detect DHM Danger Level Crossings\n\n\nCode\ndhm_crossings = {}\nfor key, station in STATIONS.items():\n    col = station.dhm_column\n    dl = station.danger_level\n    series = dhm[col].dropna()\n\n    # Detect upward crossings of danger level\n    exceed = series &gt; dl\n    cross = exceed.astype(int).diff() == 1\n    crossing_dates = series[cross].index\n\n    dhm_crossings[key] = crossing_dates\n    print(f\"{station.name}: {len(crossing_dates)} danger level crossings \"\n          f\"(&gt;{dl}m)\")\n    for d in crossing_dates:\n        print(f\"  {d.date()}\")\n\n\nChatara: 9 danger level crossings (&gt;7.0m)\n  1984-09-17\n  1987-08-11\n  1999-07-03\n  1999-08-26\n  2000-08-02\n  2000-08-30\n  2001-08-20\n  2002-08-21\n  2003-07-09\nChisapani: 7 danger level crossings (&gt;10.5m)\n  1988-08-16\n  2000-06-09\n  2000-08-01\n  2009-08-18\n  2009-10-07\n  2013-06-18\n  2014-08-15",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#geoglows-retrospective-rp-exceedance-events",
+    "href": "05-event-detection.html#geoglows-retrospective-rp-exceedance-events",
+    "title": "5  Event Detection",
+    "section": "5.3 GEOGloWS Retrospective: RP Exceedance Events",
+    "text": "5.3 GEOGloWS Retrospective: RP Exceedance Events\n\n\nCode\ngeoglows_events = {}\n\nfor key, station in STATIONS.items():\n    rid = station.geoglows_river_id\n\n    # Load retrospective\n    retro = pd.read_parquet(DATA_DIR / f\"geoglows_retro_daily_{rid}.parquet\")\n    retro.columns = [\"discharge\"]\n\n    # Load return periods\n    rp = pd.read_parquet(DATA_DIR / f\"geoglows_return_periods_{rid}.parquet\")\n    rp2_threshold = rp.loc[2].values[0]\n    rp5_threshold = rp.loc[5].values[0]\n\n    # Trim to DHM data period\n    dhm_col = dhm[station.dhm_column].dropna()\n    max_date = dhm_col.index.max()\n    retro_trimmed = retro[retro.index &lt;= max_date.tz_localize(\"UTC\")]\n\n    # Find RP2 exceedance days\n    rp2_exceed = retro_trimmed[retro_trimmed[\"discharge\"] &gt; rp2_threshold]\n    rp5_exceed = retro_trimmed[retro_trimmed[\"discharge\"] &gt; rp5_threshold]\n\n    geoglows_events[key] = {\n        \"rp2_dates\": rp2_exceed.index,\n        \"rp5_dates\": rp5_exceed.index,\n        \"rp2_threshold\": rp2_threshold,\n        \"rp5_threshold\": rp5_threshold,\n    }\n\n    print(f\"\\n{station.name}:\")\n    print(f\"  RP2 threshold: {rp2_threshold:,.0f} m³/s → \"\n          f\"{len(rp2_exceed)} exceedance days\")\n    print(f\"  RP5 threshold: {rp5_threshold:,.0f} m³/s → \"\n          f\"{len(rp5_exceed)} exceedance days\")\n\n\n\nChatara:\n  RP2 threshold: 14,459 m³/s → 112 exceedance days\n  RP5 threshold: 18,433 m³/s → 28 exceedance days\n\nChisapani:\n  RP2 threshold: 6,745 m³/s → 165 exceedance days\n  RP5 threshold: 10,005 m³/s → 46 exceedance days",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#event-matching-geoglows-vs-dhm",
+    "href": "05-event-detection.html#event-matching-geoglows-vs-dhm",
+    "title": "5  Event Detection",
+    "section": "5.4 Event Matching: GEOGloWS vs DHM",
+    "text": "5.4 Event Matching: GEOGloWS vs DHM\nMatch GEOGloWS RP exceedance events against DHM danger level crossings using a ±7 day window.\n\n\nCode\n# Get unique event dates (collapse consecutive exceedance days into events)\ndef collapse_to_events(dates, gap_days=7):\n    \"\"\"Collapse consecutive/nearby dates into distinct events.\"\"\"\n    if len(dates) == 0:\n        return pd.DatetimeIndex([])\n    dates = dates.sort_values()\n    events = [dates[0]]\n    for d in dates[1:]:\n        if (d - events[-1]).days &gt; gap_days:\n            events.append(d)\n    return pd.DatetimeIndex(events)\n\n\nresults_rows = []\n\nfor key, station in STATIONS.items():\n    dhm_dates = dhm_crossings[key]\n    geo_ev = geoglows_events[key]\n\n    for rp_level, date_key in [(2, \"rp2_dates\"), (5, \"rp5_dates\")]:\n        # Collapse consecutive exceedance days into events\n        geo_event_dates = collapse_to_events(geo_ev[date_key])\n\n        # Strip timezone for matching\n        geo_event_dates_naive = geo_event_dates.tz_localize(None)\n\n        result = match_events(\n            source_events=geo_event_dates_naive,\n            reference_events=dhm_dates,\n            window_days=7,\n        )\n\n        results_rows.append({\n            \"Station\": station.name,\n            \"RP Level\": f\"RP{rp_level}\",\n            \"DHM Events\": result[\"n_reference\"],\n            \"GEOGloWS Events\": result[\"n_source\"],\n            \"Matched (±7d)\": result[\"n_matched\"],\n            \"DHM Only\": len(result[\"reference_only\"]),\n            \"GEOGloWS Only\": len(result[\"source_only\"]),\n        })\n\ngeoglows_results = pd.DataFrame(results_rows)\ngeoglows_results\n\n\n\n\n\n\n\n\n\nStation\nRP Level\nDHM Events\nGEOGloWS Events\nMatched (±7d)\nDHM Only\nGEOGloWS Only\n\n\n\n\n0\nChatara\nRP2\n9\n43\n1\n8\n42\n\n\n1\nChatara\nRP5\n9\n10\n1\n8\n9\n\n\n2\nChisapani\nRP2\n7\n48\n0\n7\n48\n\n\n3\nChisapani\nRP5\n7\n19\n0\n7\n19",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#side-by-side-glofas-vs-geoglows",
+    "href": "05-event-detection.html#side-by-side-glofas-vs-geoglows",
+    "title": "5  Event Detection",
+    "section": "5.5 Side-by-Side: GloFAS vs GEOGloWS",
+    "text": "5.5 Side-by-Side: GloFAS vs GEOGloWS\nThe existing analysis in notebook 01.0 found:\n\n\nCode\n# GloFAS results from notebook 01.0\nglofas_results = pd.DataFrame([\n    {\"Station\": \"Chatara\", \"RP Level\": \"RP2\",\n     \"DHM Events\": 9, \"GloFAS Events\": 35,\n     \"Matched (±7d)\": 2, \"DHM Only\": 7, \"GloFAS Only\": 33},\n    {\"Station\": \"Chisapani\", \"RP Level\": \"RP2\",\n     \"DHM Events\": 7, \"GloFAS Events\": 100,\n     \"Matched (±7d)\": 5, \"DHM Only\": 2, \"GloFAS Only\": 95},\n    {\"Station\": \"Chatara\", \"RP Level\": \"RP5\",\n     \"DHM Events\": 9, \"GloFAS Events\": 5,\n     \"Matched (±7d)\": 1, \"DHM Only\": 8, \"GloFAS Only\": 4},\n    {\"Station\": \"Chisapani\", \"RP Level\": \"RP5\",\n     \"DHM Events\": 7, \"GloFAS Events\": 21,\n     \"Matched (±7d)\": 1, \"DHM Only\": 6, \"GloFAS Only\": 20},\n])\n\nprint(\"=== GloFAS Results (from notebook 01.0) ===\")\nprint(glofas_results.to_string(index=False))\nprint()\nprint(\"=== GEOGloWS Results ===\")\nprint(geoglows_results.to_string(index=False))\n\n\n=== GloFAS Results (from notebook 01.0) ===\n  Station RP Level  DHM Events  GloFAS Events  Matched (±7d)  DHM Only  GloFAS Only\n  Chatara      RP2           9             35              2         7           33\nChisapani      RP2           7            100              5         2           95\n  Chatara      RP5           9              5              1         8            4\nChisapani      RP5           7             21              1         6           20\n\n=== GEOGloWS Results ===\n  Station RP Level  DHM Events  GEOGloWS Events  Matched (±7d)  DHM Only  GEOGloWS Only\n  Chatara      RP2           9               43              1         8             42\n  Chatara      RP5           9               10              1         8              9\nChisapani      RP2           7               48              0         7             48\nChisapani      RP5           7               19              0         7             19",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#event-timeline",
+    "href": "05-event-detection.html#event-timeline",
+    "title": "5  Event Detection",
+    "section": "5.6 Event Timeline",
+    "text": "5.6 Event Timeline\n\n\nCode\nfig, axes = plt.subplots(2, 1, figsize=(14, 6), sharex=False)\n\nfor ax, (key, station) in zip(axes, STATIONS.items()):\n    dhm_dates = dhm_crossings[key]\n    geo_dates = collapse_to_events(\n        geoglows_events[key][\"rp2_dates\"]\n    ).tz_localize(None)\n\n    # DHM crossings\n    ax.vlines(dhm_dates, 0, 1, colors=\"#d62728\",\n              linewidth=2, label=\"DHM Danger Level\")\n\n    # GEOGloWS RP2 events\n    ax.vlines(geo_dates, -1, 0, colors=\"#1f77b4\",\n              linewidth=1, alpha=0.7, label=\"GEOGloWS RP2\")\n\n    ax.set_yticks([0.5, -0.5])\n    ax.set_yticklabels([\"DHM\", \"GEOGloWS\"])\n    ax.set_title(station.name)\n    ax.legend(loc=\"upper right\", fontsize=8)\n    ax.grid(True, axis=\"x\", alpha=0.3)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nTimeline of danger level crossings (DHM) vs RP2 exceedances (GEOGloWS)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "05-event-detection.html#discussion",
+    "href": "05-event-detection.html#discussion",
+    "title": "5  Event Detection",
+    "section": "5.7 Discussion",
+    "text": "5.7 Discussion\nKey observations from the event matching:\n\nGloFAS at RP2 had extremely high false alarm rates — 33 false alarms at Chatara, 95 at Chisapani. The GloFAS RP2 thresholds appear too low relative to DHM danger levels.\nGEOGloWS RP2 thresholds are much higher (14,459 vs 8,113 m³/s at Chatara), which should produce fewer false alarms — but potentially at the cost of missed events.\nThe fundamental challenge is that DHM measures water level (meters) while models produce discharge (m³/s). Without a rating curve, the comparison is indirect: we’re checking whether the model’s “extreme event” aligns with the observed “extreme event,” not whether the magnitudes match.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Event Detection</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html",
+    "href": "06-bias-correction.html",
+    "title": "6  Bias Correction",
+    "section": "",
+    "text": "6.1 Available Methods\nThe geoglows package includes a bias correction module (geoglows.bias) with several methods. This chapter explores what’s available and applies the methods that don’t require observed discharge data (since DHM provides water level, not discharge).\nThe geoglows.bias module provides three approaches:\nSince DHM data is water level (meters), not discharge (m³/s), we cannot directly use correct_historical(). The SFDC method is the primary option — it uses pre-computed correction scalars derived from the SABER (Statistical Adjustment By Empirical Regression) approach.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html#available-methods",
+    "href": "06-bias-correction.html#available-methods",
+    "title": "6  Bias Correction",
+    "section": "",
+    "text": "Method\nRequires Observed Data?\nDescription\n\n\n\n\ncorrect_historical()\nYes (discharge)\nMonthly probability mapping between simulated and observed\n\n\ncorrect_forecast()\nYes (discharge)\nApplies sim/obs correction to forecast data\n\n\nsfdc_bias_correction()\nNo (uses pre-computed scalars)\nScalar Flow Duration Curve correction using globally-derived correction factors",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html#sfdc-bias-correction",
+    "href": "06-bias-correction.html#sfdc-bias-correction",
+    "title": "6  Bias Correction",
+    "section": "6.2 SFDC Bias Correction",
+    "text": "6.2 SFDC Bias Correction\nThe SFDC method works by:\n\nComputing the simulated flow duration curve (FDC) for each month\nLooking up pre-computed scalar factors that map simulated FDC percentiles to bias-corrected values\nApplying these scalars to adjust the simulated discharge\n\n\n\nCode\nimport geoglows.bias\n\nfor key, station in STATIONS.items():\n    rid = station.geoglows_river_id\n    print(f\"\\n=== {station.name} (river_id={rid}) ===\")\n\n    # Load retrospective\n    retro = pd.read_parquet(DATA_DIR / f\"geoglows_retro_daily_{rid}.parquet\")\n    retro.columns = [\"discharge\"]\n\n    try:\n        corrected = geoglows.bias.sfdc_bias_correction(\n            sim_data=retro, river_id=rid\n        )\n        # Save corrected data\n        corrected.columns = [str(c) for c in corrected.columns]\n        out_path = DATA_DIR / f\"geoglows_retro_daily_corrected_{rid}.parquet\"\n        corrected.to_parquet(out_path)\n        print(f\"  Corrected data saved: {out_path.name}\")\n        print(f\"  Original mean: {retro['discharge'].mean():,.1f} m³/s\")\n        print(f\"  Corrected mean: {corrected.iloc[:, 0].mean():,.1f} m³/s\")\n        print(f\"  Original max: {retro['discharge'].max():,.1f} m³/s\")\n        print(f\"  Corrected max: {corrected.iloc[:, 0].max():,.1f} m³/s\")\n    except Exception as e:\n        print(f\"  SFDC correction failed: {e}\")\n        print(\"  This river may not have pre-computed SFDC scalars.\")\n\n\n\n=== Chatara (river_id=441135650) ===\n  Corrected data saved: geoglows_retro_daily_corrected_441135650.parquet\n  Original mean: 2,258.1 m³/s\n  Corrected mean: 1,585.4 m³/s\n  Original max: 27,064.0 m³/s\n  Corrected max: 13,319.1 m³/s\n\n=== Chisapani (river_id=441112306) ===\n  Corrected data saved: geoglows_retro_daily_corrected_441112306.parquet\n  Original mean: 431.3 m³/s\n  Corrected mean: 324.1 m³/s\n  Original max: 15,334.9 m³/s\n  Corrected max: 9,569.6 m³/s",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html#beforeafter-comparison",
+    "href": "06-bias-correction.html#beforeafter-comparison",
+    "title": "6  Bias Correction",
+    "section": "6.3 Before/After Comparison",
+    "text": "6.3 Before/After Comparison\n\n\nCode\nfig, axes = plt.subplots(2, 1, figsize=(14, 8))\n\nfor ax, (key, station) in zip(axes, STATIONS.items()):\n    rid = station.geoglows_river_id\n\n    # Original\n    retro = pd.read_parquet(DATA_DIR / f\"geoglows_retro_daily_{rid}.parquet\")\n    retro.columns = [\"discharge\"]\n\n    # Corrected (if available)\n    corr_path = DATA_DIR / f\"geoglows_retro_daily_corrected_{rid}.parquet\"\n    if corr_path.exists():\n        corrected = pd.read_parquet(corr_path)\n        corrected.columns = [\"discharge\"]\n\n        ax.plot(retro.index, retro[\"discharge\"],\n                color=\"#888888\", alpha=0.4, linewidth=0.3, label=\"Original\")\n        ax.plot(corrected.index, corrected[\"discharge\"],\n                color=\"#1f77b4\", alpha=0.6, linewidth=0.3, label=\"Corrected\")\n    else:\n        ax.plot(retro.index, retro[\"discharge\"],\n                color=\"#1f77b4\", alpha=0.5, linewidth=0.3,\n                label=\"Original (no correction available)\")\n\n    ax.axhline(station.glofas_rp2, color=\"#d62728\", linestyle=\"--\",\n               alpha=0.5, label=f\"GloFAS RP2\")\n    ax.set_ylabel(\"Discharge (m³/s)\")\n    ax.set_title(station.name)\n    ax.legend(fontsize=8)\n    ax.grid(True, alpha=0.2)\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nOriginal vs bias-corrected GEOGloWS retrospective",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html#return-periods-corrected-vs-original",
+    "href": "06-bias-correction.html#return-periods-corrected-vs-original",
+    "title": "6  Bias Correction",
+    "section": "6.4 Return Periods: Corrected vs Original",
+    "text": "6.4 Return Periods: Corrected vs Original\n\n\nCode\nfrom src.utils import compute_return_levels\nfrom src.constants import RETURN_PERIODS\n\nrows = []\nfor key, station in STATIONS.items():\n    rid = station.geoglows_river_id\n\n    # Original return periods (from GEOGloWS API — Log-Pearson III)\n    rp_orig = pd.read_parquet(\n        DATA_DIR / f\"geoglows_return_periods_{rid}.parquet\"\n    )\n\n    # Empirical return periods from corrected data\n    corr_path = DATA_DIR / f\"geoglows_retro_daily_corrected_{rid}.parquet\"\n    if corr_path.exists():\n        corrected = pd.read_parquet(corr_path)\n        corrected.columns = [\"discharge\"]\n        corrected.index = corrected.index.tz_localize(None)\n        rp_corr = compute_return_levels(\n            corrected[\"discharge\"], RETURN_PERIODS\n        )\n\n        for rp in RETURN_PERIODS:\n            rows.append({\n                \"Station\": station.name,\n                \"RP\": f\"{rp}-yr\",\n                \"Original (m³/s)\": f\"{rp_orig.loc[rp].values[0]:,.0f}\",\n                \"Corrected (m³/s)\": f\"{rp_corr[rp]:,.0f}\",\n                \"GloFAS Dashboard\": (\n                    f\"{station.glofas_rp2:,}\" if rp == 2\n                    else f\"{station.glofas_rp5:,}\" if rp == 5\n                    else \"—\"\n                ),\n            })\n\nif rows:\n    print(pd.DataFrame(rows).to_string(index=False))\nelse:\n    print(\"No corrected data available for return period comparison.\")\n\n\n  Station     RP Original (m³/s) Corrected (m³/s) GloFAS Dashboard\n  Chatara   2-yr          14,459            6,983            8,113\n  Chatara   5-yr          18,433            8,345           10,306\n  Chatara  10-yr          21,056            9,539                —\n  Chatara  25-yr          24,380           10,386                —\n  Chatara  50-yr          26,870           12,250                —\n  Chatara 100-yr          29,378           13,319                —\nChisapani   2-yr           6,745            3,992            5,664\nChisapani   5-yr          10,005            7,139            6,797\nChisapani  10-yr          12,083            7,767                —\nChisapani  25-yr          14,589            8,128                —\nChisapani  50-yr          16,365            8,807                —\nChisapani 100-yr          18,066            9,570                —",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "06-bias-correction.html#limitations",
+    "href": "06-bias-correction.html#limitations",
+    "title": "6  Bias Correction",
+    "section": "6.5 Limitations",
+    "text": "6.5 Limitations\n\nSFDC scalars are not available for all rivers. The pre-computed correction factors depend on having nearby observed data in the SABER database. Some rivers may not have coverage.\ncorrect_historical() requires observed discharge, not water level. If a rating curve for Chatara or Chisapani becomes available, this method could produce better results than SFDC.\nBias correction adjusts magnitudes but does not improve event timing. If the model misses an event (wrong rainfall distribution in ERA5), no bias correction will fix that.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Bias Correction</span>"
+    ]
+  },
+  {
+    "objectID": "07-assessment.html",
+    "href": "07-assessment.html",
+    "title": "7  Assessment",
+    "section": "",
+    "text": "7.1 Summary of Findings",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Assessment</span>"
+    ]
+  },
+  {
+    "objectID": "07-assessment.html#summary-of-findings",
+    "href": "07-assessment.html#summary-of-findings",
+    "title": "7  Assessment",
+    "section": "",
+    "text": "7.1.1 What GEOGloWS Provides\n\n86-year retrospective (1940–present) vs GloFAS’s 44-year record (1979–present). This is the single most valuable asset — nearly double the historical record for extreme value analysis.\n52-member ensemble forecasts with 15-day lead time, freely accessible via Python API with no authentication.\nPre-computed return periods (2–100 year) using Log-Pearson III distribution.\nBuilt-in bias correction (SFDC/SABER method) that doesn’t require local observed discharge data.\nGlobal reach-level resolution (~6.8 million river reaches) — much denser spatial coverage than GloFAS’s gridded output.\n\n\n\n7.1.2 What GEOGloWS Cannot Provide\n\nNo reforecasts/hindcasts. The forecast archive extends only ~2 months. This is the critical gap — the AA framework needs reforecasts to calibrate trigger thresholds at specific lead times (3-day action, 7-day readiness). Without reforecasts, we cannot compute exceedance probability skill metrics or determine optimal ensemble agreement thresholds.\nSpatial matching is fragile. The getriverid API is sensitive to coordinates — a 0.07° shift mapped to a completely different reach. For the Karnali, coordinate-based lookup failed entirely; we had to query the metadata table by upstream contributing area.\n\n\n\n7.1.3 Return Period Discrepancies\nGEOGloWS return periods are consistently higher than GloFAS:\n\n\n\nStation\nGEOGloWS RP2\nGloFAS RP2\nDifference\n\n\n\n\nChatara (Koshi)\n14,459\n8,113\n+78%\n\n\nChisapani (Karnali)\n6,745\n5,664\n+19%\n\n\n\nThis reflects differences in model physics (RAPID vs LISFLOOD), record length (86 vs 44 years), distribution fitting (Log-Pearson III vs Gumbel), and potentially contributing area mismatches.\n\n\n7.1.4 Event Detection\nThe event-level validation against DHM danger level crossings reveals whether GEOGloWS’s higher return period thresholds actually improve event detection relative to GloFAS’s known false alarm problem (33 false alarms at Chatara RP2, 95 at Chisapani RP2).",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Assessment</span>"
+    ]
+  },
+  {
+    "objectID": "07-assessment.html#recommendation",
+    "href": "07-assessment.html#recommendation",
+    "title": "7  Assessment",
+    "section": "7.2 Recommendation",
+    "text": "7.2 Recommendation\nGEOGloWS should not replace GloFAS or Google GRRR for trigger calibration — the missing reforecasts make this impossible. However, it is worth incorporating as:\n\n7.2.1 1. Validation Dataset\nThe 86-year retrospective provides a longer historical record for return period estimation and event catalog construction. Cross-referencing GEOGloWS events with GloFAS and DHM observations triangulates biases.\n\n\n7.2.2 2. Complementary Real-Time Signal\nOnce triggers are calibrated using GloFAS/GRRR reforecasts, GEOGloWS’s 52-member ensemble forecast can serve as an independent confirmation signal. If both GloFAS and GEOGloWS forecasts exceed their respective thresholds, confidence in the trigger activation increases.\n\n\n7.2.3 3. Bias Correction Benchmark\nThe SFDC method provides a globally-derived bias correction that doesn’t require local gauge data. Comparing SFDC-corrected GEOGloWS against GloFAS reanalysis can help quantify model biases.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Assessment</span>"
+    ]
+  },
+  {
+    "objectID": "07-assessment.html#next-steps",
+    "href": "07-assessment.html#next-steps",
+    "title": "7  Assessment",
+    "section": "7.3 Next Steps",
+    "text": "7.3 Next Steps\n\nInvestigate the Karnali spatial match further — the candidate reach (rid=441112306, area=40,149 km²) may not be the optimal match for Chisapani. Cross-checking with the HydroViewer visualization would help.\nAcquire a rating curve for Chatara and Chisapani — this would enable direct comparison between DHM water levels and model discharge, and unlock the correct_historical() bias correction method.\nMonitor GEOGloWS forecast archive — if the service begins retaining forecasts longer-term (or produces reforecasts), this changes the assessment fundamentally.\nCompare bias-corrected return periods against DHM thresholds — if SFDC correction brings GEOGloWS return periods closer to GloFAS values, it validates the correction approach.\nEvaluate the real-time forecast — track GEOGloWS ensemble forecasts during the upcoming monsoon season and compare against GloFAS forecasts and observed events.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Assessment</span>"
+    ]
+  }
+]
