@@ -3,6 +3,8 @@ project:
   output-dir: _book
   execute-dir: project
 
+jupyter: ds-aa-npl-flooding
+
 execute:
   enabled: true
   cache: true
