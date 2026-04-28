@@ -4,33 +4,38 @@
 
 This book evaluates the [GEOGloWS River Forecast System](https://www.geoglows.org/) (v2) as a potential data source for Nepal's flood anticipatory action (AA) trigger framework.
 
-The existing framework relies on:
+The framework currently uses **GloFAS** (ECMWF/Copernicus) for trigger calibration and **DHM** (Department of Hydrology and Meteorology, Nepal) water-level observations for validation. **Google GRRR** is included here as a third reference signal for cross-comparison.
 
-- **GloFAS** (ECMWF/Copernicus) — reanalysis and reforecast data for discharge thresholds and trigger calibration
-- **DHM** (Department of Hydrology and Meteorology, Nepal) — observed water level data from gauge stations
-- **Google GRRR** — experimental streamflow reforecast and reanalysis from Google Cloud
+GEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation asks whether and how it can strengthen the existing framework.
 
-GEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation investigates whether and how GEOGloWS data can strengthen the trigger framework.
+## Headline Findings
 
-## Key Finding
+1. **GEOGloWS does not provide reforecasts.** The forecast archive extends only ~2 months. This rules it out for lead-time-dependent trigger calibration, which requires comparing what a forecast said against what later happened.
 
-**GEOGloWS does not provide reforecasts (hindcasts).** The forecast archive extends only ~2 months. This means it cannot be used for the lead-time-dependent skill assessment and trigger calibration that the AA framework requires. However, the long retrospective record and built-in bias correction tools make it valuable for validation and as a complementary real-time signal.
+2. **Against observed DHM danger-level crossings, GEOGloWS at RP2 detects 1 of 9 Chatara events and 0 of 7 Chisapani events** (within a ±7 day window). GloFAS, on the same comparison, detects 2 of 9 and 5 of 7. **GEOGloWS does not improve on GloFAS at this validation.**
+
+3. **At Chisapani (Karnali) the disagreement is structural, not threshold-related.** GEOGloWS and GloFAS annual-maxima are essentially uncorrelated (r = 0.07 over 1979–2023), and GEOGloWS's mean discharge over that period is ~28% of GloFAS's (356 vs 1,291 m³/s). The 2014 DHM record-high event (water level 13.77 m) corresponds to a GEOGloWS peak of only 4,054 m³/s — well below its own RP2 of 6,745 m³/s.
+
+4. **Built-in SFDC bias correction reduces magnitudes but does not change the event-detection verdict.** Corrected counts are still 1/9 and 0/7.
+
+5. **At Chatara (Koshi), GEOGloWS tracks GloFAS well** (annual-max r = 0.94). The misses are driven by GEOGloWS's higher Log-Pearson III RPs (RP2 = 14,459 vs GloFAS 8,113), not by model disagreement.
+
+## Validation Caveat
+
+DHM water-level data ends in 2012 at Chatara and 2015 at Chisapani. All event-level validation in this book is bounded by those windows. Anything more recent in the GEOGloWS retrospective is uncheckable against DHM.
 
 ## Structure
 
 1. **GEOGloWS Overview** — what the system is, how it works, API walkthrough
-2. **Spatial Matching** — finding the correct river reaches for Nepal stations
-3. **Return Period Comparison** — cross-source return period analysis
-4. **Retrospective Comparison** — time series overlay across all data sources
-5. **Event Detection** — validating against observed DHM danger level crossings
-6. **Bias Correction** — applying GEOGloWS's built-in correction tools
-7. **Assessment** — summary findings and recommendations
+2. **Spatial Matching** — finding the correct river reaches
+3. **Threshold Comparison** — return periods across sources, including bias-corrected GEOGloWS
+4. **Time Series & Seasonal Patterns** — retrospective overlay across all sources, with bias-correction before/after
+5. **Event Detection** — central validation against observed DHM danger-level crossings
+6. **Where Does GEOGloWS Fit?** — decision matrix and recommendations
 
 ## Stations
 
-The evaluation focuses on two primary stations:
-
-| Station | River | DHM Danger Level | GloFAS RP2 | GEOGloWS River ID |
-|---------|-------|-----------------|------------|-------------------|
-| Chatara | Koshi | 7.0 m | 8,113 m³/s | 441135650 |
-| Chisapani | Karnali | 10.5 m | 5,664 m³/s | 441112306 |
+| Station | River | DHM Danger Level | GloFAS RP2 | GEOGloWS RP2 | GEOGloWS River ID |
+|---------|-------|-----------------|------------|--------------|-------------------|
+| Chatara | Koshi | 7.0 m | 8,113 m³/s | 14,459 m³/s | 441135650 |
+| Chisapani | Karnali | 10.5 m | 5,664 m³/s | 6,745 m³/s | 441112306 |

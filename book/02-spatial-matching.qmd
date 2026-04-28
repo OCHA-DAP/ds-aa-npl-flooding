@@ -103,6 +103,8 @@ print("Karnali candidates (upstream area 40,000-45,000 km², stream order >= 7):
 karnali_candidates
 ```
 
+All four candidates produce essentially identical return periods (RP2 within ~150 m³/s of each other), so reach selection within this candidate set is not load-bearing for downstream results. Whatever performance issues we find for Chisapani in later chapters, they cannot be resolved by picking a different candidate from this list.
+
 Selected reach:
 
 ```{python}
