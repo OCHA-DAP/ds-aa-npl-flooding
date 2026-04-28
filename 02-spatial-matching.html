@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    rp2 <span class="op">=</span> rp.iloc[<span class="dv">0</span>].values[<span class="dv">0</span>]</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>label<span class="sc">}</span><span class="ss">: river_id=</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">, RP2=</span><span class="sc">{</span>rp2<span class="sc">:,.0f}</span><span class="ss"> m³/s"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Results:</p>
-<div id="50244229" class="cell" data-execution_count="3">
+<div id="fe1014bc" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -321,7 +321,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="koshi-at-chatara-found-via-coordinates" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="koshi-at-chatara-found-via-coordinates"><span class="header-section-number">2.2</span> Koshi at Chatara: Found via Coordinates</h2>
 <p>For the Koshi, the exact coordinates (26.867, 87.160) successfully resolved to the main stem:</p>
-<div id="1327015a" class="cell" data-execution_count="4">
+<div id="0272ac05" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> CHATARA, CHISAPANI</span>
@@ -366,7 +366,7 @@ return_period
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (meta[<span class="st">"strmOrder"</span>] <span class="op">&gt;=</span> <span class="dv">7</span>)</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>].sort_values(<span class="st">"USContArea"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We checked return periods for the top candidates:</p>
-<div id="8be72275" class="cell" data-execution_count="5">
+<div id="44d203e8" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>karnali_candidates <span class="op">=</span> pd.DataFrame([</span>
@@ -431,7 +431,7 @@ return_period
 </div>
 </div>
 <p>Selected reach:</p>
-<div id="35d98b65" class="cell" data-execution_count="6">
+<div id="7c650eed" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>rp_chisapani <span class="op">=</span> pd.read_parquet(</span>

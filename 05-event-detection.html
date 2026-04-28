@@ -253,7 +253,7 @@ Note
 <p>This chapter requires <code>AA_DATA_DIR</code> to be set and pointing to the shared data directory with DHM observed water level data. Set <code>eval: true</code> in the code cells below when data is available.</p>
 </div>
 </div>
-<div id="6a34a890" class="cell" data-execution_count="2">
+<div id="e583e598" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
@@ -272,7 +272,7 @@ Note
 </div>
 <section id="load-dhm-observed-data" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="load-dhm-observed-data"><span class="header-section-number">5.1</span> Load DHM Observed Data</h2>
-<div id="7a5ac9ac" class="cell" data-execution_count="3">
+<div id="a0689bda" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dhm_path <span class="op">=</span> (</span>
@@ -295,7 +295,7 @@ Stations: ['Chatara', 'Chisapani', 'Asaraghat', 'Chepang', 'Kusum']</code></pre>
 </section>
 <section id="detect-dhm-danger-level-crossings" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="detect-dhm-danger-level-crossings"><span class="header-section-number">5.2</span> Detect DHM Danger Level Crossings</h2>
-<div id="9048d2ff" class="cell" data-execution_count="4">
+<div id="c3ab220e" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dhm_crossings <span class="op">=</span> {}</span>
@@ -339,7 +339,7 @@ Chisapani: 7 danger level crossings (&gt;10.5m)
 </section>
 <section id="geoglows-retrospective-rp-exceedance-events" class="level2" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="geoglows-retrospective-rp-exceedance-events"><span class="header-section-number">5.3</span> GEOGloWS Retrospective: RP Exceedance Events</h2>
-<div id="f51d2e21" class="cell" data-execution_count="5">
+<div id="f2c976f9" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>geoglows_events <span class="op">=</span> {}</span>
@@ -393,7 +393,7 @@ Chisapani:
 <section id="event-matching-geoglows-vs-dhm" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="event-matching-geoglows-vs-dhm"><span class="header-section-number">5.4</span> Event Matching: GEOGloWS vs DHM</h2>
 <p>Match GEOGloWS RP exceedance events against DHM danger level crossings using a ±7 day window.</p>
-<div id="d960fe62" class="cell" data-execution_count="6">
+<div id="95096953" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get unique event dates (collapse consecutive exceedance days into events)</span></span>
@@ -509,7 +509,7 @@ Chisapani:
 <section id="side-by-side-glofas-vs-geoglows" class="level2" data-number="5.5">
 <h2 data-number="5.5" class="anchored" data-anchor-id="side-by-side-glofas-vs-geoglows"><span class="header-section-number">5.5</span> Side-by-Side: GloFAS vs GEOGloWS</h2>
 <p>The existing analysis in notebook <code>01.0</code> found:</p>
-<div id="04a4de32" class="cell" data-execution_count="7">
+<div id="628d8e5f" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GloFAS results from notebook 01.0</span></span>
@@ -553,7 +553,7 @@ Chisapani      RP5           7               19              0         7        
 </section>
 <section id="event-timeline" class="level2" data-number="5.6">
 <h2 data-number="5.6" class="anchored" data-anchor-id="event-timeline"><span class="header-section-number">5.6</span> Event Timeline</h2>
-<div id="8eecd9e9" class="cell" data-execution_count="8">
+<div id="e16854ab" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>), sharex<span class="op">=</span><span class="va">False</span>)</span>
