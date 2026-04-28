@@ -155,8 +155,8 @@ plt.show()
 
 This plot is the most diagnostic in the chapter:
 
-- **Chatara**: r = `{python} f"{correlations['chatara']:.3f}"`. The two models agree on which years had big floods. GEOGloWS sits above the 1:1 line — bigger annual peaks, consistent with its higher published RPs.
-- **Chisapani**: r = `{python} f"{correlations['chisapani']:.3f}"`. Effectively no relationship. GEOGloWS and GloFAS are not even ranking the same years as the largest. Whatever the correct Karnali peaks are over 1979–2023, only one of these two models can be right about them, and we cannot tell which from this plot alone.
+- **Chatara**: r = 0.94. The two models agree on which years had big floods. GEOGloWS sits above the 1:1 line — bigger annual peaks, consistent with its higher published RPs.
+- **Chisapani**: r = 0.07. Effectively no relationship. GEOGloWS and GloFAS are not even ranking the same years as the largest. Whatever the correct Karnali peaks are over 1979–2023, only one of these two models can be right about them, and we cannot tell which from this plot alone.
 
 ## Seasonal cycle
 

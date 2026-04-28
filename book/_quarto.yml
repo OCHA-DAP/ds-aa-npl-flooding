@@ -20,8 +20,7 @@ book:
     - 03-return-periods.qmd
     - 04-retrospective-comparison.qmd
     - 05-event-detection.qmd
-    - 06-bias-correction.qmd
-    - 07-assessment.qmd
+    - 06-where-does-geoglows-fit.qmd
 
 format:
   html:

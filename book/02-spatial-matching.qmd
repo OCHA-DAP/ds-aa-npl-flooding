@@ -1,4 +1,4 @@
-# Spatial Matching
+# Spatial Matching {#sec-spatial-matching}
 
 ```{python}
 #| echo: false

@@ -1,0 +1,38 @@
+# Where Does GEOGloWS Fit?
+
+## Decision matrix
+
+| AA framework use case | Use GEOGloWS? | Why |
+|---|---|---|
+| Trigger calibration (lead-time skill, exceedance probabilities at fixed leadtimes) | **No** | No reforecasts. Forecast archive extends only ~2 months. |
+| Operational trigger (real-time exceedance of a calibrated threshold) | **No** | RP2 detects 1/9 Chatara and 0/7 Chisapani DHM events. Worse than GloFAS at every cell of the table. |
+| Independent confirmation signal alongside GloFAS / GRRR | **At Chatara only** | Annual-max correlation with GloFAS r = 0.94. The retrospective is broadly consistent in magnitude, just biased high. |
+| Independent confirmation signal at Chisapani | **No** | Retrospective is mass-deficient (28% of GloFAS mean) and uncorrelated with GloFAS at the annual-max scale (r = 0.07). The 2013 and 2014 record-high DHM events do not register as elevated flow. |
+| Long-record extreme value analysis | **With caveats** | The 1940–present record covers floods that GloFAS misses, but using SFDC-corrected RPs pushes thresholds below GloFAS in 3 of 4 cases. Without a rating curve to validate, we cannot say whether the longer record is more truthful or more biased. |
+| Bias-correction benchmark | **No clear win** | SFDC corrects the magnitude in a global, observation-free way. Here it overshoots (deflates rather than aligns) and does not improve event detection. |
+
+## What we ruled out, and what we did not
+
+The Chisapani failure is **not** caused by:
+
+- A wrong reach selection (all four candidates with the right upstream area produce equivalent RPs).
+- A threshold that is too high (lowering it via SFDC adds false alarms but no matches).
+- A timing offset (no GEOGloWS peak appears within ±30 days of the 2013 or 2014 record DHM events).
+
+The failure **is** consistent with the GEOGloWS / RAPID retrospective being mass-deficient in this basin — running at ~28% of GloFAS's mean and producing peaks that don't align with observed monsoon floods. We cannot diagnose the underlying cause from the data in this evaluation.
+
+## Recommendations
+
+1. **Do not adopt GEOGloWS as a trigger source for this framework.** The reforecast gap is decisive on its own; the event-detection result confirms that even the retrospective is not a usable signal at the Karnali station and is at best comparable to GloFAS at the Koshi station.
+
+2. **Acquire a rating curve for Chatara and Chisapani.** This unblocks `geoglows.bias.correct_historical()`, which uses local observed discharge instead of global scalars and is the only path to a meaningful comparison between corrected GEOGloWS and observations. It also makes the DHM water-level record directly comparable to model discharge for future calibration efforts with any source.
+
+3. **If GEOGloWS is used at all in a complementary role, restrict it to Chatara, where the retrospective is qualitatively consistent with GloFAS (annual-max r = 0.94)** — and only as a secondary confirmation, not a primary trigger.
+
+4. **Reuse the validation approach, not the verdict, when evaluating future sources.** The DHM-crossing match procedure in @sec-event-detection is the cleanest test we have given the data available, and any new candidate (e.g., a future GEOGloWS v3 with reforecasts, a refreshed GRRR product) should be put through the same comparison before being adopted.
+
+## Open questions for follow-up
+
+- Is the GEOGloWS Karnali under-prediction a known issue with RAPID/ERA5 at high-elevation Himalayan basins, or specific to TDX-Hydro reach delineation? An answer would tell us whether to expect similar problems at other Nepal stations or treat Chisapani as an isolated case.
+- Does GRRR exhibit the same Chisapani problem? The retrospective overlay in @sec-event-detection suggests not, but a fuller GRRR-only validation (matching the procedure used here for GEOGloWS and GloFAS) is the next concrete piece of work.
+- If GEOGloWS extends its forecast retention to enable reforecasts, does that change the calculus? Worth re-running this evaluation with the new data when it becomes available.
