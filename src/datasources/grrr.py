@@ -1,5 +1,10 @@
 import os
 
+# Silence gRPC/abseil log spam from google-cloud-storage; must be set
+# before any grpc/google-cloud import happens.
+os.environ.setdefault("GRPC_VERBOSITY", "NONE")
+os.environ.setdefault("GLOG_minloglevel", "3")
+
 import xarray as xr
 from dotenv import load_dotenv
 
