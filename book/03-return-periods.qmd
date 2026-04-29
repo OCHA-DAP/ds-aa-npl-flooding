@@ -27,9 +27,12 @@ GEOGloWS's record is 86 years vs GloFAS's 44, but the underlying hydrology also 
 
 ```{python}
 import pandas as pd
-import numpy as np
 from src.constants import STATIONS, RETURN_PERIODS
-from src.utils import compute_return_levels
+from src.utils import (
+    compute_return_levels,
+    load_geoglows_retro,
+    load_geoglows_retro_corrected,
+)
 
 DATA_DIR = Path(repo_root) / "data"
 
@@ -42,33 +45,23 @@ GLOFAS_EMPIRICAL = {
 rows = []
 for key, station in STATIONS.items():
     rid = station.geoglows_river_id
-
     rp_pub = pd.read_parquet(
         DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
     ).iloc[:, 0].to_dict()
-
-    orig = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
-    orig.columns = ["discharge"]; orig.index = orig.index.tz_localize(None)
-    rp_orig_emp = compute_return_levels(orig["discharge"], RETURN_PERIODS)
-
-    corr_path = DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet"
-    corr = pd.read_parquet(corr_path)
-    corr.columns = ["discharge"]
-    if corr.index.tz is not None:
-        corr.index = corr.index.tz_localize(None)
-    rp_corr_emp = compute_return_levels(corr["discharge"], RETURN_PERIODS)
-
+    rp_orig_emp = compute_return_levels(
+        load_geoglows_retro(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+    )
+    rp_corr_emp = compute_return_levels(
+        load_geoglows_retro_corrected(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+    )
     glofas_emp = GLOFAS_EMPIRICAL[station.name]
+    glofas_dashboard = {2: f"{station.glofas_rp2:,}", 5: f"{station.glofas_rp5:,}"}
 
     for rp in [2, 5, 10, 25, 50, 100]:
         rows.append({
             "Station": station.name,
             "Return Period": f"{rp}-yr",
-            "GloFAS Dashboard": (
-                f"{station.glofas_rp2:,}" if rp == 2
-                else f"{station.glofas_rp5:,}" if rp == 5
-                else "—"
-            ),
+            "GloFAS Dashboard": glofas_dashboard.get(rp, "—"),
             "GloFAS Empirical": f"{glofas_emp[rp]:,}" if rp in glofas_emp else "—",
             "GEOGloWS Published": f"{rp_pub[rp]:,.0f}",
             "GEOGloWS Empirical": f"{rp_orig_emp[rp]:,.0f}",
@@ -92,12 +85,9 @@ for ax, (key, station) in zip(axes, STATIONS.items()):
     rp_pub = pd.read_parquet(
         DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
     ).iloc[:, 0]
-
-    corr = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet")
-    corr.columns = ["discharge"]
-    if corr.index.tz is not None:
-        corr.index = corr.index.tz_localize(None)
-    rp_corr_emp = compute_return_levels(corr["discharge"], RETURN_PERIODS)
+    rp_corr_emp = compute_return_levels(
+        load_geoglows_retro_corrected(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+    )
 
     ax.plot(rp_pub.index, rp_pub.values, "o-",
             label="GEOGloWS published (Log-Pearson III)", color="#1f77b4")

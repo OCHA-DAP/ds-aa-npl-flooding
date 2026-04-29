@@ -1,6 +1,45 @@
+from datetime import timedelta
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from datetime import timedelta
+
+
+def to_naive(idx):
+    """Strip tz from a DatetimeIndex if present."""
+    return idx.tz_localize(None) if idx.tz is not None else idx
+
+
+def load_geoglows_retro(river_id, data_dir):
+    """Load GEOGloWS retrospective parquet, normalize column and index."""
+    df = pd.read_parquet(
+        Path(data_dir) / f"geoglows_retro_daily_{river_id}.parquet"
+    )
+    df.columns = ["discharge"]
+    df.index = to_naive(df.index)
+    return df
+
+
+def load_geoglows_retro_corrected(river_id, data_dir):
+    """Load SFDC-corrected GEOGloWS retrospective parquet."""
+    df = pd.read_parquet(
+        Path(data_dir) / f"geoglows_retro_daily_corrected_{river_id}.parquet"
+    )
+    df.columns = ["discharge"]
+    df.index = to_naive(df.index)
+    return df
+
+
+def collapse_to_events(dates, gap_days=7):
+    """Collapse consecutive/nearby dates into distinct events."""
+    if len(dates) == 0:
+        return pd.DatetimeIndex([])
+    dates = dates.sort_values()
+    events = [dates[0]]
+    for d in dates[1:]:
+        if (d - events[-1]).days > gap_days:
+            events.append(d)
+    return pd.DatetimeIndex(events)
 
 
 def compute_exceedance_probability(ds, threshold, station, max_days):

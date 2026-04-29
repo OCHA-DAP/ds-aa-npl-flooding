@@ -21,20 +21,21 @@ import matplotlib.pyplot as plt
 import xarray as xr
 
 from src.constants import STATIONS, RETURN_PERIODS
-from src.utils import compute_return_levels
+from src.utils import (
+    compute_return_levels,
+    load_geoglows_retro,
+    load_geoglows_retro_corrected,
+)
 
 DATA_DIR = Path(repo_root) / "data"
 AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
 ```
 
 ```{python}
-geoglows = {}
-for key, station in STATIONS.items():
-    rid = station.geoglows_river_id
-    df = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
-    df.columns = ["discharge"]
-    df.index = df.index.tz_localize(None)
-    geoglows[key] = df
+geoglows = {
+    key: load_geoglows_retro(station.geoglows_river_id, DATA_DIR)
+    for key, station in STATIONS.items()
+}
 
 glofas_path = (
     AA_DATA_DIR / "public" / "processed" / "npl" / "glofas"
@@ -231,15 +232,8 @@ fig, axes = plt.subplots(2, 1, figsize=(14, 8))
 
 for ax, (key, station) in zip(axes, STATIONS.items()):
     rid = station.geoglows_river_id
-    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
-    retro.columns = ["discharge"]; retro.index = retro.index.tz_localize(None)
-
-    corrected = pd.read_parquet(
-        DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet"
-    )
-    corrected.columns = ["discharge"]
-    if corrected.index.tz is not None:
-        corrected.index = corrected.index.tz_localize(None)
+    retro = load_geoglows_retro(rid, DATA_DIR)
+    corrected = load_geoglows_retro_corrected(rid, DATA_DIR)
 
     ax.plot(retro.index, retro["discharge"],
             color="#888888", alpha=0.4, linewidth=0.3, label="Original")

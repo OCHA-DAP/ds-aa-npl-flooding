@@ -16,29 +16,20 @@ The same procedure is applied to four series: GloFAS, GEOGloWS as published, GEO
 ```{python}
 import os
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import xarray as xr
-from datetime import timedelta
 
 from src.constants import STATIONS, RETURN_PERIODS
-from src.utils import match_events, compute_return_levels
+from src.utils import (
+    collapse_to_events,
+    compute_return_levels,
+    load_geoglows_retro,
+    load_geoglows_retro_corrected,
+    match_events,
+    to_naive,
+)
 
 DATA_DIR = Path(repo_root) / "data"
 AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
-
-def to_naive(idx):
-    return idx.tz_localize(None) if idx.tz is not None else idx
-
-def collapse_to_events(dates, gap_days=7):
-    if len(dates) == 0:
-        return pd.DatetimeIndex([])
-    d = dates.sort_values()
-    out = [d[0]]
-    for x in d[1:]:
-        if (x - out[-1]).days > gap_days:
-            out.append(x)
-    return pd.DatetimeIndex(out)
 ```
 
 ## DHM danger-level crossings
@@ -101,17 +92,13 @@ for key, station in STATIONS.items():
     refs = dhm_crossings[key]
     max_d = dhm[station.dhm_column].dropna().index.max()
 
-    # GEOGloWS published
-    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
-    retro.columns = ["discharge"]; retro.index = to_naive(retro.index)
+    retro = load_geoglows_retro(rid, DATA_DIR)
     retro_t = retro[retro.index <= max_d]["discharge"]
     rp_pub = pd.read_parquet(
         DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
     ).iloc[:, 0].to_dict()
 
-    # GEOGloWS corrected
-    corr = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_corrected_{rid}.parquet")
-    corr.columns = ["discharge"]; corr.index = to_naive(corr.index)
+    corr = load_geoglows_retro_corrected(rid, DATA_DIR)
     corr_t = corr[corr.index <= max_d]["discharge"]
     rp_corr = compute_return_levels(corr["discharge"], RETURN_PERIODS)
 
@@ -194,8 +181,7 @@ The 0/7 result at Chisapani is bad enough to suspect a structural problem rather
 diag = []
 for key, station in STATIONS.items():
     rid = station.geoglows_river_id
-    retro = pd.read_parquet(DATA_DIR / f"geoglows_retro_daily_{rid}.parquet")
-    retro.columns = ["discharge"]; retro.index = to_naive(retro.index)
+    retro = load_geoglows_retro(rid, DATA_DIR)
     rp_pub = pd.read_parquet(
         DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
     ).iloc[:, 0].to_dict()
