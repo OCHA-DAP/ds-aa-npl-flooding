@@ -166,4 +166,4 @@ The threshold-level finding above is that SFDC consistently *deflates* both stat
 
 ## Implication
 
-Choosing thresholds from GEOGloWS as-published would produce *fewer* triggers than GloFAS thresholds (higher bar). Choosing them from the SFDC-corrected series would produce *more* triggers in 3 of 4 cases (lower bar). Neither shift necessarily improves real-world detection — that depends on whether the events the model "sees" are the ones DHM actually observed. We test that next.
+Choosing thresholds from GEOGloWS as-published would produce *fewer* triggers than GloFAS thresholds (higher bar). Choosing them from the SFDC-corrected series would produce *more* triggers in 3 of 4 cases (lower bar). Neither shift necessarily improves real-world detection — that depends on whether the events the model "sees" are the ones DHM actually observed. The next chapter compares time-series and seasonal patterns across the sources; @sec-event-detection then runs the formal validation against DHM crossings.

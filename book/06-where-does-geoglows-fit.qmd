@@ -31,8 +31,13 @@ The failure **is** consistent with the GEOGloWS / RAPID retrospective being mass
 
 4. **Reuse the validation approach, not the verdict, when evaluating future sources.** The DHM-crossing match procedure in @sec-event-detection is the cleanest test we have given the data available, and any new candidate (e.g., a future GEOGloWS v3 with reforecasts, a refreshed GRRR product) should be put through the same comparison before being adopted.
 
+## Tangential finding: GRRR at Chisapani
+
+The cross-source comparison was not designed to evaluate GRRR, but the apples-to-apples event-detection table in @sec-event-detection shows GRRR matching **6 of 7** DHM crossings at Chisapani RP2 — better than GloFAS (5 of 7) and dramatically better than GEOGloWS (0 of 7). At Chatara, GRRR's RP2 detection rate is comparable to GEOGloWS (1 of 9). This finding is tangential to the GEOGloWS question this book set out to answer, but it is worth flagging for the framework: at the station where GloFAS has its highest false-alarm rate, GRRR is hitting more real events with fewer false alarms.
+
+A purpose-built GRRR validation — using GRRR's own published return periods rather than the empirical quantile method borrowed from notebook 02.0, and on the full DHM record — would be the next concrete piece of work to confirm this.
+
 ## Open questions for follow-up
 
 - Is the GEOGloWS Karnali under-prediction a known issue with RAPID/ERA5 at high-elevation Himalayan basins, or specific to TDX-Hydro reach delineation? An answer would tell us whether to expect similar problems at other Nepal stations or treat Chisapani as an isolated case.
-- Does GRRR exhibit the same Chisapani problem? The retrospective overlay in @sec-event-detection suggests not, but a fuller GRRR-only validation (matching the procedure used here for GEOGloWS and GloFAS) is the next concrete piece of work.
 - If GEOGloWS extends its forecast retention to enable reforecasts, does that change the calculus? Worth re-running this evaluation with the new data when it becomes available.

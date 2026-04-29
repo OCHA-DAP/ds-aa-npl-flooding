@@ -169,21 +169,22 @@ detection_table
 
 **At RP2:**
 
-- **Chatara**: GEOGloWS matches 1 of 9 DHM crossings, with 42 false alarms. SFDC correction lowers the threshold but the matched count stays at 1; false alarms rise to 45. GloFAS matches 2 of 9 with 33 false alarms. GRRR matches a small number with a comparable false-alarm rate (see table).
-- **Chisapani**: GEOGloWS matches **0 of 7** DHM crossings. SFDC correction does not change the matched count. GloFAS matches 5 of 7 with 95 false alarms.
+- **Chatara**: GEOGloWS matches 1 of 9 DHM crossings with 42 false alarms. SFDC correction lowers the threshold but the matched count stays at 1; false alarms rise to 45. GloFAS matches 2 of 9 with 33 false alarms. GRRR matches 1 of 9 with 19 false alarms.
+- **Chisapani**: GEOGloWS matches **0 of 7** DHM crossings. SFDC correction does not change the matched count. GloFAS matches 5 of 7 with 95 false alarms. **GRRR matches 6 of 7 with 26 false alarms** — the best detection rate of any source at this station.
 
 **At RP5:**
 
-- **Chatara**: GEOGloWS matches 1 of 9; GloFAS matches 1 of 9. False-alarm rates are similar.
-- **Chisapani**: GEOGloWS matches 0 of 7; GloFAS matches 1 of 7.
+- **Chatara**: GEOGloWS matches 1 of 9; GloFAS matches 1 of 9; GRRR matches 1 of 9. False-alarm rates are similar.
+- **Chisapani**: GEOGloWS matches 0 of 7; GloFAS matches 1 of 7; **GRRR matches 4 of 7** with 7 false alarms.
 
 **Headline numbers across both stations and both RPs (16 DHM events):**
 
+- GRRR: **12 matches** (1 + 6 + 1 + 4)
 - GloFAS: **9 matches** (2 + 5 + 1 + 1)
 - GEOGloWS published: **2 matches** (1 + 0 + 1 + 0)
 - GEOGloWS SFDC: **2 matches** (same)
 
-GEOGloWS does not improve on GloFAS at any cell of this table. SFDC correction does not rescue it.
+GEOGloWS does not improve on GloFAS at any cell of this table. SFDC correction does not rescue it. GRRR is incidentally the strongest performer in this validation, driven entirely by its Chisapani results — a finding worth surfacing for the framework even though it is tangential to the GEOGloWS question this book set out to answer.
 
 ## Why Chisapani fails: a magnitude diagnostic
 
