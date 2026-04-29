@@ -44,7 +44,7 @@ This distinction is fundamental to understanding what GEOGloWS can and cannot do
 
 The retrospective is the **answer key**. The reforecast is the **student's exam papers**. You need both to grade forecast skill. For AA trigger calibration — where the question is "if X% of ensemble members exceed the threshold at 3-day lead, should we trigger?" — you need reforecasts to calibrate X%. The retrospective alone cannot answer this.
 
-GEOGloWS's forecast archive extends only ~2 months back, far too short for trigger calibration.
+GEOGloWS's forecast archive currently retains roughly 22 months (`gd.dates()` returns ~670 daily forecast dates as of writing). That is enough to compare a forecast's day-0 analysis against the retrospective for the same date, but far too short to support the multi-year reforecast comparison required for trigger calibration.
 
 ## Comparison with Existing Data Sources
 

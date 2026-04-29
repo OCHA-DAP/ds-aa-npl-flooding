@@ -154,6 +154,40 @@ SFDC works by looking up pre-computed scalar correction factors for each month a
 
 The threshold-level finding above is that SFDC consistently *deflates* both stations. Whether that helps the actual use case (detecting observed flood events) is the question for @sec-event-detection.
 
+## Window sensitivity: published RPs are not stable across the record
+
+The published GEOGloWS RPs are fitted to the full 1940–present retrospective. If the model behaves differently in the early period than in the validation window we have DHM data for, the published threshold is biased relative to what would be empirically reasonable for the validation period.
+
+```{python}
+import os
+windows = []
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+    series = load_geoglows_retro(rid, DATA_DIR)["discharge"]
+    pub = pd.read_parquet(
+        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    ).iloc[:, 0].to_dict()
+    full = compute_return_levels(series, [2, 5])
+    val = compute_return_levels(
+        series[(series.index.year >= 1985) & (series.index.year <= 2014)], [2, 5]
+    )
+    pre = compute_return_levels(series[series.index.year < 1985], [2, 5])
+    for rp in [2, 5]:
+        windows.append({
+            "Station": station.name,
+            "RP": f"{rp}-yr",
+            "Published (LP3, full)": f"{pub[rp]:,.0f}",
+            "Empirical (full 1940–present)": f"{full[rp]:,.0f}",
+            "Empirical (1985–2014, validation)": f"{val[rp]:,.0f}",
+            "Empirical (pre-1985)": f"{pre[rp]:,.0f}",
+        })
+pd.DataFrame(windows)
+```
+
+For Chatara the windows agree to within ~7%. For **Chisapani the validation-window RP2 is 5,288 vs 6,745 published — about 22% lower**. The pre-1985 era contains the largest GEOGloWS Karnali peaks (1947, 1948, 1951, 1957–59) that pull the LP3 fit upward.
+
+This matters: if you used the published RP2 as a trigger but the model's 1985-onward statistics don't support it, you'd be using a threshold the modern record rarely produces. Whether that effect is large enough to matter for detection is tested in @sec-event-detection — applying the validation-window RP2 to the validation slice, the answer is "marginally for Chatara, not at all for Chisapani."
+
 ## Implication
 
 RP-based triggers are normalized to the data source by construction: applying each source's RP2 to its own record fires at roughly the same long-run frequency (~1 in 2 years), regardless of whether that threshold is 5,664 or 14,459 m³/s. The magnitude divergence above does not change the *number* of triggers, only the threshold value at which each source fires.
