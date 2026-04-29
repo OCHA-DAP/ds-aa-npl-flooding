@@ -156,4 +156,6 @@ The threshold-level finding above is that SFDC consistently *deflates* both stat
 
 ## Implication
 
-Choosing thresholds from GEOGloWS as-published would produce *fewer* triggers than GloFAS thresholds (higher bar). Choosing them from the SFDC-corrected series would produce *more* triggers in 3 of 4 cases (lower bar). Neither shift necessarily improves real-world detection — that depends on whether the events the model "sees" are the ones DHM actually observed. The next chapter compares time-series and seasonal patterns across the sources; @sec-event-detection then runs the formal validation against DHM crossings.
+RP-based triggers are normalized to the data source by construction: applying each source's RP2 to its own record fires at roughly the same long-run frequency (~1 in 2 years), regardless of whether that threshold is 5,664 or 14,459 m³/s. The magnitude divergence above does not change the *number* of triggers, only the threshold value at which each source fires.
+
+What the magnitude divergence tells us is how differently each source represents the basin's flood regime. SFDC correction does not split the difference; it overshoots, putting most GEOGloWS RPs below GloFAS. Whether any of these definitions actually fires on the right days — the events DHM observed — is the question for @sec-event-detection. The next chapter first looks at the time series and seasonal cycle to see whether the sources at least agree about when monsoon flow peaks and how big it gets.
