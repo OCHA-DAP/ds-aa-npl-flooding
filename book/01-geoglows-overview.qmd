@@ -55,8 +55,8 @@ GEOGloWS's forecast archive currently retains roughly 22 months (`gd.dates()` re
 | **Met forcing** | ECMWF IFS + ERA5 | Proprietary | ECMWF IFS + ERA5 |
 | **Ensemble members** | 51 (reforecast: 11) | Ensemble | 52 |
 | **Forecast lead** | 30 days | Variable | 15 days |
-| **Retrospective** | 1979–present | Variable | **1940–present** |
-| **Reforecasts** | **Yes (2003–2023)** | **Yes** | **No** |
+| **Retrospective** | 1979–present | 1980–2023 | **1940–present** |
+| **Reforecasts** | **Yes (2003–2023)** | **Yes (2016–2023)** | **No** |
 | **Return periods** | Copernicus dashboard | Computed | Built-in API |
 | **RP distribution** | Gumbel | Empirical | Log-Pearson III |
 | **API auth** | CDS registration | GCS token | **None (free)** |

@@ -1,0 +1,55 @@
+# Appendix: Zarr fetch lessons learned {.unnumbered}
+
+The forecast-vs-retrospective comparison in @sec-forecast-vs-retro required pulling roughly **20,000 forecast slices** — 667 issue dates × 2 reaches × 15 lead days, each from its own per-date Zarr store on `s3://geoglows-v2-forecasts/`. The first naive implementation took ~26 seconds per issue date with xarray; that projected to ~5 hours sequential or ~40 minutes with 8 threads. Both felt long for what is fundamentally a "read 15 small slices" job. After several iterations the per-date cost dropped to ~7 seconds, and the full archive fetched in ~51 minutes on 8 threads.
+
+Notes on what mattered, for the next person doing this.
+
+## What worked
+
+### Bypass xarray for the hot path
+
+`xr.open_zarr(path).sel(river_id=...).compute()` is ergonomic but pays for metadata parsing, dtype decoding, dimension labelling, and a Dask graph on every call. For the same store a thin `zarr.open_group(store)` + numpy slicing was ~4× faster:
+
+```python
+grp = zarr.open_group(store, mode="r")
+arr = grp["Qout"][:, :, river_positions]  # (members, time, rivers)
+time_arr = grp["time"][:]                  # int32 seconds-since-issue
+```
+
+xarray earns its keep when you need labelled dimensions, alignment across files, or lazy compute graphs. For "give me a fixed N-element slice from a known store", it is overhead.
+
+### Slice positionally, not by label
+
+Resolve `river_id → array index` **once** (from the metadata table) and then slice with integer positions. Per-call `.sel(river_id=...)` repeats a coordinate lookup that does not need repeating.
+
+### NaN-aware aggregations are mandatory for v2
+
+GEOGloWS v2 ensembles mix two cadences on the same time axis: 51 perturbed members at 3-hourly steps, 1 high-resolution control at 1-hourly steps. The Zarr arrays are padded with NaN to a common grid, so roughly half the cells in `Qout` are NaN by construction. `arr.mean(axis=...)` propagates NaN and silently produces all-NaN columns; the correct call is `np.nanmean` / `np.nanmedian` / `np.nanmax`. This was the single most embarrassing debugging session of the project.
+
+### `time` is int32 seconds-since-issue, not nanoseconds
+
+`pd.to_datetime(grp["time"][:])` interprets the array as nanoseconds and returns 1970-era timestamps, which then silently align to nothing. The actual encoding is integer seconds offset from the issue date:
+
+```python
+lead_day = (time_arr // 86400).astype(int)
+```
+
+The Zarr store's `units` attribute documents this — worth reading before assuming.
+
+### Threading beats async for blocking I/O
+
+`asyncio.to_thread(xr.open_zarr, ...)` was *slower* than a plain `ThreadPoolExecutor(max_workers=8)` despite looking more modern. The underlying boto/HTTP call still blocks; wrapping it in `asyncio` adds event-loop bookkeeping without unblocking anything. Async helps when the library itself is async (e.g. `aiohttp`, `aioboto3`) — it does not help when the inner call is sync.
+
+## What did not work
+
+- **`obstore` + zarr v3.** The intent was to swap the boto-based store for the faster Rust-based `obstore`. `zarr.open_group(obstore.S3Store(...))` raised `TypeError: Unsupported type for store_like: 'S3Store'`. Likely a version-skew issue between `zarr-python` 3.x and `obstore`. Skipped — the numpy + threading approach was already fast enough.
+- **Pre-fetching `Qout` for all 15 lead days at once.** Tried `arr = grp["Qout"][:]` (full read) then slicing in memory. No measurable speedup over slicing per lead day; S3 + zarr already chunks well by time.
+
+## Takeaways
+
+1. **xarray's ergonomics tax is real on small repeated reads.** When the read pattern is "many small slices from many known stores", drop to `zarr.open_group` + numpy.
+2. **Read the store's coordinate `units` attribute.** Time encodings vary; assuming nanoseconds is a coin flip.
+3. **NaN-pad your aggregations.** If a Zarr store mixes resolutions on a shared axis, `nan*` reductions are the only safe default.
+4. **Use threading first, async second.** Async only pays off when the underlying library is async too.
+
+The full optimized fetch script lives at `analysis/07_forecast_zarr_direct.py`; the produced parquet is `data/forecast_lead_times_v2.parquet` (20,010 rows).

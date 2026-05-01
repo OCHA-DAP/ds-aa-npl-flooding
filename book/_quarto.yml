@@ -20,7 +20,10 @@ book:
     - 03-return-periods.qmd
     - 04-retrospective-comparison.qmd
     - 05-event-detection.qmd
-    - 06-where-does-geoglows-fit.qmd
+    - 06-forecast-vs-retro.qmd
+    - 07-where-does-geoglows-fit.qmd
+  appendices:
+    - 08-appendix-zarr.qmd
 
 format:
   html:
