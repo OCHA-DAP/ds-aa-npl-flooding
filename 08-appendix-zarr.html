@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; Assessment – GEOGloWS Evaluation for Nepal Flood AA Framework</title>
+<title>Appendix: Zarr fetch lessons learned – GEOGloWS Evaluation for Nepal Flood AA Framework</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -65,18 +68,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-bias-correction.html" rel="prev">
+<link href="./07-where-does-geoglows-fit.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -117,7 +119,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-assessment.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Assessment</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-appendix-zarr.html">Appendices</a></li><li class="breadcrumb-item"><a href="./08-appendix-zarr.html">Appendix: Zarr fetch lessons learned</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -130,9 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">GEOGloWS Evaluation for Nepal Flood AA Framework</a> 
     </div>
@@ -165,13 +165,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-return-periods.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Return Period Comparison</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Threshold Comparison</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-retrospective-comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Retrospective Comparison</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time Series &amp; Seasonal Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -182,16 +182,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-bias-correction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bias Correction</span></span></a>
+  <a href="./06-forecast-vs-retro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Forecast vs Retrospective Magnitudes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-assessment.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Assessment</span></span></a>
+  <a href="./07-where-does-geoglows-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-appendix-zarr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Appendix: Zarr fetch lessons learned</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -202,29 +219,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#summary-of-findings" id="toc-summary-of-findings" class="nav-link active" data-scroll-target="#summary-of-findings"><span class="header-section-number">7.1</span> Summary of Findings</a>
+  <li><a href="#what-worked" id="toc-what-worked" class="nav-link active" data-scroll-target="#what-worked">What worked</a>
   <ul class="collapse">
-  <li><a href="#what-geoglows-provides" id="toc-what-geoglows-provides" class="nav-link" data-scroll-target="#what-geoglows-provides"><span class="header-section-number">7.1.1</span> What GEOGloWS Provides</a></li>
-  <li><a href="#what-geoglows-cannot-provide" id="toc-what-geoglows-cannot-provide" class="nav-link" data-scroll-target="#what-geoglows-cannot-provide"><span class="header-section-number">7.1.2</span> What GEOGloWS Cannot Provide</a></li>
-  <li><a href="#return-period-discrepancies" id="toc-return-period-discrepancies" class="nav-link" data-scroll-target="#return-period-discrepancies"><span class="header-section-number">7.1.3</span> Return Period Discrepancies</a></li>
-  <li><a href="#event-detection" id="toc-event-detection" class="nav-link" data-scroll-target="#event-detection"><span class="header-section-number">7.1.4</span> Event Detection</a></li>
+  <li><a href="#bypass-xarray-for-the-hot-path" id="toc-bypass-xarray-for-the-hot-path" class="nav-link" data-scroll-target="#bypass-xarray-for-the-hot-path">Bypass xarray for the hot path</a></li>
+  <li><a href="#slice-positionally-not-by-label" id="toc-slice-positionally-not-by-label" class="nav-link" data-scroll-target="#slice-positionally-not-by-label">Slice positionally, not by label</a></li>
+  <li><a href="#nan-aware-aggregations-are-mandatory-for-v2" id="toc-nan-aware-aggregations-are-mandatory-for-v2" class="nav-link" data-scroll-target="#nan-aware-aggregations-are-mandatory-for-v2">NaN-aware aggregations are mandatory for v2</a></li>
+  <li><a href="#time-is-int32-seconds-since-issue-not-nanoseconds" id="toc-time-is-int32-seconds-since-issue-not-nanoseconds" class="nav-link" data-scroll-target="#time-is-int32-seconds-since-issue-not-nanoseconds"><code>time</code> is int32 seconds-since-issue, not nanoseconds</a></li>
+  <li><a href="#threading-beats-async-for-blocking-io" id="toc-threading-beats-async-for-blocking-io" class="nav-link" data-scroll-target="#threading-beats-async-for-blocking-io">Threading beats async for blocking I/O</a></li>
   </ul></li>
-  <li><a href="#recommendation" id="toc-recommendation" class="nav-link" data-scroll-target="#recommendation"><span class="header-section-number">7.2</span> Recommendation</a>
-  <ul class="collapse">
-  <li><a href="#validation-dataset" id="toc-validation-dataset" class="nav-link" data-scroll-target="#validation-dataset"><span class="header-section-number">7.2.1</span> 1. Validation Dataset</a></li>
-  <li><a href="#complementary-real-time-signal" id="toc-complementary-real-time-signal" class="nav-link" data-scroll-target="#complementary-real-time-signal"><span class="header-section-number">7.2.2</span> 2. Complementary Real-Time Signal</a></li>
-  <li><a href="#bias-correction-benchmark" id="toc-bias-correction-benchmark" class="nav-link" data-scroll-target="#bias-correction-benchmark"><span class="header-section-number">7.2.3</span> 3. Bias Correction Benchmark</a></li>
-  </ul></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">7.3</span> Next Steps</a></li>
+  <li><a href="#what-did-not-work" id="toc-what-did-not-work" class="nav-link" data-scroll-target="#what-did-not-work">What did not work</a></li>
+  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways">Takeaways</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./08-appendix-zarr.html">Appendices</a></li><li class="breadcrumb-item"><a href="./08-appendix-zarr.html">Appendix: Zarr fetch lessons learned</a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Assessment</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Appendix: Zarr fetch lessons learned</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -241,84 +254,53 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="summary-of-findings" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="summary-of-findings"><span class="header-section-number">7.1</span> Summary of Findings</h2>
-<section id="what-geoglows-provides" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="what-geoglows-provides"><span class="header-section-number">7.1.1</span> What GEOGloWS Provides</h3>
+<p>The forecast-vs-retrospective comparison in <a href="06-forecast-vs-retro.html" class="quarto-xref"><span>6&nbsp; Forecast vs Retrospective Magnitudes</span></a> required pulling roughly <strong>20,000 forecast slices</strong> — 667 issue dates × 2 reaches × 15 lead days, each from its own per-date Zarr store on <code>s3://geoglows-v2-forecasts/</code>. The first naive implementation took ~26 seconds per issue date with xarray; that projected to ~5 hours sequential or ~40 minutes with 8 threads. Both felt long for what is fundamentally a “read 15 small slices” job. After several iterations the per-date cost dropped to ~7 seconds, and the full archive fetched in ~51 minutes on 8 threads.</p>
+<p>Notes on what mattered, for the next person doing this.</p>
+<section id="what-worked" class="level2">
+<h2 class="anchored" data-anchor-id="what-worked">What worked</h2>
+<section id="bypass-xarray-for-the-hot-path" class="level3">
+<h3 class="anchored" data-anchor-id="bypass-xarray-for-the-hot-path">Bypass xarray for the hot path</h3>
+<p><code>xr.open_zarr(path).sel(river_id=...).compute()</code> is ergonomic but pays for metadata parsing, dtype decoding, dimension labelling, and a Dask graph on every call. For the same store a thin <code>zarr.open_group(store)</code> + numpy slicing was ~4× faster:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>grp <span class="op">=</span> zarr.open_group(store, mode<span class="op">=</span><span class="st">"r"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> grp[<span class="st">"Qout"</span>][:, :, river_positions]  <span class="co"># (members, time, rivers)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>time_arr <span class="op">=</span> grp[<span class="st">"time"</span>][:]                  <span class="co"># int32 seconds-since-issue</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>xarray earns its keep when you need labelled dimensions, alignment across files, or lazy compute graphs. For “give me a fixed N-element slice from a known store”, it is overhead.</p>
+</section>
+<section id="slice-positionally-not-by-label" class="level3">
+<h3 class="anchored" data-anchor-id="slice-positionally-not-by-label">Slice positionally, not by label</h3>
+<p>Resolve <code>river_id → array index</code> <strong>once</strong> (from the metadata table) and then slice with integer positions. Per-call <code>.sel(river_id=...)</code> repeats a coordinate lookup that does not need repeating.</p>
+</section>
+<section id="nan-aware-aggregations-are-mandatory-for-v2" class="level3">
+<h3 class="anchored" data-anchor-id="nan-aware-aggregations-are-mandatory-for-v2">NaN-aware aggregations are mandatory for v2</h3>
+<p>GEOGloWS v2 ensembles mix two cadences on the same time axis: 51 perturbed members at 3-hourly steps, 1 high-resolution control at 1-hourly steps. The Zarr arrays are padded with NaN to a common grid, so roughly half the cells in <code>Qout</code> are NaN by construction. <code>arr.mean(axis=...)</code> propagates NaN and silently produces all-NaN columns; the correct call is <code>np.nanmean</code> / <code>np.nanmedian</code> / <code>np.nanmax</code>. This was the single most embarrassing debugging session of the project.</p>
+</section>
+<section id="time-is-int32-seconds-since-issue-not-nanoseconds" class="level3">
+<h3 class="anchored" data-anchor-id="time-is-int32-seconds-since-issue-not-nanoseconds"><code>time</code> is int32 seconds-since-issue, not nanoseconds</h3>
+<p><code>pd.to_datetime(grp["time"][:])</code> interprets the array as nanoseconds and returns 1970-era timestamps, which then silently align to nothing. The actual encoding is integer seconds offset from the issue date:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lead_day <span class="op">=</span> (time_arr <span class="op">//</span> <span class="dv">86400</span>).astype(<span class="bu">int</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The Zarr store’s <code>units</code> attribute documents this — worth reading before assuming.</p>
+</section>
+<section id="threading-beats-async-for-blocking-io" class="level3">
+<h3 class="anchored" data-anchor-id="threading-beats-async-for-blocking-io">Threading beats async for blocking I/O</h3>
+<p><code>asyncio.to_thread(xr.open_zarr, ...)</code> was <em>slower</em> than a plain <code>ThreadPoolExecutor(max_workers=8)</code> despite looking more modern. The underlying boto/HTTP call still blocks; wrapping it in <code>asyncio</code> adds event-loop bookkeeping without unblocking anything. Async helps when the library itself is async (e.g.&nbsp;<code>aiohttp</code>, <code>aioboto3</code>) — it does not help when the inner call is sync.</p>
+</section>
+</section>
+<section id="what-did-not-work" class="level2">
+<h2 class="anchored" data-anchor-id="what-did-not-work">What did not work</h2>
 <ul>
-<li><strong>86-year retrospective</strong> (1940–present) vs GloFAS’s 44-year record (1979–present). This is the single most valuable asset — nearly double the historical record for extreme value analysis.</li>
-<li><strong>52-member ensemble forecasts</strong> with 15-day lead time, freely accessible via Python API with no authentication.</li>
-<li><strong>Pre-computed return periods</strong> (2–100 year) using Log-Pearson III distribution.</li>
-<li><strong>Built-in bias correction</strong> (SFDC/SABER method) that doesn’t require local observed discharge data.</li>
-<li><strong>Global reach-level resolution</strong> (~6.8 million river reaches) — much denser spatial coverage than GloFAS’s gridded output.</li>
+<li><strong><code>obstore</code> + zarr v3.</strong> The intent was to swap the boto-based store for the faster Rust-based <code>obstore</code>. <code>zarr.open_group(obstore.S3Store(...))</code> raised <code>TypeError: Unsupported type for store_like: 'S3Store'</code>. Likely a version-skew issue between <code>zarr-python</code> 3.x and <code>obstore</code>. Skipped — the numpy + threading approach was already fast enough.</li>
+<li><strong>Pre-fetching <code>Qout</code> for all 15 lead days at once.</strong> Tried <code>arr = grp["Qout"][:]</code> (full read) then slicing in memory. No measurable speedup over slicing per lead day; S3 + zarr already chunks well by time.</li>
 </ul>
 </section>
-<section id="what-geoglows-cannot-provide" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="what-geoglows-cannot-provide"><span class="header-section-number">7.1.2</span> What GEOGloWS Cannot Provide</h3>
-<ul>
-<li><strong>No reforecasts/hindcasts.</strong> The forecast archive extends only ~2 months. This is the critical gap — the AA framework needs reforecasts to calibrate trigger thresholds at specific lead times (3-day action, 7-day readiness). Without reforecasts, we cannot compute exceedance probability skill metrics or determine optimal ensemble agreement thresholds.</li>
-<li><strong>Spatial matching is fragile.</strong> The <code>getriverid</code> API is sensitive to coordinates — a 0.07° shift mapped to a completely different reach. For the Karnali, coordinate-based lookup failed entirely; we had to query the metadata table by upstream contributing area.</li>
-</ul>
-</section>
-<section id="return-period-discrepancies" class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="return-period-discrepancies"><span class="header-section-number">7.1.3</span> Return Period Discrepancies</h3>
-<p>GEOGloWS return periods are consistently higher than GloFAS:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Station</th>
-<th>GEOGloWS RP2</th>
-<th>GloFAS RP2</th>
-<th>Difference</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Chatara (Koshi)</td>
-<td>14,459</td>
-<td>8,113</td>
-<td>+78%</td>
-</tr>
-<tr class="even">
-<td>Chisapani (Karnali)</td>
-<td>6,745</td>
-<td>5,664</td>
-<td>+19%</td>
-</tr>
-</tbody>
-</table>
-<p>This reflects differences in model physics (RAPID vs LISFLOOD), record length (86 vs 44 years), distribution fitting (Log-Pearson III vs Gumbel), and potentially contributing area mismatches.</p>
-</section>
-<section id="event-detection" class="level3" data-number="7.1.4">
-<h3 data-number="7.1.4" class="anchored" data-anchor-id="event-detection"><span class="header-section-number">7.1.4</span> Event Detection</h3>
-<p>The event-level validation against DHM danger level crossings reveals whether GEOGloWS’s higher return period thresholds actually improve event detection relative to GloFAS’s known false alarm problem (33 false alarms at Chatara RP2, 95 at Chisapani RP2).</p>
-</section>
-</section>
-<section id="recommendation" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="recommendation"><span class="header-section-number">7.2</span> Recommendation</h2>
-<p><strong>GEOGloWS should not replace GloFAS or Google GRRR for trigger calibration</strong> — the missing reforecasts make this impossible. However, it is worth incorporating as:</p>
-<section id="validation-dataset" class="level3" data-number="7.2.1">
-<h3 data-number="7.2.1" class="anchored" data-anchor-id="validation-dataset"><span class="header-section-number">7.2.1</span> 1. Validation Dataset</h3>
-<p>The 86-year retrospective provides a longer historical record for return period estimation and event catalog construction. Cross-referencing GEOGloWS events with GloFAS and DHM observations triangulates biases.</p>
-</section>
-<section id="complementary-real-time-signal" class="level3" data-number="7.2.2">
-<h3 data-number="7.2.2" class="anchored" data-anchor-id="complementary-real-time-signal"><span class="header-section-number">7.2.2</span> 2. Complementary Real-Time Signal</h3>
-<p>Once triggers are calibrated using GloFAS/GRRR reforecasts, GEOGloWS’s 52-member ensemble forecast can serve as an independent confirmation signal. If both GloFAS and GEOGloWS forecasts exceed their respective thresholds, confidence in the trigger activation increases.</p>
-</section>
-<section id="bias-correction-benchmark" class="level3" data-number="7.2.3">
-<h3 data-number="7.2.3" class="anchored" data-anchor-id="bias-correction-benchmark"><span class="header-section-number">7.2.3</span> 3. Bias Correction Benchmark</h3>
-<p>The SFDC method provides a globally-derived bias correction that doesn’t require local gauge data. Comparing SFDC-corrected GEOGloWS against GloFAS reanalysis can help quantify model biases.</p>
-</section>
-</section>
-<section id="next-steps" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">7.3</span> Next Steps</h2>
+<section id="takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="takeaways">Takeaways</h2>
 <ol type="1">
-<li><p><strong>Investigate the Karnali spatial match further</strong> — the candidate reach (rid=441112306, area=40,149 km²) may not be the optimal match for Chisapani. Cross-checking with the HydroViewer visualization would help.</p></li>
-<li><p><strong>Acquire a rating curve for Chatara and Chisapani</strong> — this would enable direct comparison between DHM water levels and model discharge, and unlock the <code>correct_historical()</code> bias correction method.</p></li>
-<li><p><strong>Monitor GEOGloWS forecast archive</strong> — if the service begins retaining forecasts longer-term (or produces reforecasts), this changes the assessment fundamentally.</p></li>
-<li><p><strong>Compare bias-corrected return periods against DHM thresholds</strong> — if SFDC correction brings GEOGloWS return periods closer to GloFAS values, it validates the correction approach.</p></li>
-<li><p><strong>Evaluate the real-time forecast</strong> — track GEOGloWS ensemble forecasts during the upcoming monsoon season and compare against GloFAS forecasts and observed events.</p></li>
+<li><strong>xarray’s ergonomics tax is real on small repeated reads.</strong> When the read pattern is “many small slices from many known stores”, drop to <code>zarr.open_group</code> + numpy.</li>
+<li><strong>Read the store’s coordinate <code>units</code> attribute.</strong> Time encodings vary; assuming nanoseconds is a coin flip.</li>
+<li><strong>NaN-pad your aggregations.</strong> If a Zarr store mixes resolutions on a shared axis, <code>nan*</code> reductions are the only safe default.</li>
+<li><strong>Use threading first, async second.</strong> Async only pays off when the underlying library is async too.</li>
 </ol>
+<p>The full optimized fetch script lives at <code>analysis/07_forecast_zarr_direct.py</code>; the produced parquet is <code>data/forecast_lead_times_v2.parquet</code> (20,010 rows).</p>
 
 
 <!-- -->
@@ -779,79 +761,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./06-bias-correction.html" class="pagination-link" aria-label="Bias Correction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bias Correction</span></span>
+      <a href="./07-where-does-geoglows-fit.html" class="pagination-link" aria-label="Where Does GEOGloWS Fit?">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Assessment</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> <span class="bu">str</span>(Path.cwd().parent)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> repo_root <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, repo_root)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Summary of Findings</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### What GEOGloWS Provides</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**86-year retrospective** (1940–present) vs GloFAS's 44-year record (1979–present). This is the single most valuable asset — nearly double the historical record for extreme value analysis.</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**52-member ensemble forecasts** with 15-day lead time, freely accessible via Python API with no authentication.</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Pre-computed return periods** (2–100 year) using Log-Pearson III distribution.</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Built-in bias correction** (SFDC/SABER method) that doesn't require local observed discharge data.</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Global reach-level resolution** (~6.8 million river reaches) — much denser spatial coverage than GloFAS's gridded output.</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### What GEOGloWS Cannot Provide</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**No reforecasts/hindcasts.** The forecast archive extends only ~2 months. This is the critical gap — the AA framework needs reforecasts to calibrate trigger thresholds at specific lead times (3-day action, 7-day readiness). Without reforecasts, we cannot compute exceedance probability skill metrics or determine optimal ensemble agreement thresholds.</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Spatial matching is fragile.** The <span class="in">`getriverid`</span> API is sensitive to coordinates — a 0.07° shift mapped to a completely different reach. For the Karnali, coordinate-based lookup failed entirely; we had to query the metadata table by upstream contributing area.</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### Return Period Discrepancies</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>GEOGloWS return periods are consistently higher than GloFAS:</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Station <span class="pp">|</span> GEOGloWS RP2 <span class="pp">|</span> GloFAS RP2 <span class="pp">|</span> Difference <span class="pp">|</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------|-------------|------------|------------|</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Chatara (Koshi) <span class="pp">|</span> 14,459 <span class="pp">|</span> 8,113 <span class="pp">|</span> +78% <span class="pp">|</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Chisapani (Karnali) <span class="pp">|</span> 6,745 <span class="pp">|</span> 5,664 <span class="pp">|</span> +19% <span class="pp">|</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>This reflects differences in model physics (RAPID vs LISFLOOD), record length (86 vs 44 years), distribution fitting (Log-Pearson III vs Gumbel), and potentially contributing area mismatches.</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### Event Detection</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>The event-level validation against DHM danger level crossings reveals whether GEOGloWS's higher return period thresholds actually improve event detection relative to GloFAS's known false alarm problem (33 false alarms at Chatara RP2, 95 at Chisapani RP2).</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recommendation</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>**GEOGloWS should not replace GloFAS or Google GRRR for trigger calibration** — the missing reforecasts make this impossible. However, it is worth incorporating as:</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. Validation Dataset</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>The 86-year retrospective provides a longer historical record for return period estimation and event catalog construction. Cross-referencing GEOGloWS events with GloFAS and DHM observations triangulates biases.</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. Complementary Real-Time Signal</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>Once triggers are calibrated using GloFAS/GRRR reforecasts, GEOGloWS's 52-member ensemble forecast can serve as an independent confirmation signal. If both GloFAS and GEOGloWS forecasts exceed their respective thresholds, confidence in the trigger activation increases.</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="fu">### 3. Bias Correction Benchmark</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>The SFDC method provides a globally-derived bias correction that doesn't require local gauge data. Comparing SFDC-corrected GEOGloWS against GloFAS reanalysis can help quantify model biases.</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Next Steps</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Investigate the Karnali spatial match further** — the candidate reach (rid=441112306, area=40,149 km²) may not be the optimal match for Chisapani. Cross-checking with the HydroViewer visualization would help.</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Acquire a rating curve for Chatara and Chisapani** — this would enable direct comparison between DHM water levels and model discharge, and unlock the <span class="in">`correct_historical()`</span> bias correction method.</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Monitor GEOGloWS forecast archive** — if the service begins retaining forecasts longer-term (or produces reforecasts), this changes the assessment fundamentally.</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Compare bias-corrected return periods against DHM thresholds** — if SFDC correction brings GEOGloWS return periods closer to GloFAS values, it validates the correction approach.</span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Evaluate the real-time forecast** — track GEOGloWS ensemble forecasts during the upcoming monsoon season and compare against GloFAS forecasts and observed events.</span>
-</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Appendix: Zarr fetch lessons learned {.unnumbered}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>The forecast-vs-retrospective comparison in @sec-forecast-vs-retro required pulling roughly **20,000 forecast slices** — 667 issue dates × 2 reaches × 15 lead days, each from its own per-date Zarr store on <span class="in">`s3://geoglows-v2-forecasts/`</span>. The first naive implementation took ~26 seconds per issue date with xarray; that projected to ~5 hours sequential or ~40 minutes with 8 threads. Both felt long for what is fundamentally a "read 15 small slices" job. After several iterations the per-date cost dropped to ~7 seconds, and the full archive fetched in ~51 minutes on 8 threads.</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Notes on what mattered, for the next person doing this.</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## What worked</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">### Bypass xarray for the hot path</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="in">`xr.open_zarr(path).sel(river_id=...).compute()`</span> is ergonomic but pays for metadata parsing, dtype decoding, dimension labelling, and a Dask graph on every call. For the same store a thin <span class="in">`zarr.open_group(store)`</span> + numpy slicing was ~4× faster:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>grp <span class="op">=</span> zarr.open_group(store, mode<span class="op">=</span><span class="st">"r"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> grp[<span class="st">"Qout"</span>][:, :, river_positions]  <span class="co"># (members, time, rivers)</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>time_arr <span class="op">=</span> grp[<span class="st">"time"</span>][:]                  <span class="co"># int32 seconds-since-issue</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>xarray earns its keep when you need labelled dimensions, alignment across files, or lazy compute graphs. For "give me a fixed N-element slice from a known store", it is overhead.</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">### Slice positionally, not by label</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>Resolve <span class="in">`river_id → array index`</span> **once** (from the metadata table) and then slice with integer positions. Per-call <span class="in">`.sel(river_id=...)`</span> repeats a coordinate lookup that does not need repeating.</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### NaN-aware aggregations are mandatory for v2</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>GEOGloWS v2 ensembles mix two cadences on the same time axis: 51 perturbed members at 3-hourly steps, 1 high-resolution control at 1-hourly steps. The Zarr arrays are padded with NaN to a common grid, so roughly half the cells in <span class="in">`Qout`</span> are NaN by construction. <span class="in">`arr.mean(axis=...)`</span> propagates NaN and silently produces all-NaN columns; the correct call is <span class="in">`np.nanmean`</span> / <span class="in">`np.nanmedian`</span> / <span class="in">`np.nanmax`</span>. This was the single most embarrassing debugging session of the project.</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### `time` is int32 seconds-since-issue, not nanoseconds</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="in">`pd.to_datetime(grp["time"][:])`</span> interprets the array as nanoseconds and returns 1970-era timestamps, which then silently align to nothing. The actual encoding is integer seconds offset from the issue date:</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>lead_day <span class="op">=</span> (time_arr <span class="op">//</span> <span class="dv">86400</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>The Zarr store's <span class="in">`units`</span> attribute documents this — worth reading before assuming.</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="fu">### Threading beats async for blocking I/O</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="in">`asyncio.to_thread(xr.open_zarr, ...)`</span> was *slower* than a plain <span class="in">`ThreadPoolExecutor(max_workers=8)`</span> despite looking more modern. The underlying boto/HTTP call still blocks; wrapping it in <span class="in">`asyncio`</span> adds event-loop bookkeeping without unblocking anything. Async helps when the library itself is async (e.g. <span class="in">`aiohttp`</span>, <span class="in">`aioboto3`</span>) — it does not help when the inner call is sync.</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## What did not work</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**`obstore` + zarr v3.** The intent was to swap the boto-based store for the faster Rust-based <span class="in">`obstore`</span>. <span class="in">`zarr.open_group(obstore.S3Store(...))`</span> raised <span class="in">`TypeError: Unsupported type for store_like: 'S3Store'`</span>. Likely a version-skew issue between <span class="in">`zarr-python`</span> 3.x and <span class="in">`obstore`</span>. Skipped — the numpy + threading approach was already fast enough.</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Pre-fetching `Qout` for all 15 lead days at once.** Tried <span class="in">`arr = grp["Qout"][:]`</span> (full read) then slicing in memory. No measurable speedup over slicing per lead day; S3 + zarr already chunks well by time.</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Takeaways</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**xarray's ergonomics tax is real on small repeated reads.** When the read pattern is "many small slices from many known stores", drop to <span class="in">`zarr.open_group`</span> + numpy.</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Read the store's coordinate `units` attribute.** Time encodings vary; assuming nanoseconds is a coin flip.</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**NaN-pad your aggregations.** If a Zarr store mixes resolutions on a shared axis, <span class="in">`nan*`</span> reductions are the only safe default.</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Use threading first, async second.** Async only pays off when the underlying library is async too.</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>The full optimized fetch script lives at <span class="in">`analysis/07_forecast_zarr_direct.py`</span>; the produced parquet is <span class="in">`data/forecast_lead_times_v2.parquet`</span> (20,010 rows).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

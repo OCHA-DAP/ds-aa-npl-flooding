@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="CHD Data Science">
-<meta name="dcterms.date" content="2026-05-01">
 
-<title>GEOGloWS Evaluation for Nepal Flood AA Framework</title>
+<title>7&nbsp; Where Does GEOGloWS Fit? – GEOGloWS Evaluation for Nepal Flood AA Framework</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -70,7 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01-geoglows-overview.html" rel="next">
+<link href="./08-appendix-zarr.html" rel="next">
+<link href="./06-forecast-vs-retro.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -121,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">GEOGloWS Evaluation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-where-does-geoglows-fit.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -148,7 +147,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GEOGloWS Evaluation</span></a>
   </div>
 </li>
@@ -190,7 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-where-does-geoglows-fit.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-where-does-geoglows-fit.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></span></a>
   </div>
 </li>
@@ -221,14 +220,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#geoglows-evaluation" id="toc-geoglows-evaluation" class="nav-link active" data-scroll-target="#geoglows-evaluation">GEOGloWS Evaluation</a>
-  <ul class="collapse">
-  <li><a href="#purpose" id="toc-purpose" class="nav-link" data-scroll-target="#purpose">Purpose</a></li>
-  <li><a href="#headline-findings" id="toc-headline-findings" class="nav-link" data-scroll-target="#headline-findings">Headline Findings</a></li>
-  <li><a href="#validation-caveat" id="toc-validation-caveat" class="nav-link" data-scroll-target="#validation-caveat">Validation Caveat</a></li>
-  <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a></li>
-  <li><a href="#stations" id="toc-stations" class="nav-link" data-scroll-target="#stations">Stations</a></li>
-  </ul></li>
+  <li><a href="#decision-matrix" id="toc-decision-matrix" class="nav-link active" data-scroll-target="#decision-matrix"><span class="header-section-number">7.1</span> Decision matrix</a></li>
+  <li><a href="#what-we-ruled-out-and-what-we-did-not" id="toc-what-we-ruled-out-and-what-we-did-not" class="nav-link" data-scroll-target="#what-we-ruled-out-and-what-we-did-not"><span class="header-section-number">7.2</span> What we ruled out, and what we did not</a></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations"><span class="header-section-number">7.3</span> Recommendations</a></li>
+  <li><a href="#tangential-finding-grrr-at-chisapani" id="toc-tangential-finding-grrr-at-chisapani" class="nav-link" data-scroll-target="#tangential-finding-grrr-at-chisapani"><span class="header-section-number">7.4</span> Tangential finding: GRRR at Chisapani</a></li>
+  <li><a href="#open-questions-for-follow-up" id="toc-open-questions-for-follow-up" class="nav-link" data-scroll-target="#open-questions-for-follow-up"><span class="header-section-number">7.5</span> Open questions for follow-up</a></li>
   </ul>
 </nav>
     </div>
@@ -237,26 +233,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">GEOGloWS Evaluation for Nepal Flood AA Framework</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>CHD Data Science </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">May 1, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -266,90 +250,99 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="geoglows-evaluation" class="level1 unnumbered">
-<h1 class="unnumbered">GEOGloWS Evaluation</h1>
-<section id="purpose" class="level2">
-<h2 class="anchored" data-anchor-id="purpose">Purpose</h2>
-<p>This book evaluates the <a href="https://www.geoglows.org/">GEOGloWS River Forecast System</a> (v2) as a potential data source for Nepal’s flood anticipatory action (AA) trigger framework.</p>
-<p>The framework currently uses <strong>GloFAS</strong> (ECMWF/Copernicus) for trigger calibration and <strong>DHM</strong> (Department of Hydrology and Meteorology, Nepal) water-level observations for validation. <strong>Google GRRR</strong> is included here as a third reference signal for cross-comparison.</p>
-<p>GEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation asks whether and how it can strengthen the existing framework.</p>
-</section>
-<section id="headline-findings" class="level2">
-<h2 class="anchored" data-anchor-id="headline-findings">Headline Findings</h2>
-<p><strong>Bottom line: GEOGloWS is not feasible as the basis for an AA trigger framework.</strong> Two structural gaps make calibrated, RP-based triggering impossible without external data:</p>
-<ol type="1">
-<li><p><strong>No reforecasts.</strong> GEOGloWS does not publish a multi-year reforecast archive, which is required to calibrate lead-time-dependent skill metrics (e.g., exceedance probability at 3-day or 7-day lead). The live forecast archive is ~22 months, far too short.</p></li>
-<li><p><strong>The published return-period thresholds are calibrated to the retrospective, but the operational forecast runs at a systematically different magnitude.</strong> Using the ~22-month archive of live forecasts, we find at the verified-location Chatara reach that the forecast distribution sits on the 2:1 line below retrospective — forecast ≈ retro / 2 — across all 15 lead days, including the AA action (day 3) and readiness (day 7) leadtimes. The ensemble mean has never reached the published RP2 (14,459 m³/s) at any lead time over the full archive; an ensemble-mean trigger using this threshold would not fire. See <a href="06-forecast-vs-retro.html" class="quarto-xref"><span>6&nbsp; Forecast vs Retrospective Magnitudes</span></a>.</p></li>
-</ol>
-<p>The remaining findings characterize the gaps in more detail:</p>
-<ol start="3" type="1">
-<li><p><strong>Against observed DHM danger-level crossings, GEOGloWS at RP2 detects 1 of 9 Chatara events and 0 of 7 Chisapani events</strong> (within a ±7 day window). GloFAS, on the same comparison, detects 2 of 9 and 5 of 7. <strong>GEOGloWS does not improve on GloFAS at this validation.</strong></p></li>
-<li><p><strong>At Chisapani (Karnali) the GEOGloWS-vs-GloFAS disagreement is structural.</strong> Annual-maxima are essentially uncorrelated (r = 0.07 over 1979–2023), and GEOGloWS’s mean discharge is ~28% of GloFAS’s. <strong>Caveat</strong>: the chosen reach has not been geographically verified against the DHM gauge location, so this disagreement may reflect a reach-mapping issue rather than a product difference.</p></li>
-<li><p><strong>Built-in SFDC bias correction does not change the event-detection verdict</strong> at either station. Corrected counts are still 1/9 and 0/7.</p></li>
-<li><p><strong>At Chatara (Koshi), the GEOGloWS retrospective tracks GloFAS well</strong> (annual-max r = 0.94). The forecast-vs-retro bias documented in finding 2 is therefore a real product-level issue, not an artefact of a wrong reach.</p></li>
-</ol>
-</section>
-<section id="validation-caveat" class="level2">
-<h2 class="anchored" data-anchor-id="validation-caveat">Validation Caveat</h2>
-<p>DHM water-level data ends in 2012 at Chatara and 2015 at Chisapani. All event-level validation in this book is bounded by those windows. Anything more recent in the GEOGloWS retrospective is uncheckable against DHM.</p>
-</section>
-<section id="structure" class="level2">
-<h2 class="anchored" data-anchor-id="structure">Structure</h2>
-<ol type="1">
-<li><strong>GEOGloWS Overview</strong> — what the system is, how it works, API walkthrough</li>
-<li><strong>Spatial Matching</strong> — finding the correct river reaches</li>
-<li><strong>Threshold Comparison</strong> — return periods across sources, including bias-corrected GEOGloWS</li>
-<li><strong>Time Series &amp; Seasonal Patterns</strong> — retrospective overlay across all sources, with bias-correction before/after</li>
-<li><strong>Event Detection</strong> — validation against observed DHM danger-level crossings</li>
-<li><strong>Forecast vs Retrospective Magnitudes</strong> — the binding constraint: published RPs are retro-only, forecast runs at half retro magnitude across all lead times</li>
-<li><strong>Where Does GEOGloWS Fit?</strong> — decision matrix and recommendations</li>
-</ol>
-</section>
-<section id="stations" class="level2">
-<h2 class="anchored" data-anchor-id="stations">Stations</h2>
+<section id="decision-matrix" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="decision-matrix"><span class="header-section-number">7.1</span> Decision matrix</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 11%">
-<col style="width: 8%">
-<col style="width: 21%">
-<col style="width: 15%">
-<col style="width: 17%">
-<col style="width: 24%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Station</th>
-<th>River</th>
-<th>DHM Danger Level</th>
-<th>GloFAS RP2</th>
-<th>GEOGloWS RP2</th>
-<th>GEOGloWS River ID</th>
+<th>AA framework use case</th>
+<th>Use GEOGloWS?</th>
+<th>Why</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Chatara</td>
-<td>Koshi</td>
-<td>7.0 m</td>
-<td>8,113 m³/s</td>
-<td>14,459 m³/s</td>
-<td>441135650</td>
+<td>Trigger calibration (lead-time skill, exceedance probabilities at fixed leadtimes)</td>
+<td><strong>No</strong></td>
+<td>No multi-year reforecast archive. The live forecast archive (~22 months) is too short for stable RP-frequency calibration.</td>
 </tr>
 <tr class="even">
-<td>Chisapani</td>
-<td>Karnali</td>
-<td>10.5 m</td>
-<td>5,664 m³/s</td>
-<td>6,745 m³/s</td>
-<td>441112306</td>
+<td>Operational trigger using published RP thresholds</td>
+<td><strong>No</strong></td>
+<td>The published RPs are calibrated to the retrospective only. The operational forecast runs at ~half retrospective magnitude across all lead times — the ensemble mean has never reached published RP2 (14,459 m³/s at Chatara) at any lead time in the 22-month archive. See <a href="06-forecast-vs-retro.html" class="quarto-xref"><span>Chapter 6</span></a>.</td>
+</tr>
+<tr class="odd">
+<td>Operational trigger using forecast-derived thresholds</td>
+<td><strong>No</strong></td>
+<td>A 22-month forecast archive contains zero or one RP2 events by definition — too sparse to fit stable thresholds.</td>
+</tr>
+<tr class="even">
+<td>Operational trigger validated against DHM</td>
+<td><strong>No</strong></td>
+<td>RP2 detects 1/9 Chatara and 0/7 Chisapani DHM events; worse than GloFAS at every cell. See <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a>.</td>
+</tr>
+<tr class="odd">
+<td>Independent confirmation signal alongside GloFAS / GRRR</td>
+<td><strong>At Chatara only, with caveats</strong></td>
+<td>Retrospective annual-max r = 0.94 with GloFAS; the retrospective is qualitatively consistent. But the operational forecast is biased low relative to retrospective by ~50% at every lead time, so its “confirmations” use a different magnitude regime than the framework expects.</td>
+</tr>
+<tr class="even">
+<td>Independent confirmation signal at Chisapani</td>
+<td><strong>No</strong></td>
+<td>Reach 441112306 has not been geographically verified; the GEO-vs-GloFAS retrospective r = 0.07 disagreement may be reach-mapping rather than product.</td>
+</tr>
+<tr class="odd">
+<td>Long-record extreme value analysis</td>
+<td><strong>With caveats</strong></td>
+<td>The 1940–present record covers floods that GloFAS misses, but using SFDC-corrected RPs pushes thresholds below GloFAS in 3 of 4 cases. Without a rating curve to validate, we cannot say whether the longer record is more truthful or more biased.</td>
+</tr>
+<tr class="even">
+<td>Bias-correction benchmark</td>
+<td><strong>No clear win</strong></td>
+<td>SFDC corrects the magnitude in a global, observation-free way. Here it overshoots (deflates rather than aligns) and does not improve event detection.</td>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="what-we-ruled-out-and-what-we-did-not" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="what-we-ruled-out-and-what-we-did-not"><span class="header-section-number">7.2</span> What we ruled out, and what we did not</h2>
+<p>The Chisapani failure is <strong>not</strong> caused by:</p>
+<ul>
+<li>A wrong reach selection (all four candidates with the right upstream area produce equivalent RPs).</li>
+<li>A threshold that is too high (lowering it via SFDC adds false alarms but no matches).</li>
+<li>A timing offset (no GEOGloWS peak appears within ±30 days of the 2013 or 2014 record DHM events).</li>
+</ul>
+<p>The failure <strong>is</strong> consistent with the GEOGloWS / RAPID retrospective being mass-deficient in this basin — running at ~28% of GloFAS’s mean and producing peaks that don’t align with observed monsoon floods. We cannot diagnose the underlying cause from the data in this evaluation.</p>
+</section>
+<section id="recommendations" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="recommendations"><span class="header-section-number">7.3</span> Recommendations</h2>
+<ol type="1">
+<li><p><strong>Do not adopt GEOGloWS as a trigger source for this framework.</strong> Two structural gaps make calibrated triggering impossible: (a) no multi-year reforecast archive for skill-based calibration, and (b) the published RPs are retrospective-only while the operational forecast runs at half retrospective magnitude. The published thresholds therefore cannot fire correctly on the forecast — see <a href="06-forecast-vs-retro.html" class="quarto-xref"><span>Chapter 6</span></a>.</p></li>
+<li><p><strong>Acquire a rating curve for Chatara and Chisapani.</strong> This unblocks <code>geoglows.bias.correct_historical()</code>, which uses local observed discharge instead of global scalars and is the only path to a meaningful comparison between corrected GEOGloWS and observations. It also makes the DHM water-level record directly comparable to model discharge for future calibration efforts with any source.</p></li>
+<li><p><strong>If GEOGloWS forecasts are used in a confirmation role, calibrate the threshold from the forecast archive itself, not from the published RPs.</strong> Even then, the 22-month archive limits how rare an event the threshold can capture.</p></li>
+<li><p><strong>Reuse the validation approach, not the verdict, when evaluating future sources.</strong> The DHM-crossing match procedure in <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a> is the cleanest test we have given the data available, and any new candidate (e.g., a future GEOGloWS v3 with reforecasts, a refreshed GRRR product) should be put through the same comparison before being adopted.</p></li>
+</ol>
+</section>
+<section id="tangential-finding-grrr-at-chisapani" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="tangential-finding-grrr-at-chisapani"><span class="header-section-number">7.4</span> Tangential finding: GRRR at Chisapani</h2>
+<p>The cross-source comparison was not designed to evaluate GRRR, but the apples-to-apples event-detection table in <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a> shows GRRR matching <strong>6 of 7</strong> DHM crossings at Chisapani RP2 — better than GloFAS (5 of 7) and dramatically better than GEOGloWS (0 of 7). At Chatara, GRRR’s RP2 detection rate is comparable to GEOGloWS (1 of 9). This finding is tangential to the GEOGloWS question this book set out to answer, but it is worth flagging for the framework: at the Karnali station where GloFAS already detects most events, GRRR detects one more, with fewer false alarms.</p>
+<p>A purpose-built GRRR validation — using GRRR’s own published return periods rather than the empirical quantile method borrowed from notebook 02.0, and on the full DHM record — would be the next concrete piece of work to confirm this.</p>
+</section>
+<section id="open-questions-for-follow-up" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="open-questions-for-follow-up"><span class="header-section-number">7.5</span> Open questions for follow-up</h2>
+<ul>
+<li>Is the GEOGloWS Karnali under-prediction a known issue with RAPID/ERA5 at high-elevation Himalayan basins, or specific to TDX-Hydro reach delineation? An answer would tell us whether to expect similar problems at other Nepal stations or treat Chisapani as an isolated case.</li>
+<li>If GEOGloWS extends its forecast retention to enable reforecasts, does that change the calculus? Worth re-running this evaluation with the new data when it becomes available.</li>
+</ul>
 
 
 <!-- -->
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -806,61 +799,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./06-forecast-vs-retro.html" class="pagination-link" aria-label="Forecast vs Retrospective Magnitudes">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Forecast vs Retrospective Magnitudes</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01-geoglows-overview.html" class="pagination-link" aria-label="GEOGloWS Overview">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">GEOGloWS Overview</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-appendix-zarr.html" class="pagination-link" aria-label="Appendix: Zarr fetch lessons learned">
+        <span class="nav-page-text">Appendix: Zarr fetch lessons learned</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># GEOGloWS Evaluation {.unnumbered}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Where Does GEOGloWS Fit?</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Purpose</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Decision matrix</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>This book evaluates the <span class="co">[</span><span class="ot">GEOGloWS River Forecast System</span><span class="co">](https://www.geoglows.org/)</span> (v2) as a potential data source for Nepal's flood anticipatory action (AA) trigger framework.</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>The framework currently uses **GloFAS** (ECMWF/Copernicus) for trigger calibration and **DHM** (Department of Hydrology and Meteorology, Nepal) water-level observations for validation. **Google GRRR** is included here as a third reference signal for cross-comparison.</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>GEOGloWS offers a complementary global streamflow service with some distinct advantages — most notably an 86-year retrospective simulation (1940–present) and a free, unauthenticated API. This evaluation asks whether and how it can strengthen the existing framework.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Headline Findings</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>**Bottom line: GEOGloWS is not feasible as the basis for an AA trigger framework.** Two structural gaps make calibrated, RP-based triggering impossible without external data:</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**No reforecasts.** GEOGloWS does not publish a multi-year reforecast archive, which is required to calibrate lead-time-dependent skill metrics (e.g., exceedance probability at 3-day or 7-day lead). The live forecast archive is ~22 months, far too short.</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**The published return-period thresholds are calibrated to the retrospective, but the operational forecast runs at a systematically different magnitude.** Using the ~22-month archive of live forecasts, we find at the verified-location Chatara reach that the forecast distribution sits on the 2:1 line below retrospective — forecast ≈ retro / 2 — across all 15 lead days, including the AA action (day 3) and readiness (day 7) leadtimes. The ensemble mean has never reached the published RP2 (14,459 m³/s) at any lead time over the full archive; an ensemble-mean trigger using this threshold would not fire. See @sec-forecast-vs-retro.</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>The remaining findings characterize the gaps in more detail:</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Against observed DHM danger-level crossings, GEOGloWS at RP2 detects 1 of 9 Chatara events and 0 of 7 Chisapani events** (within a ±7 day window). GloFAS, on the same comparison, detects 2 of 9 and 5 of 7. **GEOGloWS does not improve on GloFAS at this validation.**</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**At Chisapani (Karnali) the GEOGloWS-vs-GloFAS disagreement is structural.** Annual-maxima are essentially uncorrelated (r = 0.07 over 1979–2023), and GEOGloWS's mean discharge is ~28% of GloFAS's. **Caveat**: the chosen reach has not been geographically verified against the DHM gauge location, so this disagreement may reflect a reach-mapping issue rather than a product difference.</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Built-in SFDC bias correction does not change the event-detection verdict** at either station. Corrected counts are still 1/9 and 0/7.</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**At Chatara (Koshi), the GEOGloWS retrospective tracks GloFAS well** (annual-max r = 0.94). The forecast-vs-retro bias documented in finding 2 is therefore a real product-level issue, not an artefact of a wrong reach.</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Validation Caveat</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>DHM water-level data ends in 2012 at Chatara and 2015 at Chisapani. All event-level validation in this book is bounded by those windows. Anything more recent in the GEOGloWS retrospective is uncheckable against DHM.</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## Structure</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**GEOGloWS Overview** — what the system is, how it works, API walkthrough</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Spatial Matching** — finding the correct river reaches</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Threshold Comparison** — return periods across sources, including bias-corrected GEOGloWS</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Time Series &amp; Seasonal Patterns** — retrospective overlay across all sources, with bias-correction before/after</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Event Detection** — validation against observed DHM danger-level crossings</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Forecast vs Retrospective Magnitudes** — the binding constraint: published RPs are retro-only, forecast runs at half retro magnitude across all lead times</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>**Where Does GEOGloWS Fit?** — decision matrix and recommendations</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## Stations</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Station <span class="pp">|</span> River <span class="pp">|</span> DHM Danger Level <span class="pp">|</span> GloFAS RP2 <span class="pp">|</span> GEOGloWS RP2 <span class="pp">|</span> GEOGloWS River ID <span class="pp">|</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------|-------|-----------------|------------|--------------|-------------------|</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Chatara <span class="pp">|</span> Koshi <span class="pp">|</span> 7.0 m <span class="pp">|</span> 8,113 m³/s <span class="pp">|</span> 14,459 m³/s <span class="pp">|</span> 441135650 <span class="pp">|</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Chisapani <span class="pp">|</span> Karnali <span class="pp">|</span> 10.5 m <span class="pp">|</span> 5,664 m³/s <span class="pp">|</span> 6,745 m³/s <span class="pp">|</span> 441112306 <span class="pp">|</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> AA framework use case <span class="pp">|</span> Use GEOGloWS? <span class="pp">|</span> Why <span class="pp">|</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Trigger calibration (lead-time skill, exceedance probabilities at fixed leadtimes) <span class="pp">|</span> **No** <span class="pp">|</span> No multi-year reforecast archive. The live forecast archive (~22 months) is too short for stable RP-frequency calibration. <span class="pp">|</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operational trigger using published RP thresholds <span class="pp">|</span> **No** <span class="pp">|</span> The published RPs are calibrated to the retrospective only. The operational forecast runs at ~half retrospective magnitude across all lead times — the ensemble mean has never reached published RP2 (14,459 m³/s at Chatara) at any lead time in the 22-month archive. See @sec-forecast-vs-retro. <span class="pp">|</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operational trigger using forecast-derived thresholds <span class="pp">|</span> **No** <span class="pp">|</span> A 22-month forecast archive contains zero or one RP2 events by definition — too sparse to fit stable thresholds. <span class="pp">|</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Operational trigger validated against DHM <span class="pp">|</span> **No** <span class="pp">|</span> RP2 detects 1/9 Chatara and 0/7 Chisapani DHM events; worse than GloFAS at every cell. See @sec-event-detection. <span class="pp">|</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Independent confirmation signal alongside GloFAS / GRRR <span class="pp">|</span> **At Chatara only, with caveats** <span class="pp">|</span> Retrospective annual-max r = 0.94 with GloFAS; the retrospective is qualitatively consistent. But the operational forecast is biased low relative to retrospective by ~50% at every lead time, so its "confirmations" use a different magnitude regime than the framework expects. <span class="pp">|</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Independent confirmation signal at Chisapani <span class="pp">|</span> **No** <span class="pp">|</span> Reach 441112306 has not been geographically verified; the GEO-vs-GloFAS retrospective r = 0.07 disagreement may be reach-mapping rather than product. <span class="pp">|</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Long-record extreme value analysis <span class="pp">|</span> **With caveats** <span class="pp">|</span> The 1940–present record covers floods that GloFAS misses, but using SFDC-corrected RPs pushes thresholds below GloFAS in 3 of 4 cases. Without a rating curve to validate, we cannot say whether the longer record is more truthful or more biased. <span class="pp">|</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Bias-correction benchmark <span class="pp">|</span> **No clear win** <span class="pp">|</span> SFDC corrects the magnitude in a global, observation-free way. Here it overshoots (deflates rather than aligns) and does not improve event detection. <span class="pp">|</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## What we ruled out, and what we did not</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>The Chisapani failure is **not** caused by:</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A wrong reach selection (all four candidates with the right upstream area produce equivalent RPs).</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A threshold that is too high (lowering it via SFDC adds false alarms but no matches).</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>A timing offset (no GEOGloWS peak appears within ±30 days of the 2013 or 2014 record DHM events).</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>The failure **is** consistent with the GEOGloWS / RAPID retrospective being mass-deficient in this basin — running at ~28% of GloFAS's mean and producing peaks that don't align with observed monsoon floods. We cannot diagnose the underlying cause from the data in this evaluation.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recommendations</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Do not adopt GEOGloWS as a trigger source for this framework.** Two structural gaps make calibrated triggering impossible: (a) no multi-year reforecast archive for skill-based calibration, and (b) the published RPs are retrospective-only while the operational forecast runs at half retrospective magnitude. The published thresholds therefore cannot fire correctly on the forecast — see @sec-forecast-vs-retro.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Acquire a rating curve for Chatara and Chisapani.** This unblocks <span class="in">`geoglows.bias.correct_historical()`</span>, which uses local observed discharge instead of global scalars and is the only path to a meaningful comparison between corrected GEOGloWS and observations. It also makes the DHM water-level record directly comparable to model discharge for future calibration efforts with any source.</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**If GEOGloWS forecasts are used in a confirmation role, calibrate the threshold from the forecast archive itself, not from the published RPs.** Even then, the 22-month archive limits how rare an event the threshold can capture.</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Reuse the validation approach, not the verdict, when evaluating future sources.** The DHM-crossing match procedure in @sec-event-detection is the cleanest test we have given the data available, and any new candidate (e.g., a future GEOGloWS v3 with reforecasts, a refreshed GRRR product) should be put through the same comparison before being adopted.</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tangential finding: GRRR at Chisapani</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>The cross-source comparison was not designed to evaluate GRRR, but the apples-to-apples event-detection table in @sec-event-detection shows GRRR matching **6 of 7** DHM crossings at Chisapani RP2 — better than GloFAS (5 of 7) and dramatically better than GEOGloWS (0 of 7). At Chatara, GRRR's RP2 detection rate is comparable to GEOGloWS (1 of 9). This finding is tangential to the GEOGloWS question this book set out to answer, but it is worth flagging for the framework: at the Karnali station where GloFAS already detects most events, GRRR detects one more, with fewer false alarms.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>A purpose-built GRRR validation — using GRRR's own published return periods rather than the empirical quantile method borrowed from notebook 02.0, and on the full DHM record — would be the next concrete piece of work to confirm this.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">## Open questions for follow-up</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Is the GEOGloWS Karnali under-prediction a known issue with RAPID/ERA5 at high-elevation Himalayan basins, or specific to TDX-Hydro reach delineation? An answer would tell us whether to expect similar problems at other Nepal stations or treat Chisapani as an isolated case.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>If GEOGloWS extends its forecast retention to enable reforecasts, does that change the calculus? Worth re-running this evaluation with the new data when it becomes available.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

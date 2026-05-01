@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Return Period Comparison – GEOGloWS Evaluation for Nepal Flood AA Framework</title>
+<title>3&nbsp; Threshold Comparison – GEOGloWS Evaluation for Nepal Flood AA Framework</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="./02-spatial-matching.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -121,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-return-periods.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Return Period Comparison</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-return-periods.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Threshold Comparison</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -134,9 +136,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">GEOGloWS Evaluation for Nepal Flood AA Framework</a> 
     </div>
@@ -169,13 +169,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-return-periods.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Return Period Comparison</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Threshold Comparison</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-retrospective-comparison.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Retrospective Comparison</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time Series &amp; Seasonal Patterns</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -186,16 +186,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-bias-correction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Bias Correction</span></span></a>
+  <a href="./06-forecast-vs-retro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Forecast vs Retrospective Magnitudes</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-assessment.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Assessment</span></span></a>
+  <a href="./07-where-does-geoglows-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Where Does GEOGloWS Fit?</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-appendix-zarr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Appendix: Zarr fetch lessons learned</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -206,14 +223,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-sources-and-methods" id="toc-data-sources-and-methods" class="nav-link active" data-scroll-target="#data-sources-and-methods"><span class="header-section-number">3.1</span> Data Sources and Methods</a></li>
+  <li><a href="#sources-and-methods" id="toc-sources-and-methods" class="nav-link active" data-scroll-target="#sources-and-methods"><span class="header-section-number">3.1</span> Sources and Methods</a></li>
   <li><a href="#cross-source-comparison" id="toc-cross-source-comparison" class="nav-link" data-scroll-target="#cross-source-comparison"><span class="header-section-number">3.2</span> Cross-Source Comparison</a></li>
-  <li><a href="#key-observations" id="toc-key-observations" class="nav-link" data-scroll-target="#key-observations"><span class="header-section-number">3.3</span> Key Observations</a>
-  <ul class="collapse">
-  <li><a href="#chatara-koshi" id="toc-chatara-koshi" class="nav-link" data-scroll-target="#chatara-koshi"><span class="header-section-number">3.3.1</span> Chatara (Koshi)</a></li>
-  </ul></li>
-  <li><a href="#why-the-difference" id="toc-why-the-difference" class="nav-link" data-scroll-target="#why-the-difference"><span class="header-section-number">3.4</span> Why the Difference?</a></li>
-  <li><a href="#implications-for-the-aa-framework" id="toc-implications-for-the-aa-framework" class="nav-link" data-scroll-target="#implications-for-the-aa-framework"><span class="header-section-number">3.5</span> Implications for the AA Framework</a></li>
+  <li><a href="#visual-comparison" id="toc-visual-comparison" class="nav-link" data-scroll-target="#visual-comparison"><span class="header-section-number">3.3</span> Visual Comparison</a></li>
+  <li><a href="#what-the-numbers-say" id="toc-what-the-numbers-say" class="nav-link" data-scroll-target="#what-the-numbers-say"><span class="header-section-number">3.4</span> What the numbers say</a></li>
+  <li><a href="#why-uncorrected-geoglows-reads-higher" id="toc-why-uncorrected-geoglows-reads-higher" class="nav-link" data-scroll-target="#why-uncorrected-geoglows-reads-higher"><span class="header-section-number">3.5</span> Why uncorrected GEOGloWS reads higher</a></li>
+  <li><a href="#bias-correction-what-it-does-and-does-not-do" id="toc-bias-correction-what-it-does-and-does-not-do" class="nav-link" data-scroll-target="#bias-correction-what-it-does-and-does-not-do"><span class="header-section-number">3.6</span> Bias correction: what it does and does not do</a></li>
+  <li><a href="#window-sensitivity-published-rps-are-not-stable-across-the-record" id="toc-window-sensitivity-published-rps-are-not-stable-across-the-record" class="nav-link" data-scroll-target="#window-sensitivity-published-rps-are-not-stable-across-the-record"><span class="header-section-number">3.7</span> Window sensitivity: published RPs are not stable across the record</a></li>
+  <li><a href="#implication" id="toc-implication" class="nav-link" data-scroll-target="#implication"><span class="header-section-number">3.8</span> Implication</a></li>
   </ul>
 </nav>
     </div>
@@ -222,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Return Period Comparison</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Threshold Comparison</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -239,102 +256,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Return period thresholds are central to the AA trigger framework — they define what constitutes a “significant” flood event. Different data sources compute return periods using different methods, distributional assumptions, and underlying data, producing notably different threshold values.</p>
-<section id="data-sources-and-methods" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="data-sources-and-methods"><span class="header-section-number">3.1</span> Data Sources and Methods</h2>
+<p>Return-period thresholds define what counts as a “significant” flood event in the AA framework. Different sources fit different distributions to different record lengths, so the threshold values diverge — sometimes a lot. This chapter compares them and asks whether GEOGloWS’s built-in SFDC bias correction narrows the gap with GloFAS.</p>
+<section id="sources-and-methods" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sources-and-methods"><span class="header-section-number">3.1</span> Sources and Methods</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 21%">
-<col style="width: 21%">
-<col style="width: 35%">
-<col style="width: 21%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 36%">
+<col style="width: 19%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Source</th>
 <th>Period</th>
 <th>Distribution</th>
-<th>Method</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>GloFAS (Copernicus dashboard)</td>
+<td>GloFAS Copernicus dashboard</td>
 <td>1979–present</td>
 <td>Gumbel Type I</td>
 <td>Fitted to reanalysis annual maxima</td>
 </tr>
 <tr class="even">
-<td>GloFAS (empirical, notebook 01.0)</td>
+<td>GloFAS empirical</td>
 <td>1979–2023</td>
 <td>Empirical quantile</td>
-<td>Ranked annual maxima</td>
+<td>Ranked annual maxima (notebook 01.0)</td>
 </tr>
 <tr class="odd">
-<td>GEOGloWS v2</td>
+<td>GEOGloWS published</td>
 <td>1940–present</td>
 <td>Log-Pearson III</td>
-<td>Fitted to retrospective annual maxima</td>
+<td>Pre-computed via <code>geoglows.data.return_periods</code></td>
+</tr>
+<tr class="even">
+<td>GEOGloWS empirical (uncorrected)</td>
+<td>1940–present</td>
+<td>Empirical quantile</td>
+<td>Computed from retro daily</td>
+</tr>
+<tr class="odd">
+<td>GEOGloWS empirical (SFDC corrected)</td>
+<td>1940–present</td>
+<td>Empirical quantile</td>
+<td>After <code>geoglows.bias.sfdc_bias_correction</code></td>
 </tr>
 </tbody>
 </table>
-<p>The GEOGloWS retrospective covers 86 years vs GloFAS’s 44 years. A longer record should produce more stable extreme value estimates, but the underlying hydrological model also differs (RAPID routing-only vs LISFLOOD full land surface).</p>
+<p>GEOGloWS’s record is 86 years vs GloFAS’s 44, but the underlying hydrology also differs — RAPID is a routing-only model running on TDX-Hydro, while LISFLOOD is a calibrated full land-surface model.</p>
 </section>
 <section id="cross-source-comparison" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="cross-source-comparison"><span class="header-section-number">3.2</span> Cross-Source Comparison</h2>
-<div id="7b5d5195" class="cell" data-execution_count="2">
+<div id="4155e2e0" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># GloFAS empirical return levels computed from reanalysis (1979-2023)</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Source: notebook 01.0 compute_return_levels() on GloFAS reanalysis NetCDF</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>GLOFAS_EMPIRICAL <span class="op">=</span> {</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chatara"</span>: {<span class="dv">2</span>: <span class="dv">7831</span>, <span class="dv">5</span>: <span class="dv">9716</span>, <span class="dv">10</span>: <span class="dv">11408</span>, <span class="dv">20</span>: <span class="dv">14396</span>, <span class="dv">50</span>: <span class="dv">16951</span>, <span class="dv">100</span>: <span class="dv">16951</span>},</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chisapani"</span>: {<span class="dv">2</span>: <span class="dv">5847</span>, <span class="dv">5</span>: <span class="dv">6747</span>, <span class="dv">10</span>: <span class="dv">7424</span>, <span class="dv">20</span>: <span class="dv">7936</span>, <span class="dv">50</span>: <span class="dv">8816</span>, <span class="dv">100</span>: <span class="dv">8816</span>},</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS, RETURN_PERIODS</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># GloFAS empirical return levels from reanalysis (1979-2023), source: notebook 01.0</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>GLOFAS_EMPIRICAL <span class="op">=</span> {</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chatara"</span>: {<span class="dv">2</span>: <span class="dv">7831</span>, <span class="dv">5</span>: <span class="dv">9716</span>, <span class="dv">10</span>: <span class="dv">11408</span>, <span class="dv">20</span>: <span class="dv">14396</span>, <span class="dv">50</span>: <span class="dv">16951</span>, <span class="dv">100</span>: <span class="dv">16951</span>},</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chisapani"</span>: {<span class="dv">2</span>: <span class="dv">5847</span>, <span class="dv">5</span>: <span class="dv">6747</span>, <span class="dv">10</span>: <span class="dv">7424</span>, <span class="dv">20</span>: <span class="dv">7936</span>, <span class="dv">50</span>: <span class="dv">8816</span>, <span class="dv">100</span>: <span class="dv">8816</span>},</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GEOGloWS return periods from downloaded parquet</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    rp_geo <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp_level <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>]:</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        geo_val <span class="op">=</span> rp_geo.loc[rp_level].values[<span class="dv">0</span>]</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        row <span class="op">=</span> {</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Return Period"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_level<span class="sc">}</span><span class="ss">-yr"</span>,</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS (m³/s)"</span>: <span class="ss">f"</span><span class="sc">{</span>geo_val<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GloFAS Copernicus dashboard values</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> rp_level <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp2<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> rp_level <span class="op">==</span> <span class="dv">5</span>:</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp5<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="st">"—"</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GloFAS empirical values (from reanalysis annual maxima)</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> rp_level <span class="kw">in</span> glofas_emp:</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Empirical (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>glofas_emp[rp_level]<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Empirical (m³/s)"</span>] <span class="op">=</span> <span class="st">"—"</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        rows.append(row)</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>comparison</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    rp_orig_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    rp_corr_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro_corrected(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    glofas_dashboard <span class="op">=</span> {<span class="dv">2</span>: <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp2<span class="sc">:,}</span><span class="ss">"</span>, <span class="dv">5</span>: <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp5<span class="sc">:,}</span><span class="ss">"</span>}</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>]:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        rows.append({</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Return Period"</span>: <span class="ss">f"</span><span class="sc">{</span>rp<span class="sc">}</span><span class="ss">-yr"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GloFAS Dashboard"</span>: glofas_dashboard.get(rp, <span class="st">"—"</span>),</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GloFAS Empirical"</span>: <span class="ss">f"</span><span class="sc">{</span>glofas_emp[rp]<span class="sc">:,}</span><span class="ss">"</span> <span class="cf">if</span> rp <span class="kw">in</span> glofas_emp <span class="cf">else</span> <span class="st">"—"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS Published"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_pub[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS Empirical"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_orig_emp[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS SFDC-corrected"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_corr_emp[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>comparison</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -346,9 +369,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">Station</th>
 <th data-quarto-table-cell-role="th">Return Period</th>
-<th data-quarto-table-cell-role="th">GEOGloWS (m³/s)</th>
-<th data-quarto-table-cell-role="th">GloFAS Dashboard (m³/s)</th>
-<th data-quarto-table-cell-role="th">GloFAS Empirical (m³/s)</th>
+<th data-quarto-table-cell-role="th">GloFAS Dashboard</th>
+<th data-quarto-table-cell-role="th">GloFAS Empirical</th>
+<th data-quarto-table-cell-role="th">GEOGloWS Published</th>
+<th data-quarto-table-cell-role="th">GEOGloWS Empirical</th>
+<th data-quarto-table-cell-role="th">GEOGloWS SFDC-corrected</th>
 </tr>
 </thead>
 <tbody>
@@ -356,97 +381,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th data-quarto-table-cell-role="th">0</th>
 <td>Chatara</td>
 <td>2-yr</td>
-<td>14,459</td>
 <td>8,113</td>
 <td>7,831</td>
+<td>14,459</td>
+<td>14,169</td>
+<td>6,983</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>Chatara</td>
 <td>5-yr</td>
-<td>18,433</td>
 <td>10,306</td>
 <td>9,716</td>
+<td>18,433</td>
+<td>17,607</td>
+<td>8,345</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
 <td>Chatara</td>
 <td>10-yr</td>
-<td>21,056</td>
 <td>—</td>
 <td>11,408</td>
+<td>21,056</td>
+<td>19,113</td>
+<td>9,539</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
 <td>Chatara</td>
 <td>25-yr</td>
+<td>—</td>
+<td>—</td>
 <td>24,380</td>
-<td>—</td>
-<td>—</td>
+<td>25,648</td>
+<td>10,386</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
 <td>Chatara</td>
 <td>50-yr</td>
-<td>26,870</td>
 <td>—</td>
 <td>16,951</td>
+<td>26,870</td>
+<td>27,064</td>
+<td>12,250</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">5</th>
 <td>Chatara</td>
 <td>100-yr</td>
-<td>29,378</td>
 <td>—</td>
 <td>16,951</td>
+<td>29,378</td>
+<td>27,064</td>
+<td>13,319</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">6</th>
 <td>Chisapani</td>
 <td>2-yr</td>
-<td>6,745</td>
 <td>5,664</td>
 <td>5,847</td>
+<td>6,745</td>
+<td>6,297</td>
+<td>3,992</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">7</th>
 <td>Chisapani</td>
 <td>5-yr</td>
-<td>10,005</td>
 <td>6,797</td>
 <td>6,747</td>
+<td>10,005</td>
+<td>10,234</td>
+<td>7,139</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">8</th>
 <td>Chisapani</td>
 <td>10-yr</td>
-<td>12,083</td>
 <td>—</td>
 <td>7,424</td>
+<td>12,083</td>
+<td>12,678</td>
+<td>7,767</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">9</th>
 <td>Chisapani</td>
 <td>25-yr</td>
+<td>—</td>
+<td>—</td>
 <td>14,589</td>
-<td>—</td>
-<td>—</td>
+<td>13,741</td>
+<td>8,128</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">10</th>
 <td>Chisapani</td>
 <td>50-yr</td>
-<td>16,365</td>
 <td>—</td>
 <td>8,816</td>
+<td>16,365</td>
+<td>14,774</td>
+<td>8,807</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">11</th>
 <td>Chisapani</td>
 <td>100-yr</td>
-<td>18,066</td>
 <td>—</td>
 <td>8,816</td>
+<td>18,066</td>
+<td>15,335</td>
+<td>9,570</td>
 </tr>
 </tbody>
 </table>
@@ -455,84 +504,218 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="key-observations" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="key-observations"><span class="header-section-number">3.3</span> Key Observations</h2>
-<section id="chatara-koshi" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="chatara-koshi"><span class="header-section-number">3.3.1</span> Chatara (Koshi)</h3>
-<div id="5b0804e0" class="cell" data-execution_count="3">
+<section id="visual-comparison" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="visual-comparison"><span class="header-section-number">3.3</span> Visual Comparison</h2>
+<div id="7e27e9be" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (key, station) <span class="kw">in</span> <span class="bu">zip</span>(axes, STATIONS.items()):</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    rp_geo <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">5</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (key, station) <span class="kw">in</span> <span class="bu">zip</span>(axes, STATIONS.items()):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    rp_levels <span class="op">=</span> rp_geo.index.values</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    geo_vals <span class="op">=</span> rp_geo.iloc[:, <span class="dv">0</span>].values</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    rp_corr_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro_corrected(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GEOGloWS (Log-Pearson III)</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    ax.plot(rp_levels, geo_vals, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"GEOGloWS (Log-Pearson III)"</span>,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#1f77b4"</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GloFAS empirical (from reanalysis annual maxima)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    ax.plot(rp_pub.index, rp_pub.values, <span class="st">"o-"</span>,</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GEOGloWS published (Log-Pearson III)"</span>, color<span class="op">=</span><span class="st">"#1f77b4"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="bu">list</span>(rp_corr_emp.keys()), <span class="bu">list</span>(rp_corr_emp.values()), <span class="st">"v--"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GEOGloWS SFDC-corrected (empirical)"</span>, color<span class="op">=</span><span class="st">"#7570b3"</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    emp_rps <span class="op">=</span> <span class="bu">sorted</span>(glofas_emp.keys())</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    emp_vals <span class="op">=</span> [glofas_emp[rp] <span class="cf">for</span> rp <span class="kw">in</span> emp_rps]</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    ax.plot(emp_rps, emp_vals, <span class="st">"s-"</span>, label<span class="op">=</span><span class="st">"GloFAS Empirical"</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#d62728"</span>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GloFAS dashboard (Gumbel) — just RP2 and RP5</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">2</span>, station.glofas_rp2, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            markersize<span class="op">=</span><span class="dv">10</span>, label<span class="op">=</span><span class="st">"GloFAS Dashboard (Gumbel)"</span>)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">5</span>, station.glofas_rp5, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Return Period (years)"</span>)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Discharge (m³/s)"</span>)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    ax.set_title(station.name)</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    ax.plot(emp_rps, [glofas_emp[r] <span class="cf">for</span> r <span class="kw">in</span> emp_rps], <span class="st">"s-"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GloFAS empirical"</span>, color<span class="op">=</span><span class="st">"#d62728"</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">2</span>, station.glofas_rp2, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GloFAS dashboard (Gumbel)"</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">5</span>, station.glofas_rp5, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Return Period (years)"</span>)</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Discharge (m³/s)"</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    ax.set_title(station.name)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="03-return-periods_files/figure-html/cell-4-output-1.png" width="1142" height="468" class="figure-img"></p>
+<p><img src="03-return-periods_files/figure-html/cell-4-output-1.png" width="1238" height="468" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p><strong>GEOGloWS consistently produces higher return period values:</strong></p>
+</section>
+<section id="what-the-numbers-say" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="what-the-numbers-say"><span class="header-section-number">3.4</span> What the numbers say</h2>
+<p><strong>Uncorrected, GEOGloWS RPs are higher than GloFAS:</strong></p>
 <ul>
-<li><strong>Chatara RP2</strong>: GEOGloWS 14,459 vs GloFAS 8,113 — <strong>78% higher</strong></li>
-<li><strong>Chatara RP5</strong>: GEOGloWS 18,433 vs GloFAS 10,306 — <strong>79% higher</strong></li>
-<li><strong>Chisapani RP2</strong>: GEOGloWS 6,745 vs GloFAS 5,664 — <strong>19% higher</strong></li>
-<li><strong>Chisapani RP5</strong>: GEOGloWS 10,005 vs GloFAS 6,797 — <strong>47% higher</strong></li>
+<li><strong>Chatara RP2</strong>: 14,459 (GEO) vs 8,113 (GloFAS dashboard) — <strong>+78%</strong></li>
+<li><strong>Chatara RP5</strong>: 18,433 vs 10,306 — <strong>+79%</strong></li>
+<li><strong>Chisapani RP2</strong>: 6,745 vs 5,664 — <strong>+19%</strong></li>
+<li><strong>Chisapani RP5</strong>: 10,005 vs 6,797 — <strong>+47%</strong></li>
 </ul>
+<p><strong>SFDC bias correction overshoots the gap and pushes most GEOGloWS RPs <em>below</em> GloFAS:</strong></p>
+<ul>
+<li><strong>Chatara RP2</strong>: 14,459 → 6,983 (now 14% below GloFAS dashboard)</li>
+<li><strong>Chatara RP5</strong>: 18,433 → 8,345 (now 19% below)</li>
+<li><strong>Chisapani RP2</strong>: 6,745 → 3,992 (now 30% below)</li>
+<li><strong>Chisapani RP5</strong>: 10,005 → 7,139 (5% above)</li>
+</ul>
+<p>In other words, SFDC does not gently align GEOGloWS with GloFAS — it deflates the entire distribution. The Chatara mean drops from 2,258 to 1,585 m³/s and the maximum is roughly halved (27,064 → 13,319 m³/s). That magnitude shift carries through to the empirical RP estimates.</p>
 </section>
-</section>
-<section id="why-the-difference" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="why-the-difference"><span class="header-section-number">3.4</span> Why the Difference?</h2>
-<p>Several factors contribute to the divergence:</p>
+<section id="why-uncorrected-geoglows-reads-higher" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="why-uncorrected-geoglows-reads-higher"><span class="header-section-number">3.5</span> Why uncorrected GEOGloWS reads higher</h2>
+<p>Several factors push the published Log-Pearson III estimates above GloFAS:</p>
 <ol type="1">
-<li><p><strong>Different distributions</strong>: Log-Pearson III (GEOGloWS) vs Gumbel (GloFAS). Log-Pearson III has a heavier tail which can produce higher extreme value estimates.</p></li>
-<li><p><strong>Different record lengths</strong>: 86 years (GEOGloWS) vs 44 years (GloFAS). The longer GEOGloWS record may capture rarer extreme events that the GloFAS period misses.</p></li>
-<li><p><strong>Different hydrological models</strong>: RAPID routes ECMWF runoff through a vector river network. LISFLOOD (GloFAS) is a full land-surface model with calibration against ~2,000+ gauges. The uncalibrated RAPID model may overestimate peak flows.</p></li>
-<li><p><strong>Different river delineation</strong>: TDX-Hydro reaches vs GloFAS grid cells. The contributing area of the matched reach may differ between systems.</p></li>
-<li><p><strong>Different spatial representation</strong>: The GEOGloWS river_id we matched may not correspond to the exact same point on the river as the GloFAS grid cell.</p></li>
+<li><strong>Distribution choice</strong>: Log-Pearson III has a heavier tail than Gumbel.</li>
+<li><strong>Record length</strong>: 86 years (GEOGloWS) vs 44 (GloFAS). The longer record can sample rarer events. GEOGloWS’s largest annual maxes for Chisapani fall in 1947, 1948, 1951, 1957–59, 1971, and 1974 — entirely outside the GloFAS window.</li>
+<li><strong>Model differences</strong>: RAPID routes ECMWF/ERA5 runoff through a vector network with no calibration step; LISFLOOD is a full land-surface model calibrated against ~2,000+ gauges.</li>
+<li><strong>River delineation</strong>: TDX-Hydro reach areas are not guaranteed to match GloFAS grid-cell drainage.</li>
 </ol>
 </section>
-<section id="implications-for-the-aa-framework" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="implications-for-the-aa-framework"><span class="header-section-number">3.5</span> Implications for the AA Framework</h2>
-<p>If GEOGloWS return periods were used directly as trigger thresholds, they would produce <strong>fewer triggers</strong> than GloFAS thresholds (higher bar to clear). However, this comparison is between return periods derived from different models — the forecast discharge magnitudes also differ. The meaningful comparison is event-level: does GEOGloWS flag the same flood events as actually observed? This is explored in <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<section id="bias-correction-what-it-does-and-does-not-do" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="bias-correction-what-it-does-and-does-not-do"><span class="header-section-number">3.6</span> Bias correction: what it does and does not do</h2>
+<p><code>geoglows.bias</code> exposes three methods. Only one is usable here:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 65%">
+<col style="width: 17%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Requires observed discharge?</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>correct_historical()</code></td>
+<td>Yes</td>
+<td>Blocked: DHM provides water level, not discharge</td>
+</tr>
+<tr class="even">
+<td><code>correct_forecast()</code></td>
+<td>Yes</td>
+<td>Same blocker</td>
+</tr>
+<tr class="odd">
+<td><code>sfdc_bias_correction()</code></td>
+<td>No (uses pre-computed SABER scalars)</td>
+<td>Applied here</td>
+</tr>
+</tbody>
+</table>
+<p>SFDC works by looking up pre-computed scalar correction factors for each month and percentile of the simulated flow-duration curve and rescaling the simulation accordingly. The correction is global — derived from the SABER reference dataset — and does not learn from local observations.</p>
+<p>The threshold-level finding above is that SFDC consistently <em>deflates</em> both stations. Whether that helps the actual use case (detecting observed flood events) is the question for <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+</section>
+<section id="window-sensitivity-published-rps-are-not-stable-across-the-record" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="window-sensitivity-published-rps-are-not-stable-across-the-record"><span class="header-section-number">3.7</span> Window sensitivity: published RPs are not stable across the record</h2>
+<p>The published GEOGloWS RPs are fitted to the full 1940–present retrospective. If the model behaves differently in the early period than in the validation window we have DHM data for, the published threshold is biased relative to what would be empirically reasonable for the validation period.</p>
+<div id="72e03acd" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>windows <span class="op">=</span> []</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    series <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)[<span class="st">"discharge"</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    pub <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    full <span class="op">=</span> compute_return_levels(series, [<span class="dv">2</span>, <span class="dv">5</span>])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    val <span class="op">=</span> compute_return_levels(</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        series[(series.index.year <span class="op">&gt;=</span> <span class="dv">1985</span>) <span class="op">&amp;</span> (series.index.year <span class="op">&lt;=</span> <span class="dv">2014</span>)], [<span class="dv">2</span>, <span class="dv">5</span>]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    pre <span class="op">=</span> compute_return_levels(series[series.index.year <span class="op">&lt;</span> <span class="dv">1985</span>], [<span class="dv">2</span>, <span class="dv">5</span>])</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>]:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        windows.append({</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RP"</span>: <span class="ss">f"</span><span class="sc">{</span>rp<span class="sc">}</span><span class="ss">-yr"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Published (LP3, full)"</span>: <span class="ss">f"</span><span class="sc">{</span>pub[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (full 1940–present)"</span>: <span class="ss">f"</span><span class="sc">{</span>full[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (1985–2014, validation)"</span>: <span class="ss">f"</span><span class="sc">{</span>val[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (pre-1985)"</span>: <span class="ss">f"</span><span class="sc">{</span>pre[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(windows)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Station</th>
+<th data-quarto-table-cell-role="th">RP</th>
+<th data-quarto-table-cell-role="th">Published (LP3, full)</th>
+<th data-quarto-table-cell-role="th">Empirical (full 1940–present)</th>
+<th data-quarto-table-cell-role="th">Empirical (1985–2014, validation)</th>
+<th data-quarto-table-cell-role="th">Empirical (pre-1985)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Chatara</td>
+<td>2-yr</td>
+<td>14,459</td>
+<td>14,169</td>
+<td>13,388</td>
+<td>14,632</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Chatara</td>
+<td>5-yr</td>
+<td>18,433</td>
+<td>17,607</td>
+<td>15,475</td>
+<td>18,225</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>Chisapani</td>
+<td>2-yr</td>
+<td>6,745</td>
+<td>6,297</td>
+<td>5,288</td>
+<td>6,804</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Chisapani</td>
+<td>5-yr</td>
+<td>10,005</td>
+<td>10,234</td>
+<td>8,241</td>
+<td>12,123</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>For Chatara the windows agree to within ~7%. For <strong>Chisapani the validation-window RP2 is 5,288 vs 6,745 published — about 22% lower</strong>. The pre-1985 era contains the largest GEOGloWS Karnali peaks (1947, 1948, 1951, 1957–59) that pull the LP3 fit upward.</p>
+<p>This matters: if you used the published RP2 as a trigger but the model’s 1985-onward statistics don’t support it, you’d be using a threshold the modern record rarely produces. Whether that effect is large enough to matter for detection is tested in <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a> — applying the validation-window RP2 to the validation slice, the answer is “marginally for Chatara, not at all for Chisapani.”</p>
+</section>
+<section id="implication" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="implication"><span class="header-section-number">3.8</span> Implication</h2>
+<p>RP-based triggers are normalized to the data source by construction: applying each source’s RP2 to its own record fires at roughly the same long-run frequency (~1 in 2 years), regardless of whether that threshold is 5,664 or 14,459 m³/s. The magnitude divergence above does not change the <em>number</em> of triggers, only the threshold value at which each source fires.</p>
+<p>What the magnitude divergence tells us is how differently each source represents the basin’s flood regime. SFDC correction does not split the difference; it overshoots, putting most GEOGloWS RPs below GloFAS. Whether any of these definitions actually fires on the right days — the events DHM observed — is the question for <a href="05-event-detection.html" class="quarto-xref"><span>Chapter 5</span></a>. The next chapter first looks at the time series and seasonal cycle to see whether the sources at least agree about when monsoon flow peaks and how big it gets.</p>
 
 
 <!-- -->
@@ -998,159 +1181,206 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./04-retrospective-comparison.html" class="pagination-link" aria-label="Retrospective Comparison">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Retrospective Comparison</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./04-retrospective-comparison.html" class="pagination-link" aria-label="Time Series &amp; Seasonal Patterns">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Time Series &amp; Seasonal Patterns</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Return Period Comparison</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> <span class="bu">str</span>(Path.cwd().parent)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> repo_root <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, repo_root)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>Return period thresholds are central to the AA trigger framework — they define what constitutes a "significant" flood event. Different data sources compute return periods using different methods, distributional assumptions, and underlying data, producing notably different threshold values.</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Sources and Methods</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Source <span class="pp">|</span> Period <span class="pp">|</span> Distribution <span class="pp">|</span> Method <span class="pp">|</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|--------|--------|-------------|--------|</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GloFAS (Copernicus dashboard) <span class="pp">|</span> 1979–present <span class="pp">|</span> Gumbel Type I <span class="pp">|</span> Fitted to reanalysis annual maxima <span class="pp">|</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GloFAS (empirical, notebook 01.0) <span class="pp">|</span> 1979–2023 <span class="pp">|</span> Empirical quantile <span class="pp">|</span> Ranked annual maxima <span class="pp">|</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GEOGloWS v2 <span class="pp">|</span> 1940–present <span class="pp">|</span> Log-Pearson III <span class="pp">|</span> Fitted to retrospective annual maxima <span class="pp">|</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>The GEOGloWS retrospective covers 86 years vs GloFAS's 44 years. A longer record should produce more stable extreme value estimates, but the underlying hydrological model also differs (RAPID routing-only vs LISFLOOD full land surface).</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cross-Source Comparison</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># GloFAS empirical return levels computed from reanalysis (1979-2023)</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Source: notebook 01.0 compute_return_levels() on GloFAS reanalysis NetCDF</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>GLOFAS_EMPIRICAL <span class="op">=</span> {</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chatara"</span>: {<span class="dv">2</span>: <span class="dv">7831</span>, <span class="dv">5</span>: <span class="dv">9716</span>, <span class="dv">10</span>: <span class="dv">11408</span>, <span class="dv">20</span>: <span class="dv">14396</span>, <span class="dv">50</span>: <span class="dv">16951</span>, <span class="dv">100</span>: <span class="dv">16951</span>},</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chisapani"</span>: {<span class="dv">2</span>: <span class="dv">5847</span>, <span class="dv">5</span>: <span class="dv">6747</span>, <span class="dv">10</span>: <span class="dv">7424</span>, <span class="dv">20</span>: <span class="dv">7936</span>, <span class="dv">50</span>: <span class="dv">8816</span>, <span class="dv">100</span>: <span class="dv">8816</span>},</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GEOGloWS return periods from downloaded parquet</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    rp_geo <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp_level <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>]:</span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>        geo_val <span class="op">=</span> rp_geo.loc[rp_level].values[<span class="dv">0</span>]</span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>        row <span class="op">=</span> {</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Return Period"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_level<span class="sc">}</span><span class="ss">-yr"</span>,</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS (m³/s)"</span>: <span class="ss">f"</span><span class="sc">{</span>geo_val<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GloFAS Copernicus dashboard values</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> rp_level <span class="op">==</span> <span class="dv">2</span>:</span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp2<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> rp_level <span class="op">==</span> <span class="dv">5</span>:</span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp5<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Dashboard (m³/s)"</span>] <span class="op">=</span> <span class="st">"—"</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GloFAS empirical values (from reanalysis annual maxima)</span></span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> rp_level <span class="kw">in</span> glofas_emp:</span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Empirical (m³/s)"</span>] <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>glofas_emp[rp_level]<span class="sc">:,}</span><span class="ss">"</span></span>
-<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>            row[<span class="st">"GloFAS Empirical (m³/s)"</span>] <span class="op">=</span> <span class="st">"—"</span></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>        rows.append(row)</span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> pd.DataFrame(rows)</span>
-<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>comparison</span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key Observations</span></span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a><span class="fu">### Chatara (Koshi)</span></span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
-<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (key, station) <span class="kw">in</span> <span class="bu">zip</span>(axes, STATIONS.items()):</span>
-<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
-<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    rp_geo <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
-<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    rp_levels <span class="op">=</span> rp_geo.index.values</span>
-<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>    geo_vals <span class="op">=</span> rp_geo.iloc[:, <span class="dv">0</span>].values</span>
-<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GEOGloWS (Log-Pearson III)</span></span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>    ax.plot(rp_levels, geo_vals, <span class="st">"o-"</span>, label<span class="op">=</span><span class="st">"GEOGloWS (Log-Pearson III)"</span>,</span>
-<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#1f77b4"</span>)</span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GloFAS empirical (from reanalysis annual maxima)</span></span>
-<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
-<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>    emp_rps <span class="op">=</span> <span class="bu">sorted</span>(glofas_emp.keys())</span>
-<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>    emp_vals <span class="op">=</span> [glofas_emp[rp] <span class="cf">for</span> rp <span class="kw">in</span> emp_rps]</span>
-<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>    ax.plot(emp_rps, emp_vals, <span class="st">"s-"</span>, label<span class="op">=</span><span class="st">"GloFAS Empirical"</span>,</span>
-<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">"#d62728"</span>)</span>
-<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>    <span class="co"># GloFAS dashboard (Gumbel) — just RP2 and RP5</span></span>
-<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">2</span>, station.glofas_rp2, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>,</span>
-<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>            markersize<span class="op">=</span><span class="dv">10</span>, label<span class="op">=</span><span class="st">"GloFAS Dashboard (Gumbel)"</span>)</span>
-<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">5</span>, station.glofas_rp5, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Return Period (years)"</span>)</span>
-<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Discharge (m³/s)"</span>)</span>
-<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>    ax.set_title(station.name)</span>
-<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
-<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>**GEOGloWS consistently produces higher return period values:**</span>
-<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP2**: GEOGloWS 14,459 vs GloFAS 8,113 — **78% higher**</span>
-<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP5**: GEOGloWS 18,433 vs GloFAS 10,306 — **79% higher**</span>
-<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP2**: GEOGloWS 6,745 vs GloFAS 5,664 — **19% higher**</span>
-<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP5**: GEOGloWS 10,005 vs GloFAS 6,797 — **47% higher**</span>
-<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why the Difference?</span></span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>Several factors contribute to the divergence:</span>
-<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Different distributions**: Log-Pearson III (GEOGloWS) vs Gumbel (GloFAS). Log-Pearson III has a heavier tail which can produce higher extreme value estimates.</span>
-<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Different record lengths**: 86 years (GEOGloWS) vs 44 years (GloFAS). The longer GEOGloWS record may capture rarer extreme events that the GloFAS period misses.</span>
-<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Different hydrological models**: RAPID routes ECMWF runoff through a vector river network. LISFLOOD (GloFAS) is a full land-surface model with calibration against ~2,000+ gauges. The uncalibrated RAPID model may overestimate peak flows.</span>
-<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Different river delineation**: TDX-Hydro reaches vs GloFAS grid cells. The contributing area of the matched reach may differ between systems.</span>
-<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Different spatial representation**: The GEOGloWS river_id we matched may not correspond to the exact same point on the river as the GloFAS grid cell.</span>
-<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implications for the AA Framework</span></span>
-<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a>If GEOGloWS return periods were used directly as trigger thresholds, they would produce **fewer triggers** than GloFAS thresholds (higher bar to clear). However, this comparison is between return periods derived from different models — the forecast discharge magnitudes also differ. The meaningful comparison is event-level: does GEOGloWS flag the same flood events as actually observed? This is explored in @sec-event-detection.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Threshold Comparison</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> <span class="bu">str</span>(Path.cwd().parent)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> repo_root <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, repo_root)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>Return-period thresholds define what counts as a "significant" flood event in the AA framework. Different sources fit different distributions to different record lengths, so the threshold values diverge — sometimes a lot. This chapter compares them and asks whether GEOGloWS's built-in SFDC bias correction narrows the gap with GloFAS.</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sources and Methods</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Source <span class="pp">|</span> Period <span class="pp">|</span> Distribution <span class="pp">|</span> Notes <span class="pp">|</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|--------|--------|-------------|-------|</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GloFAS Copernicus dashboard <span class="pp">|</span> 1979–present <span class="pp">|</span> Gumbel Type I <span class="pp">|</span> Fitted to reanalysis annual maxima <span class="pp">|</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GloFAS empirical <span class="pp">|</span> 1979–2023 <span class="pp">|</span> Empirical quantile <span class="pp">|</span> Ranked annual maxima (notebook 01.0) <span class="pp">|</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GEOGloWS published <span class="pp">|</span> 1940–present <span class="pp">|</span> Log-Pearson III <span class="pp">|</span> Pre-computed via <span class="in">`geoglows.data.return_periods`</span> <span class="pp">|</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GEOGloWS empirical (uncorrected) <span class="pp">|</span> 1940–present <span class="pp">|</span> Empirical quantile <span class="pp">|</span> Computed from retro daily <span class="pp">|</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> GEOGloWS empirical (SFDC corrected) <span class="pp">|</span> 1940–present <span class="pp">|</span> Empirical quantile <span class="pp">|</span> After <span class="in">`geoglows.bias.sfdc_bias_correction`</span> <span class="pp">|</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>GEOGloWS's record is 86 years vs GloFAS's 44, but the underlying hydrology also differs — RAPID is a routing-only model running on TDX-Hydro, while LISFLOOD is a calibrated full land-surface model.</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## Cross-Source Comparison</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS, RETURN_PERIODS</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co"># GloFAS empirical return levels from reanalysis (1979-2023), source: notebook 01.0</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>GLOFAS_EMPIRICAL <span class="op">=</span> {</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chatara"</span>: {<span class="dv">2</span>: <span class="dv">7831</span>, <span class="dv">5</span>: <span class="dv">9716</span>, <span class="dv">10</span>: <span class="dv">11408</span>, <span class="dv">20</span>: <span class="dv">14396</span>, <span class="dv">50</span>: <span class="dv">16951</span>, <span class="dv">100</span>: <span class="dv">16951</span>},</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Chisapani"</span>: {<span class="dv">2</span>: <span class="dv">5847</span>, <span class="dv">5</span>: <span class="dv">6747</span>, <span class="dv">10</span>: <span class="dv">7424</span>, <span class="dv">20</span>: <span class="dv">7936</span>, <span class="dv">50</span>: <span class="dv">8816</span>, <span class="dv">100</span>: <span class="dv">8816</span>},</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    rp_orig_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    rp_corr_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro_corrected(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>    glofas_dashboard <span class="op">=</span> {<span class="dv">2</span>: <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp2<span class="sc">:,}</span><span class="ss">"</span>, <span class="dv">5</span>: <span class="ss">f"</span><span class="sc">{</span>station<span class="sc">.</span>glofas_rp5<span class="sc">:,}</span><span class="ss">"</span>}</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>]:</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>        rows.append({</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Return Period"</span>: <span class="ss">f"</span><span class="sc">{</span>rp<span class="sc">}</span><span class="ss">-yr"</span>,</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GloFAS Dashboard"</span>: glofas_dashboard.get(rp, <span class="st">"—"</span>),</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GloFAS Empirical"</span>: <span class="ss">f"</span><span class="sc">{</span>glofas_emp[rp]<span class="sc">:,}</span><span class="ss">"</span> <span class="cf">if</span> rp <span class="kw">in</span> glofas_emp <span class="cf">else</span> <span class="st">"—"</span>,</span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS Published"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_pub[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS Empirical"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_orig_emp[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>            <span class="st">"GEOGloWS SFDC-corrected"</span>: <span class="ss">f"</span><span class="sc">{</span>rp_corr_emp[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>comparison <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>comparison</span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visual Comparison</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">5</span>))</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, (key, station) <span class="kw">in</span> <span class="bu">zip</span>(axes, STATIONS.items()):</span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>]</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>    rp_corr_emp <span class="op">=</span> compute_return_levels(</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>        load_geoglows_retro_corrected(rid, DATA_DIR)[<span class="st">"discharge"</span>], RETURN_PERIODS</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    ax.plot(rp_pub.index, rp_pub.values, <span class="st">"o-"</span>,</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GEOGloWS published (Log-Pearson III)"</span>, color<span class="op">=</span><span class="st">"#1f77b4"</span>)</span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="bu">list</span>(rp_corr_emp.keys()), <span class="bu">list</span>(rp_corr_emp.values()), <span class="st">"v--"</span>,</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GEOGloWS SFDC-corrected (empirical)"</span>, color<span class="op">=</span><span class="st">"#7570b3"</span>)</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    glofas_emp <span class="op">=</span> GLOFAS_EMPIRICAL[station.name]</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    emp_rps <span class="op">=</span> <span class="bu">sorted</span>(glofas_emp.keys())</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    ax.plot(emp_rps, [glofas_emp[r] <span class="cf">for</span> r <span class="kw">in</span> emp_rps], <span class="st">"s-"</span>,</span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GloFAS empirical"</span>, color<span class="op">=</span><span class="st">"#d62728"</span>)</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">2</span>, station.glofas_rp2, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span><span class="st">"GloFAS dashboard (Gumbel)"</span>)</span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    ax.plot(<span class="dv">5</span>, station.glofas_rp5, <span class="st">"^"</span>, color<span class="op">=</span><span class="st">"#ff7f0e"</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>    ax.set_xscale(<span class="st">"log"</span>)</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"Return Period (years)"</span>)</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"Discharge (m³/s)"</span>)</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>    ax.set_title(station.name)</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>    ax.legend(fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## What the numbers say</span></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a>**Uncorrected, GEOGloWS RPs are higher than GloFAS:**</span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP2**: 14,459 (GEO) vs 8,113 (GloFAS dashboard) — **+78%**</span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP5**: 18,433 vs 10,306 — **+79%**</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP2**: 6,745 vs 5,664 — **+19%**</span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP5**: 10,005 vs 6,797 — **+47%**</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>**SFDC bias correction overshoots the gap and pushes most GEOGloWS RPs *below* GloFAS:**</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP2**: 14,459 → 6,983 (now 14% below GloFAS dashboard)</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chatara RP5**: 18,433 → 8,345 (now 19% below)</span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP2**: 6,745 → 3,992 (now 30% below)</span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chisapani RP5**: 10,005 → 7,139 (5% above)</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>In other words, SFDC does not gently align GEOGloWS with GloFAS — it deflates the entire distribution. The Chatara mean drops from 2,258 to 1,585 m³/s and the maximum is roughly halved (27,064 → 13,319 m³/s). That magnitude shift carries through to the empirical RP estimates.</span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why uncorrected GEOGloWS reads higher</span></span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>Several factors push the published Log-Pearson III estimates above GloFAS:</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Distribution choice**: Log-Pearson III has a heavier tail than Gumbel.</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Record length**: 86 years (GEOGloWS) vs 44 (GloFAS). The longer record can sample rarer events. GEOGloWS's largest annual maxes for Chisapani fall in 1947, 1948, 1951, 1957–59, 1971, and 1974 — entirely outside the GloFAS window.</span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Model differences**: RAPID routes ECMWF/ERA5 runoff through a vector network with no calibration step; LISFLOOD is a full land-surface model calibrated against ~2,000+ gauges.</span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**River delineation**: TDX-Hydro reach areas are not guaranteed to match GloFAS grid-cell drainage.</span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a><span class="fu">## Bias correction: what it does and does not do</span></span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a><span class="in">`geoglows.bias`</span> exposes three methods. Only one is usable here:</span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Method <span class="pp">|</span> Requires observed discharge? <span class="pp">|</span> Status <span class="pp">|</span></span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a><span class="pp">|--------|------------------------------|--------|</span></span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`correct_historical()`</span> <span class="pp">|</span> Yes <span class="pp">|</span> Blocked: DHM provides water level, not discharge <span class="pp">|</span></span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`correct_forecast()`</span> <span class="pp">|</span> Yes <span class="pp">|</span> Same blocker <span class="pp">|</span></span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> <span class="in">`sfdc_bias_correction()`</span> <span class="pp">|</span> No (uses pre-computed SABER scalars) <span class="pp">|</span> Applied here <span class="pp">|</span></span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a>SFDC works by looking up pre-computed scalar correction factors for each month and percentile of the simulated flow-duration curve and rescaling the simulation accordingly. The correction is global — derived from the SABER reference dataset — and does not learn from local observations.</span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a>The threshold-level finding above is that SFDC consistently *deflates* both stations. Whether that helps the actual use case (detecting observed flood events) is the question for @sec-event-detection.</span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## Window sensitivity: published RPs are not stable across the record</span></span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a>The published GEOGloWS RPs are fitted to the full 1940–present retrospective. If the model behaves differently in the early period than in the validation window we have DHM data for, the published threshold is biased relative to what would be empirically reasonable for the validation period.</span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a>windows <span class="op">=</span> []</span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a>    series <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)[<span class="st">"discharge"</span>]</span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a>    pub <span class="op">=</span> pd.read_parquet(</span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>    full <span class="op">=</span> compute_return_levels(series, [<span class="dv">2</span>, <span class="dv">5</span>])</span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a>    val <span class="op">=</span> compute_return_levels(</span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a>        series[(series.index.year <span class="op">&gt;=</span> <span class="dv">1985</span>) <span class="op">&amp;</span> (series.index.year <span class="op">&lt;=</span> <span class="dv">2014</span>)], [<span class="dv">2</span>, <span class="dv">5</span>]</span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a>    pre <span class="op">=</span> compute_return_levels(series[series.index.year <span class="op">&lt;</span> <span class="dv">1985</span>], [<span class="dv">2</span>, <span class="dv">5</span>])</span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> rp <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">5</span>]:</span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a>        windows.append({</span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Station"</span>: station.name,</span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a>            <span class="st">"RP"</span>: <span class="ss">f"</span><span class="sc">{</span>rp<span class="sc">}</span><span class="ss">-yr"</span>,</span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Published (LP3, full)"</span>: <span class="ss">f"</span><span class="sc">{</span>pub[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (full 1940–present)"</span>: <span class="ss">f"</span><span class="sc">{</span>full[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (1985–2014, validation)"</span>: <span class="ss">f"</span><span class="sc">{</span>val[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Empirical (pre-1985)"</span>: <span class="ss">f"</span><span class="sc">{</span>pre[rp]<span class="sc">:,.0f}</span><span class="ss">"</span>,</span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(windows)</span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a>For Chatara the windows agree to within ~7%. For **Chisapani the validation-window RP2 is 5,288 vs 6,745 published — about 22% lower**. The pre-1985 era contains the largest GEOGloWS Karnali peaks (1947, 1948, 1951, 1957–59) that pull the LP3 fit upward.</span>
+<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a>This matters: if you used the published RP2 as a trigger but the model's 1985-onward statistics don't support it, you'd be using a threshold the modern record rarely produces. Whether that effect is large enough to matter for detection is tested in @sec-event-detection — applying the validation-window RP2 to the validation slice, the answer is "marginally for Chatara, not at all for Chisapani."</span>
+<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a><span class="fu">## Implication</span></span>
+<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a>RP-based triggers are normalized to the data source by construction: applying each source's RP2 to its own record fires at roughly the same long-run frequency (~1 in 2 years), regardless of whether that threshold is 5,664 or 14,459 m³/s. The magnitude divergence above does not change the *number* of triggers, only the threshold value at which each source fires.</span>
+<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a>What the magnitude divergence tells us is how differently each source represents the basin's flood regime. SFDC correction does not split the difference; it overshoots, putting most GEOGloWS RPs below GloFAS. Whether any of these definitions actually fires on the right days — the events DHM observed — is the question for @sec-event-detection. The next chapter first looks at the time series and seasonal cycle to see whether the sources at least agree about when monsoon flow peaks and how big it gets.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
