@@ -300,7 +300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>NaN-pad your aggregations.</strong> If a Zarr store mixes resolutions on a shared axis, <code>nan*</code> reductions are the only safe default.</li>
 <li><strong>Use threading first, async second.</strong> Async only pays off when the underlying library is async too.</li>
 </ol>
-<p>The full optimized fetch script lives at <code>analysis/07_forecast_zarr_direct.py</code>; the produced parquet is <code>data/forecast_lead_times_v2.parquet</code> (20,010 rows).</p>
+<p>The full optimized fetch script lives at <code>analysis/07_forecast_zarr_direct.py</code>. The produced parquet is published to Azure blob at <code>ds-aa-npl-flooding/processed/geoglows/forecast_lead_times_v2.parquet</code> via <code>ocha_stratus</code> and consumed from there by Chapter 6.</p>
 
 
 <!-- -->
@@ -822,7 +822,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**NaN-pad your aggregations.** If a Zarr store mixes resolutions on a shared axis, <span class="in">`nan*`</span> reductions are the only safe default.</span>
 <span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Use threading first, async second.** Async only pays off when the underlying library is async too.</span>
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>The full optimized fetch script lives at <span class="in">`analysis/07_forecast_zarr_direct.py`</span>; the produced parquet is <span class="in">`data/forecast_lead_times_v2.parquet`</span> (20,010 rows).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>The full optimized fetch script lives at <span class="in">`analysis/07_forecast_zarr_direct.py`</span>. The produced parquet is published to Azure blob at <span class="in">`ds-aa-npl-flooding/processed/geoglows/forecast_lead_times_v2.parquet`</span> via <span class="in">`ocha_stratus`</span> and consumed from there by Chapter 6.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

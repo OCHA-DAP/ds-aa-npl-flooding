@@ -402,7 +402,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The <code>geoglows</code> Python package provides access to all data products. Data is stored on AWS S3 as Zarr arrays (retrospective) and on a REST API (forecasts).</p>
 <section id="key-functions" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="key-functions"><span class="header-section-number">1.4.1</span> Key Functions</h3>
-<div id="cf33a039" class="cell" data-execution_count="3">
+<div id="4fdabf5c" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geoglows.data <span class="im">as</span> gd</span>
@@ -486,12 +486,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="quick-demo-return-periods" class="level3" data-number="1.4.2">
 <h3 data-number="1.4.2" class="anchored" data-anchor-id="quick-demo-return-periods"><span class="header-section-number">1.4.2</span> Quick Demo: Return Periods</h3>
-<div id="fc9c7593" class="cell" data-execution_count="4">
+<div id="e6f27457" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rp <span class="op">=</span> pd.read_parquet(Path(repo_root) <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"geoglows_return_periods_441135650.parquet"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Chatara (Koshi) — GEOGloWS Return Periods (m³/s):"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>rp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ocha_stratus <span class="im">as</span> stratus</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> BLOB_PREFIX, BLOB_STAGE</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rp <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_441135650.parquet"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    stage<span class="op">=</span>BLOB_STAGE,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Chatara (Koshi) — GEOGloWS Return Periods (m³/s):"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>rp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Chatara (Koshi) — GEOGloWS Return Periods (m³/s):</code></pre>
@@ -1135,36 +1141,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quick Demo: Return Periods</span></span>
 <span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>rp <span class="op">=</span> pd.read_parquet(Path(repo_root) <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"geoglows_return_periods_441135650.parquet"</span>)</span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Chatara (Koshi) — GEOGloWS Return Periods (m³/s):"</span>)</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>rp</span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quick Demo: Forecast Ensemble Structure</span></span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: fetch today's forecast (not run at render time — requires S3 search)</span></span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> gd.forecast_stats(river_id<span class="op">=</span><span class="dv">441135650</span>)</span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns DataFrame with columns:</span></span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a><span class="co">#   flow_min, flow_25p, flow_avg, flow_med, flow_75p, flow_max, high_res</span></span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Index: hourly timestamps over 15-day forecast window</span></span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a><span class="co"># Shape: ~280 rows x 7 columns</span></span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>The forecast data has 52 ensemble members (51 perturbed + 1 high-resolution control). The <span class="in">`forecast_stats()`</span> function returns summary statistics across the 51 perturbed members; <span class="in">`forecast_ensembles()`</span> returns all 52 individual traces.</span>
-<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Storage</span></span>
-<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Retrospective**: S3 Zarr at <span class="in">`s3://geoglows-v2/`</span> (anonymous access)</span>
-<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Forecasts**: S3 Zarr, organized by date (<span class="in">`YYYYMMDDHH.zarr`</span>)</span>
-<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**REST API**: <span class="in">`https://geoglows.ecmwf.int/api/v2/`</span> (backup access method)</span>
-<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Metadata table**: Parquet file with all ~6.8M river reach properties</span>
-<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a><span class="fu">### Known Issues</span></span>
-<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The <span class="in">`pytz`</span> package is missing from the declared dependencies (must be installed manually)</span>
-<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`latlon_to_river()`</span> requires downloading the full metadata table (~100MB+), which is slow on first call</span>
-<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The metadata table in v2.2.0 does not contain lat/lon columns despite the function trying to use them — the REST <span class="in">`getriverid`</span> endpoint is more reliable</span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ocha_stratus <span class="im">as</span> stratus</span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> BLOB_PREFIX, BLOB_STAGE</span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>rp <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>    <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_441135650.parquet"</span>,</span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    stage<span class="op">=</span>BLOB_STAGE,</span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Chatara (Koshi) — GEOGloWS Return Periods (m³/s):"</span>)</span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>rp</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a><span class="fu">### Quick Demo: Forecast Ensemble Structure</span></span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: fetch today's forecast (not run at render time — requires S3 search)</span></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> gd.forecast_stats(river_id<span class="op">=</span><span class="dv">441135650</span>)</span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns DataFrame with columns:</span></span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a><span class="co">#   flow_min, flow_25p, flow_avg, flow_med, flow_75p, flow_max, high_res</span></span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Index: hourly timestamps over 15-day forecast window</span></span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Shape: ~280 rows x 7 columns</span></span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a>The forecast data has 52 ensemble members (51 perturbed + 1 high-resolution control). The <span class="in">`forecast_stats()`</span> function returns summary statistics across the 51 perturbed members; <span class="in">`forecast_ensembles()`</span> returns all 52 individual traces.</span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Storage</span></span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Retrospective**: S3 Zarr at <span class="in">`s3://geoglows-v2/`</span> (anonymous access)</span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Forecasts**: S3 Zarr, organized by date (<span class="in">`YYYYMMDDHH.zarr`</span>)</span>
+<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**REST API**: <span class="in">`https://geoglows.ecmwf.int/api/v2/`</span> (backup access method)</span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Metadata table**: Parquet file with all ~6.8M river reach properties</span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a><span class="fu">### Known Issues</span></span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The <span class="in">`pytz`</span> package is missing from the declared dependencies (must be installed manually)</span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`latlon_to_river()`</span> requires downloading the full metadata table (~100MB+), which is slow on first call</span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The metadata table in v2.2.0 does not contain lat/lon columns despite the function trying to use them — the REST <span class="in">`getriverid`</span> endpoint is more reliable</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -256,31 +256,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>This is the central validation. We take observed DHM danger-level crossings as the reference, and ask whether each model’s RP exceedance events line up with them within a ±7 day window.</p>
 <p>The same pipeline is applied to four series: GloFAS, GEOGloWS as published, GEOGloWS SFDC-corrected, and Google GRRR. Each source’s exceedance days are collapsed to events with a 7-day gap, then matched against DHM crossings. Earlier numbers floating around (e.g., “100 GloFAS events at Chisapani RP2”) came from notebook 01.0, which counted exceedance <em>days</em> rather than collapsed events; this chapter recomputes everything end-to-end so the four sources are directly comparable.</p>
-<div id="6f45a968" class="cell" data-execution_count="3">
+<div id="db61977c" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS, RETURN_PERIODS</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    collapse_to_events,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    match_events,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    to_naive,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ocha_stratus <span class="im">as</span> stratus</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> BLOB_PREFIX, BLOB_STAGE, RETURN_PERIODS, STATIONS</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    collapse_to_events,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    match_events,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    to_naive,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>AA_DATA_DIR <span class="op">=</span> Path(os.environ[<span class="st">"AA_DATA_DIR"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="dhm-danger-level-crossings" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="dhm-danger-level-crossings"><span class="header-section-number">5.1</span> DHM danger-level crossings</h2>
 <p>DHM water-level data ends in 2012 at Chatara and 2015 at Chisapani; that defines the validation window for everything below.</p>
-<div id="99600c90" class="cell" data-execution_count="4">
+<div id="236f716c" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dhm_path <span class="op">=</span> (</span>
@@ -327,7 +327,7 @@ Chisapani: DHM 1985-01-01 → 2015-12-31, 7 crossings of 10.5 m
 </section>
 <section id="side-by-side-detection-table" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="side-by-side-detection-table"><span class="header-section-number">5.2</span> Side-by-side detection table</h2>
-<div id="b3d5772f" class="cell" data-execution_count="5">
+<div id="633bda26" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build the full comparison: rows = (station, source, RP), columns = matched/missed/false</span></span>
@@ -364,13 +364,13 @@ Chisapani: DHM 1985-01-01 → 2015-12-31, 7 crossings of 10.5 m
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    refs <span class="op">=</span> dhm_crossings[key]</span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    max_d <span class="op">=</span> dhm[station.dhm_column].dropna().index.<span class="bu">max</span>()</span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid)</span>
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    retro_t <span class="op">=</span> retro[retro.index <span class="op">&lt;=</span> max_d][<span class="st">"discharge"</span>]</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span>, stage<span class="op">=</span>BLOB_STAGE</span>
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    corr <span class="op">=</span> load_geoglows_retro_corrected(rid, DATA_DIR)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    corr <span class="op">=</span> load_geoglows_retro_corrected(rid)</span>
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    corr_t <span class="op">=</span> corr[corr.index <span class="op">&lt;=</span> max_d][<span class="st">"discharge"</span>]</span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>    rp_corr <span class="op">=</span> compute_return_levels(corr[<span class="st">"discharge"</span>], RETURN_PERIODS)</span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
@@ -427,7 +427,7 @@ Chisapani: DHM 1985-01-01 → 2015-12-31, 7 crossings of 10.5 m
 <span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>detection_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/61/cp06zhcj4y76q7rfx0qlm06c0000gn/T/ipykernel_22893/751240151.py:15: FutureWarning: In a future version, xarray will not decode the variable 'step' into a timedelta64 dtype based on the presence of a timedelta-like 'units' attribute by default. Instead it will rely on the presence of a timedelta64 'dtype' attribute, which is now xarray's default way of encoding timedelta64 values.
+<pre><code>/var/folders/61/cp06zhcj4y76q7rfx0qlm06c0000gn/T/ipykernel_14727/2574485077.py:15: FutureWarning: In a future version, xarray will not decode the variable 'step' into a timedelta64 dtype based on the presence of a timedelta-like 'units' attribute by default. Instead it will rely on the presence of a timedelta64 'dtype' attribute, which is now xarray's default way of encoding timedelta64 values.
 To continue decoding into a timedelta64 dtype, either set `decode_timedelta=True` when opening this dataset, or add the attribute `dtype='timedelta64[ns]'` to this variable on disk.
 To opt-in to future behavior, set `decode_timedelta=False`.
   xr.open_dataset(glofas_path).to_dataframe().reset_index()</code></pre>
@@ -676,15 +676,15 @@ To opt-in to future behavior, set `decode_timedelta=False`.
 <section id="why-chisapani-fails-a-magnitude-diagnostic" class="level2" data-number="5.4">
 <h2 data-number="5.4" class="anchored" data-anchor-id="why-chisapani-fails-a-magnitude-diagnostic"><span class="header-section-number">5.4</span> Why Chisapani fails: a magnitude diagnostic</h2>
 <p>The 0/7 result at Chisapani is bad enough to suspect a structural problem rather than a threshold one. For each DHM danger-level crossing, the maximum GEOGloWS discharge in a ±30 day window:</p>
-<div id="37789c73" class="cell" data-execution_count="6">
+<div id="0fa1cfaa" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>diag <span class="op">=</span> []</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span>, stage<span class="op">=</span>BLOB_STAGE</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> dhm[station.dhm_column].dropna()</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
@@ -1419,20 +1419,20 @@ To opt-in to future behavior, set `decode_timedelta=False`.
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> STATIONS, RETURN_PERIODS</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    collapse_to_events,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    match_events,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    to_naive,</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="op">=</span> Path(repo_root) <span class="op">/</span> <span class="st">"data"</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ocha_stratus <span class="im">as</span> stratus</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.constants <span class="im">import</span> BLOB_PREFIX, BLOB_STAGE, RETURN_PERIODS, STATIONS</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.utils <span class="im">import</span> (</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    collapse_to_events,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    compute_return_levels,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    load_geoglows_retro_corrected,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    match_events,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    to_naive,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>AA_DATA_DIR <span class="op">=</span> Path(os.environ[<span class="st">"AA_DATA_DIR"</span>])</span>
 <span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
@@ -1499,13 +1499,13 @@ To opt-in to future behavior, set `decode_timedelta=False`.
 <span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>    refs <span class="op">=</span> dhm_crossings[key]</span>
 <span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>    max_d <span class="op">=</span> dhm[station.dhm_column].dropna().index.<span class="bu">max</span>()</span>
 <span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid)</span>
 <span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>    retro_t <span class="op">=</span> retro[retro.index <span class="op">&lt;=</span> max_d][<span class="st">"discharge"</span>]</span>
-<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span>, stage<span class="op">=</span>BLOB_STAGE</span>
 <span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
 <span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>    corr <span class="op">=</span> load_geoglows_retro_corrected(rid, DATA_DIR)</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>    corr <span class="op">=</span> load_geoglows_retro_corrected(rid)</span>
 <span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>    corr_t <span class="op">=</span> corr[corr.index <span class="op">&lt;=</span> max_d][<span class="st">"discharge"</span>]</span>
 <span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>    rp_corr <span class="op">=</span> compute_return_levels(corr[<span class="st">"discharge"</span>], RETURN_PERIODS)</span>
 <span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a></span>
@@ -1593,9 +1593,9 @@ To opt-in to future behavior, set `decode_timedelta=False`.
 <span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>diag <span class="op">=</span> []</span>
 <span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, station <span class="kw">in</span> STATIONS.items():</span>
 <span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>    rid <span class="op">=</span> station.geoglows_river_id</span>
-<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid, DATA_DIR)</span>
-<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> pd.read_parquet(</span>
-<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>        DATA_DIR <span class="op">/</span> <span class="ss">f"geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span></span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>    retro <span class="op">=</span> load_geoglows_retro(rid)</span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>    rp_pub <span class="op">=</span> stratus.load_parquet_from_blob(</span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>BLOB_PREFIX<span class="sc">}</span><span class="ss">/geoglows_return_periods_</span><span class="sc">{</span>rid<span class="sc">}</span><span class="ss">.parquet"</span>, stage<span class="op">=</span>BLOB_STAGE</span>
 <span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>    ).iloc[:, <span class="dv">0</span>].to_dict()</span>
 <span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a>    s <span class="op">=</span> dhm[station.dhm_column].dropna()</span>
 <span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a></span>
