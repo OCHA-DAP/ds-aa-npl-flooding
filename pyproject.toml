@@ -20,6 +20,7 @@ dependencies = [
     "jupyter-cache>=1.0.1",
     "pyarrow>=23.0.1",
     "python-dotenv>=1.2.2",
+    "ocha-stratus>=0.1.7",
 ]
 
 [tool.black]

@@ -59,10 +59,12 @@ Moving just 0.07° south mapped to a completely different reach — RP2 dropped 
 For the Koshi, the exact coordinates (26.867, 87.160) successfully resolved to the main stem:
 
 ```{python}
-from src.constants import CHATARA, CHISAPANI
+import ocha_stratus as stratus
+from src.constants import BLOB_PREFIX, BLOB_STAGE, CHATARA, CHISAPANI
 
-rp_chatara = pd.read_parquet(
-    Path(repo_root) / "data" / f"geoglows_return_periods_{CHATARA.geoglows_river_id}.parquet"
+rp_chatara = stratus.load_parquet_from_blob(
+    f"{BLOB_PREFIX}/geoglows_return_periods_{CHATARA.geoglows_river_id}.parquet",
+    stage=BLOB_STAGE,
 )
 
 print(f"Koshi main stem: river_id = {CHATARA.geoglows_river_id}")
@@ -108,8 +110,9 @@ All four candidates produce essentially identical return periods (RP2 within ~15
 Selected reach:
 
 ```{python}
-rp_chisapani = pd.read_parquet(
-    Path(repo_root) / "data" / f"geoglows_return_periods_{CHISAPANI.geoglows_river_id}.parquet"
+rp_chisapani = stratus.load_parquet_from_blob(
+    f"{BLOB_PREFIX}/geoglows_return_periods_{CHISAPANI.geoglows_river_id}.parquet",
+    stage=BLOB_STAGE,
 )
 
 print(f"Selected: river_id = {CHISAPANI.geoglows_river_id}")

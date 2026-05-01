@@ -52,4 +52,4 @@ The Zarr store's `units` attribute documents this — worth reading before assum
 3. **NaN-pad your aggregations.** If a Zarr store mixes resolutions on a shared axis, `nan*` reductions are the only safe default.
 4. **Use threading first, async second.** Async only pays off when the underlying library is async too.
 
-The full optimized fetch script lives at `analysis/07_forecast_zarr_direct.py`; the produced parquet is `data/forecast_lead_times_v2.parquet` (20,010 rows).
+The full optimized fetch script lives at `analysis/07_forecast_zarr_direct.py`. The produced parquet is published to Azure blob at `ds-aa-npl-flooding/processed/geoglows/forecast_lead_times_v2.parquet` via `ocha_stratus` and consumed from there by Chapter 6.

@@ -52,3 +52,7 @@ RETURN_PERIODS = [2, 5, 10, 25, 50, 100]
 # Trigger lead times (days)
 READINESS_LEADTIME = 7
 ACTION_LEADTIME = 3
+
+# Azure Blob (via ocha_stratus): container="projects", stage="dev"
+BLOB_PREFIX = "ds-aa-npl-flooding/processed/geoglows"
+BLOB_STAGE = "dev"

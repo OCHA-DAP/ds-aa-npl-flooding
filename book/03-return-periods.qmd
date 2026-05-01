@@ -26,15 +26,14 @@ GEOGloWS's record is 86 years vs GloFAS's 44, but the underlying hydrology also 
 ## Cross-Source Comparison
 
 ```{python}
+import ocha_stratus as stratus
 import pandas as pd
-from src.constants import STATIONS, RETURN_PERIODS
+from src.constants import BLOB_PREFIX, BLOB_STAGE, RETURN_PERIODS, STATIONS
 from src.utils import (
     compute_return_levels,
     load_geoglows_retro,
     load_geoglows_retro_corrected,
 )
-
-DATA_DIR = Path(repo_root) / "data"
 
 # GloFAS empirical return levels from reanalysis (1979-2023), source: notebook 01.0
 GLOFAS_EMPIRICAL = {
@@ -45,14 +44,14 @@ GLOFAS_EMPIRICAL = {
 rows = []
 for key, station in STATIONS.items():
     rid = station.geoglows_river_id
-    rp_pub = pd.read_parquet(
-        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
     ).iloc[:, 0].to_dict()
     rp_orig_emp = compute_return_levels(
-        load_geoglows_retro(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+        load_geoglows_retro(rid)["discharge"], RETURN_PERIODS
     )
     rp_corr_emp = compute_return_levels(
-        load_geoglows_retro_corrected(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+        load_geoglows_retro_corrected(rid)["discharge"], RETURN_PERIODS
     )
     glofas_emp = GLOFAS_EMPIRICAL[station.name]
     glofas_dashboard = {2: f"{station.glofas_rp2:,}", 5: f"{station.glofas_rp5:,}"}
@@ -82,11 +81,11 @@ fig, axes = plt.subplots(1, 2, figsize=(13, 5))
 for ax, (key, station) in zip(axes, STATIONS.items()):
     rid = station.geoglows_river_id
 
-    rp_pub = pd.read_parquet(
-        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
     ).iloc[:, 0]
     rp_corr_emp = compute_return_levels(
-        load_geoglows_retro_corrected(rid, DATA_DIR)["discharge"], RETURN_PERIODS
+        load_geoglows_retro_corrected(rid)["discharge"], RETURN_PERIODS
     )
 
     ax.plot(rp_pub.index, rp_pub.values, "o-",
@@ -159,13 +158,12 @@ The threshold-level finding above is that SFDC consistently *deflates* both stat
 The published GEOGloWS RPs are fitted to the full 1940–present retrospective. If the model behaves differently in the early period than in the validation window we have DHM data for, the published threshold is biased relative to what would be empirically reasonable for the validation period.
 
 ```{python}
-import os
 windows = []
 for key, station in STATIONS.items():
     rid = station.geoglows_river_id
-    series = load_geoglows_retro(rid, DATA_DIR)["discharge"]
-    pub = pd.read_parquet(
-        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    series = load_geoglows_retro(rid)["discharge"]
+    pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
     ).iloc[:, 0].to_dict()
     full = compute_return_levels(series, [2, 5])
     val = compute_return_levels(

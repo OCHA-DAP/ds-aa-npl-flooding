@@ -33,5 +33,6 @@ The goal is to improve the effectiveness and precision of flood-related anticipa
 1. Clone the repository.
 2. Install dependencies with `uv sync` (project uses `pyproject.toml` and `uv.lock`).
 3. Set `AA_DATA_DIR` to the shared CERF AA data directory (required for GloFAS, DHM, and EM-DAT inputs).
-4. For Google GRRR access, set `GOOGLE_API_KEY` (used by `src/datasources/grrr.py`).
-5. Run the notebooks in `analysis/` for exploratory work, or render the Quarto book for the GEOGloWS evaluation summary.
+4. Set `DSCI_AZ_BLOB_DEV_SAS` (read) and, if running the upload steps, `DSCI_AZ_BLOB_DEV_SAS_WRITE`. The Quarto book reads the GEOGloWS retrospective, return-period, and forecast-leadtime parquets from Azure blob via `ocha_stratus`.
+5. For Google GRRR access, set `GOOGLE_API_KEY` (used by `src/datasources/grrr.py`).
+6. Run the notebooks in `analysis/` for exploratory work, or render the Quarto book for the GEOGloWS evaluation summary.

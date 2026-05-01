@@ -27,13 +27,12 @@ from src.utils import (
     load_geoglows_retro_corrected,
 )
 
-DATA_DIR = Path(repo_root) / "data"
 AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
 ```
 
 ```{python}
 geoglows = {
-    key: load_geoglows_retro(station.geoglows_river_id, DATA_DIR)
+    key: load_geoglows_retro(station.geoglows_river_id)
     for key, station in STATIONS.items()
 }
 
@@ -232,8 +231,8 @@ fig, axes = plt.subplots(2, 1, figsize=(14, 8))
 
 for ax, (key, station) in zip(axes, STATIONS.items()):
     rid = station.geoglows_river_id
-    retro = load_geoglows_retro(rid, DATA_DIR)
-    corrected = load_geoglows_retro_corrected(rid, DATA_DIR)
+    retro = load_geoglows_retro(rid)
+    corrected = load_geoglows_retro_corrected(rid)
 
     ax.plot(retro.index, retro["discharge"],
             color="#888888", alpha=0.4, linewidth=0.3, label="Original")

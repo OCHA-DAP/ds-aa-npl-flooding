@@ -19,22 +19,23 @@ For 667 daily forecast issue dates across 2024-07-01 to 2026-04-29 (one date fai
 
 ```{python}
 #| eval: true
-import pandas as pd
 import numpy as np
+import ocha_stratus as stratus
+import pandas as pd
 
-from src.constants import STATIONS
+from src.constants import BLOB_PREFIX, BLOB_STAGE, STATIONS
 from src.utils import load_geoglows_retro
 
-DATA = Path(repo_root) / "data"
-
-df = pd.read_parquet(DATA / "forecast_lead_times_v2.parquet")
+df = stratus.load_parquet_from_blob(
+    f"{BLOB_PREFIX}/forecast_lead_times_v2.parquet", stage=BLOB_STAGE
+)
 df["forecast_date"] = pd.to_datetime(df["forecast_date"])
 df["valid_date"] = df["forecast_date"] + pd.to_timedelta(df["lead_day"], unit="D")
 rid_to_name = {s.geoglows_river_id: s.name for s in STATIONS.values()}
 df["station"] = df["river_id"].map(rid_to_name)
 
 retros = {
-    s.name: load_geoglows_retro(s.geoglows_river_id, DATA)["discharge"]
+    s.name: load_geoglows_retro(s.geoglows_river_id)["discharge"]
     for s in STATIONS.values()
 }
 df["retro"] = df.apply(
@@ -91,7 +92,9 @@ The box centers sit at ~0.55 from day 0 to day 14. Box widths grow slightly with
 #| fig-cap: "Chatara — Q-Q plots of forecast vs retrospective at lead days 0, 3, 7, 14. The forecast distribution lies on the 2:1 line (forecast = retro/2) at every lead time. The published RP2 (14,459 m³/s) is never reached on the ensemble mean — the highest ensemble-mean value in the archive is ~9,000 m³/s."
 
 rid = 441135650
-rp = pd.read_parquet(DATA / f"geoglows_return_periods_{rid}.parquet").iloc[:, 0].to_dict()
+rp = stratus.load_parquet_from_blob(
+    f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
+).iloc[:, 0].to_dict()
 
 fig, axes = plt.subplots(1, 4, figsize=(15, 4.5), sharex=True, sharey=True)
 qs = np.linspace(0.01, 0.999, 200)

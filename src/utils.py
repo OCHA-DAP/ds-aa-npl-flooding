@@ -1,8 +1,10 @@
 from datetime import timedelta
-from pathlib import Path
 
 import numpy as np
+import ocha_stratus as stratus
 import pandas as pd
+
+from src.constants import BLOB_PREFIX, BLOB_STAGE
 
 
 def to_naive(idx):
@@ -10,20 +12,22 @@ def to_naive(idx):
     return idx.tz_localize(None) if idx.tz is not None else idx
 
 
-def load_geoglows_retro(river_id, data_dir):
-    """Load GEOGloWS retrospective parquet, normalize column and index."""
-    df = pd.read_parquet(
-        Path(data_dir) / f"geoglows_retro_daily_{river_id}.parquet"
+def load_geoglows_retro(river_id):
+    """Load GEOGloWS retrospective parquet from blob, normalize column and index."""
+    df = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_retro_daily_{river_id}.parquet",
+        stage=BLOB_STAGE,
     )
     df.columns = ["discharge"]
     df.index = to_naive(df.index)
     return df
 
 
-def load_geoglows_retro_corrected(river_id, data_dir):
-    """Load SFDC-corrected GEOGloWS retrospective parquet."""
-    df = pd.read_parquet(
-        Path(data_dir) / f"geoglows_retro_daily_corrected_{river_id}.parquet"
+def load_geoglows_retro_corrected(river_id):
+    """Load SFDC-corrected GEOGloWS retrospective parquet from blob."""
+    df = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_retro_daily_corrected_{river_id}.parquet",
+        stage=BLOB_STAGE,
     )
     df.columns = ["discharge"]
     df.index = to_naive(df.index)

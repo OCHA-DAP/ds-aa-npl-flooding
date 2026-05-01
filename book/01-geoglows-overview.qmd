@@ -93,7 +93,13 @@ pd.DataFrame(data_funcs, columns=["Function", "Description"])
 ### Quick Demo: Return Periods
 
 ```{python}
-rp = pd.read_parquet(Path(repo_root) / "data" / "geoglows_return_periods_441135650.parquet")
+import ocha_stratus as stratus
+from src.constants import BLOB_PREFIX, BLOB_STAGE
+
+rp = stratus.load_parquet_from_blob(
+    f"{BLOB_PREFIX}/geoglows_return_periods_441135650.parquet",
+    stage=BLOB_STAGE,
+)
 print("Chatara (Koshi) — GEOGloWS Return Periods (m³/s):")
 rp
 ```

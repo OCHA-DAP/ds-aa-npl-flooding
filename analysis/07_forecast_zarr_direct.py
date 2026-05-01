@@ -23,12 +23,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import numpy as np
+import ocha_stratus as stratus
 import pandas as pd
 import zarr
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
-from src.constants import STATIONS  # noqa: E402
+from src.constants import BLOB_PREFIX, BLOB_STAGE, STATIONS  # noqa: E402
 
 warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO,
@@ -139,40 +140,54 @@ def main() -> None:
     parser.add_argument("--checkpoint-every", type=int, default=50)
     args = parser.parse_args()
 
-    end = pd.Timestamp(args.end_date) if args.end_date else (
-        pd.Timestamp.today().normalize() - pd.Timedelta(days=1)
+    if OUTPUT_PATH.exists():
+        log.info("Output exists locally, skipping zarr fetch: %s", OUTPUT_PATH)
+        df = pd.read_parquet(OUTPUT_PATH)
+    else:
+        end = pd.Timestamp(args.end_date) if args.end_date else (
+            pd.Timestamp.today().normalize() - pd.Timedelta(days=1)
+        )
+        all_dates = [d.strftime("%Y%m%d00")
+                     for d in pd.date_range(args.start_date, end, freq="D")]
+        log.info("Generated %d forecast dates from %s to %s",
+                 len(all_dates), all_dates[0], all_dates[-1])
+        sampled = all_dates if args.n_dates is None else sample_dates(all_dates, args.n_dates)
+        log.info("Using %d dates", len(sampled))
+
+        rivid_positions = resolve_rivid_indices(args.river_ids, sampled[0])
+        log.info("Submitting %d Zarr fetches with %d workers", len(sampled), args.workers)
+
+        results = []
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futures = {ex.submit(fetch_one, d, args.river_ids, rivid_positions): d
+                       for d in sampled}
+            for i, fut in enumerate(as_completed(futures), 1):
+                d = futures[fut]
+                rows = fut.result()
+                results.extend(rows)
+                log.info("  [%d/%d] date=%s %s", i, len(sampled), d,
+                         f"ok ({len(rows)} rows)" if rows else "FAIL")
+                if args.checkpoint_every and i % args.checkpoint_every == 0:
+                    pd.DataFrame(results).to_parquet(OUTPUT_PATH, index=False)
+                    log.info("    checkpoint: %d rows -> %s", len(results), OUTPUT_PATH.name)
+
+        df = pd.DataFrame(results)
+        if df.empty:
+            log.error("No results retrieved")
+            sys.exit(1)
+        df = df.sort_values(["river_id", "forecast_date", "lead_day"]).reset_index(drop=True)
+        df.to_parquet(OUTPUT_PATH, index=False)
+        log.info("Wrote %d rows to %s", len(df), OUTPUT_PATH)
+
+    blob_name = f"{BLOB_PREFIX}/{OUTPUT_PATH.name}"
+    existing = stratus.list_container_blobs(
+        name_starts_with=blob_name, stage=BLOB_STAGE
     )
-    all_dates = [d.strftime("%Y%m%d00")
-                 for d in pd.date_range(args.start_date, end, freq="D")]
-    log.info("Generated %d forecast dates from %s to %s",
-             len(all_dates), all_dates[0], all_dates[-1])
-    sampled = all_dates if args.n_dates is None else sample_dates(all_dates, args.n_dates)
-    log.info("Using %d dates", len(sampled))
-
-    rivid_positions = resolve_rivid_indices(args.river_ids, sampled[0])
-    log.info("Submitting %d Zarr fetches with %d workers", len(sampled), args.workers)
-
-    results = []
-    with ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futures = {ex.submit(fetch_one, d, args.river_ids, rivid_positions): d
-                   for d in sampled}
-        for i, fut in enumerate(as_completed(futures), 1):
-            d = futures[fut]
-            rows = fut.result()
-            results.extend(rows)
-            log.info("  [%d/%d] date=%s %s", i, len(sampled), d,
-                     f"ok ({len(rows)} rows)" if rows else "FAIL")
-            if args.checkpoint_every and i % args.checkpoint_every == 0:
-                pd.DataFrame(results).to_parquet(OUTPUT_PATH, index=False)
-                log.info("    checkpoint: %d rows -> %s", len(results), OUTPUT_PATH.name)
-
-    df = pd.DataFrame(results)
-    if df.empty:
-        log.error("No results retrieved")
-        sys.exit(1)
-    df = df.sort_values(["river_id", "forecast_date", "lead_day"]).reset_index(drop=True)
-    df.to_parquet(OUTPUT_PATH, index=False)
-    log.info("Wrote %d rows to %s", len(df), OUTPUT_PATH)
+    if blob_name in existing:
+        log.info("Blob exists, skipping upload: %s", blob_name)
+    else:
+        stratus.upload_parquet_to_blob(df, blob_name, stage=BLOB_STAGE)
+        log.info("Uploaded to blob: %s", blob_name)
 
 
 if __name__ == "__main__":

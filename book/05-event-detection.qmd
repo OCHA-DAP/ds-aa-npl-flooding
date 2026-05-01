@@ -15,10 +15,11 @@ The same pipeline is applied to four series: GloFAS, GEOGloWS as published, GEOG
 
 ```{python}
 import os
-import pandas as pd
 import matplotlib.pyplot as plt
+import ocha_stratus as stratus
+import pandas as pd
 
-from src.constants import STATIONS, RETURN_PERIODS
+from src.constants import BLOB_PREFIX, BLOB_STAGE, RETURN_PERIODS, STATIONS
 from src.utils import (
     collapse_to_events,
     compute_return_levels,
@@ -28,7 +29,6 @@ from src.utils import (
     to_naive,
 )
 
-DATA_DIR = Path(repo_root) / "data"
 AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
 ```
 
@@ -95,13 +95,13 @@ for key, station in STATIONS.items():
     refs = dhm_crossings[key]
     max_d = dhm[station.dhm_column].dropna().index.max()
 
-    retro = load_geoglows_retro(rid, DATA_DIR)
+    retro = load_geoglows_retro(rid)
     retro_t = retro[retro.index <= max_d]["discharge"]
-    rp_pub = pd.read_parquet(
-        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
     ).iloc[:, 0].to_dict()
 
-    corr = load_geoglows_retro_corrected(rid, DATA_DIR)
+    corr = load_geoglows_retro_corrected(rid)
     corr_t = corr[corr.index <= max_d]["discharge"]
     rp_corr = compute_return_levels(corr["discharge"], RETURN_PERIODS)
 
@@ -189,9 +189,9 @@ The 0/7 result at Chisapani is bad enough to suspect a structural problem rather
 diag = []
 for key, station in STATIONS.items():
     rid = station.geoglows_river_id
-    retro = load_geoglows_retro(rid, DATA_DIR)
-    rp_pub = pd.read_parquet(
-        DATA_DIR / f"geoglows_return_periods_{rid}.parquet"
+    retro = load_geoglows_retro(rid)
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
     ).iloc[:, 0].to_dict()
     s = dhm[station.dhm_column].dropna()
 
