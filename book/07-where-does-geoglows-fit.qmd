@@ -1,0 +1,45 @@
+# Where Does GEOGloWS Fit?
+
+## Decision matrix
+
+| AA framework use case | Use GEOGloWS? | Why |
+|---|---|---|
+| Trigger calibration (lead-time skill, exceedance probabilities at fixed leadtimes) | **No** | No multi-year reforecast archive. The live forecast archive (~22 months) is too short for stable RP-frequency calibration. |
+| Operational trigger using published RP thresholds | **No** | The published RPs are calibrated to the retrospective only. The operational forecast runs at ~half retrospective magnitude across all lead times — the ensemble mean has never reached published RP2 (14,459 m³/s at Chatara) at any lead time in the 22-month archive. See @sec-forecast-vs-retro. |
+| Operational trigger using forecast-derived thresholds | **No** | A 22-month forecast archive contains zero or one RP2 events by definition — too sparse to fit stable thresholds. |
+| Operational trigger validated against DHM | **No** | RP2 detects 1/9 Chatara and 0/7 Chisapani DHM events; worse than GloFAS at every cell. See @sec-event-detection. |
+| Independent confirmation signal alongside GloFAS / GRRR | **At Chatara only, with caveats** | Retrospective annual-max r = 0.94 with GloFAS; the retrospective is qualitatively consistent. But the operational forecast is biased low relative to retrospective by ~50% at every lead time, so its "confirmations" use a different magnitude regime than the framework expects. |
+| Independent confirmation signal at Chisapani | **No** | Reach 441112306 has not been geographically verified; the GEO-vs-GloFAS retrospective r = 0.07 disagreement may be reach-mapping rather than product. |
+| Long-record extreme value analysis | **With caveats** | The 1940–present record covers floods that GloFAS misses, but using SFDC-corrected RPs pushes thresholds below GloFAS in 3 of 4 cases. Without a rating curve to validate, we cannot say whether the longer record is more truthful or more biased. |
+| Bias-correction benchmark | **No clear win** | SFDC corrects the magnitude in a global, observation-free way. Here it overshoots (deflates rather than aligns) and does not improve event detection. |
+
+## What we ruled out, and what we did not
+
+The Chisapani failure is **not** caused by:
+
+- A wrong reach selection (all four candidates with the right upstream area produce equivalent RPs).
+- A threshold that is too high (lowering it via SFDC adds false alarms but no matches).
+- A timing offset (no GEOGloWS peak appears within ±30 days of the 2013 or 2014 record DHM events).
+
+The failure **is** consistent with the GEOGloWS / RAPID retrospective being mass-deficient in this basin — running at ~28% of GloFAS's mean and producing peaks that don't align with observed monsoon floods. We cannot diagnose the underlying cause from the data in this evaluation.
+
+## Recommendations
+
+1. **Do not adopt GEOGloWS as a trigger source for this framework.** Two structural gaps make calibrated triggering impossible: (a) no multi-year reforecast archive for skill-based calibration, and (b) the published RPs are retrospective-only while the operational forecast runs at half retrospective magnitude. The published thresholds therefore cannot fire correctly on the forecast — see @sec-forecast-vs-retro.
+
+2. **Acquire a rating curve for Chatara and Chisapani.** This unblocks `geoglows.bias.correct_historical()`, which uses local observed discharge instead of global scalars and is the only path to a meaningful comparison between corrected GEOGloWS and observations. It also makes the DHM water-level record directly comparable to model discharge for future calibration efforts with any source.
+
+3. **If GEOGloWS forecasts are used in a confirmation role, calibrate the threshold from the forecast archive itself, not from the published RPs.** Even then, the 22-month archive limits how rare an event the threshold can capture.
+
+4. **Reuse the validation approach, not the verdict, when evaluating future sources.** The DHM-crossing match procedure in @sec-event-detection is the cleanest test we have given the data available, and any new candidate (e.g., a future GEOGloWS v3 with reforecasts, a refreshed GRRR product) should be put through the same comparison before being adopted.
+
+## Tangential finding: GRRR at Chisapani
+
+The cross-source comparison was not designed to evaluate GRRR, but the apples-to-apples event-detection table in @sec-event-detection shows GRRR matching **6 of 7** DHM crossings at Chisapani RP2 — better than GloFAS (5 of 7) and dramatically better than GEOGloWS (0 of 7). At Chatara, GRRR's RP2 detection rate is comparable to GEOGloWS (1 of 9). This finding is tangential to the GEOGloWS question this book set out to answer, but it is worth flagging for the framework: at the Karnali station where GloFAS already detects most events, GRRR detects one more, with fewer false alarms.
+
+A purpose-built GRRR validation — using GRRR's own published return periods rather than the empirical quantile method borrowed from notebook 02.0, and on the full DHM record — would be the next concrete piece of work to confirm this.
+
+## Open questions for follow-up
+
+- Is the GEOGloWS Karnali under-prediction a known issue with RAPID/ERA5 at high-elevation Himalayan basins, or specific to TDX-Hydro reach delineation? An answer would tell us whether to expect similar problems at other Nepal stations or treat Chisapani as an isolated case.
+- If GEOGloWS extends its forecast retention to enable reforecasts, does that change the calculus? Worth re-running this evaluation with the new data when it becomes available.

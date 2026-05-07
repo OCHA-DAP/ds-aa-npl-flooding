@@ -1,0 +1,243 @@
+# Event Detection {#sec-event-detection}
+
+```{python}
+#| echo: false
+import sys
+from pathlib import Path
+repo_root = str(Path.cwd().parent)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+```
+
+This is the central validation. We take observed DHM danger-level crossings as the reference, and ask whether each model's RP exceedance events line up with them within a ±7 day window.
+
+The same pipeline is applied to four series: GloFAS, GEOGloWS as published, GEOGloWS SFDC-corrected, and Google GRRR. Each source's exceedance days are collapsed to events with a 7-day gap, then matched against DHM crossings. Earlier numbers floating around (e.g., "100 GloFAS events at Chisapani RP2") came from notebook 01.0, which counted exceedance *days* rather than collapsed events; this chapter recomputes everything end-to-end so the four sources are directly comparable.
+
+```{python}
+import os
+import matplotlib.pyplot as plt
+import ocha_stratus as stratus
+import pandas as pd
+
+from src.constants import BLOB_PREFIX, BLOB_STAGE, RETURN_PERIODS, STATIONS
+from src.utils import (
+    collapse_to_events,
+    compute_return_levels,
+    load_geoglows_retro,
+    load_geoglows_retro_corrected,
+    match_events,
+    to_naive,
+)
+
+AA_DATA_DIR = Path(os.environ["AA_DATA_DIR"])
+```
+
+## DHM danger-level crossings
+
+DHM water-level data ends in 2012 at Chatara and 2015 at Chisapani; that defines the validation window for everything below.
+
+```{python}
+dhm_path = (
+    AA_DATA_DIR / "private" / "exploration" / "npl" / "dhm"
+    / "processed" / "waterl_level_procssed.csv"
+)
+dhm = pd.read_csv(dhm_path)
+dhm["date"] = pd.to_datetime(dhm["date"])
+dhm = dhm.set_index("date")
+
+dhm_crossings = {}
+for key, station in STATIONS.items():
+    s = dhm[station.dhm_column].dropna()
+    cross = (s > station.danger_level).astype(int).diff() == 1
+    dhm_crossings[key] = s[cross].index
+    print(
+        f"{station.name}: DHM {s.index.min().date()} → {s.index.max().date()}, "
+        f"{len(dhm_crossings[key])} crossings of {station.danger_level} m"
+    )
+    for d in dhm_crossings[key]:
+        print(f"  {d.date()}  (water level {s.loc[d]:.2f} m)")
+```
+
+## Side-by-side detection table
+
+```{python}
+# Build the full comparison: rows = (station, source, RP), columns = matched/missed/false
+def detection_for(series_naive, threshold, ref_dates):
+    series_naive = series_naive[~series_naive.index.duplicated()]
+    exceed = series_naive[series_naive > threshold].index
+    events = collapse_to_events(exceed)
+    return match_events(events, ref_dates, window_days=7)
+
+# GloFAS reanalysis (computed via the same pipeline as the other sources)
+import xarray as xr
+glofas_path = (
+    AA_DATA_DIR / "public" / "processed" / "npl" / "glofas"
+    / "npl_cems-glofas-historical_v4.nc"
+)
+glofas_df = (
+    xr.open_dataset(glofas_path).to_dataframe().reset_index()
+    .set_index("time")[["Chatara", "Chisapani"]]
+)
+
+# GRRR reanalysis (notebook 02.0 RP convention: empirical quantile of annual maxima)
+from src.datasources.grrr import process_reanalysis
+grrr_series = {}
+for key, station in STATIONS.items():
+    if station.grrr_gauge_id:
+        gr = process_reanalysis(gauge=station.grrr_gauge_id)
+        gr = gr.set_index("valid_time")["streamflow"]
+        gr.index = to_naive(gr.index)
+        grrr_series[key] = gr
+
+rows = []
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+    refs = dhm_crossings[key]
+    max_d = dhm[station.dhm_column].dropna().index.max()
+
+    retro = load_geoglows_retro(rid)
+    retro_t = retro[retro.index <= max_d]["discharge"]
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
+    ).iloc[:, 0].to_dict()
+
+    corr = load_geoglows_retro_corrected(rid)
+    corr_t = corr[corr.index <= max_d]["discharge"]
+    rp_corr = compute_return_levels(corr["discharge"], RETURN_PERIODS)
+
+    glofas_t = glofas_df[station.dhm_column]
+    glofas_t = glofas_t[glofas_t.index <= max_d]
+    rp_glofas = {2: station.glofas_rp2, 5: station.glofas_rp5}
+
+    gr = grrr_series.get(key)
+    if gr is not None:
+        gr_t = gr[gr.index <= max_d]
+        gr_annmax = gr.groupby(gr.index.year).max()
+        rp_grrr = {rp: gr_annmax.quantile(1 - 1 / rp) for rp in RETURN_PERIODS}
+
+    for rp_level in [2, 5]:
+        m = detection_for(glofas_t, rp_glofas[rp_level], refs)
+        rows.append({"Station": station.name, "RP": f"RP{rp_level}",
+                     "Source": "GloFAS",
+                     "DHM events": m["n_reference"],
+                     "Model events": m["n_source"],
+                     "Matched": m["n_matched"],
+                     "Misses": len(m["reference_only"]),
+                     "False alarms": len(m["source_only"]),
+                     "Threshold (m³/s)": f"{rp_glofas[rp_level]:,}"})
+
+        m = detection_for(retro_t, rp_pub[rp_level], refs)
+        rows.append({"Station": station.name, "RP": f"RP{rp_level}",
+                     "Source": "GEOGloWS",
+                     "DHM events": m["n_reference"], "Model events": m["n_source"],
+                     "Matched": m["n_matched"],
+                     "Misses": len(m["reference_only"]),
+                     "False alarms": len(m["source_only"]),
+                     "Threshold (m³/s)": f"{rp_pub[rp_level]:,.0f}"})
+
+        m = detection_for(corr_t, rp_corr[rp_level], refs)
+        rows.append({"Station": station.name, "RP": f"RP{rp_level}",
+                     "Source": "GEOGloWS (SFDC)",
+                     "DHM events": m["n_reference"], "Model events": m["n_source"],
+                     "Matched": m["n_matched"],
+                     "Misses": len(m["reference_only"]),
+                     "False alarms": len(m["source_only"]),
+                     "Threshold (m³/s)": f"{rp_corr[rp_level]:,.0f}"})
+
+        if gr is not None:
+            m = detection_for(gr_t, rp_grrr[rp_level], refs)
+            rows.append({"Station": station.name, "RP": f"RP{rp_level}",
+                         "Source": "GRRR",
+                         "DHM events": m["n_reference"], "Model events": m["n_source"],
+                         "Matched": m["n_matched"],
+                         "Misses": len(m["reference_only"]),
+                         "False alarms": len(m["source_only"]),
+                         "Threshold (m³/s)": f"{rp_grrr[rp_level]:,.0f}"})
+
+detection_table = pd.DataFrame(rows)
+detection_table
+```
+
+## What the table says
+
+All four sources are now compared on the same footing. Refer to the rendered table above for exact false-alarm counts; key findings:
+
+**At RP2:**
+
+- **Chatara**: GEOGloWS matches 1 of 9 DHM crossings, GloFAS 2 of 9, GRRR 1 of 9. SFDC correction does not change the GEOGloWS matched count.
+- **Chisapani**: GEOGloWS matches **0 of 7** DHM crossings (SFDC unchanged); GloFAS matches 5 of 7; **GRRR matches 6 of 7 — the best of any source at this station.**
+
+**At RP5:**
+
+- **Chatara**: all three sources match 1 of 9.
+- **Chisapani**: GEOGloWS 0 of 7, GloFAS 1 of 7, **GRRR 4 of 7**.
+
+**Headline numbers across both stations and both RPs (16 DHM events):**
+
+- GRRR: **12 matches** (1 + 6 + 1 + 4)
+- GloFAS: **9 matches** (2 + 5 + 1 + 1)
+- GEOGloWS published: **2 matches** (1 + 0 + 1 + 0)
+- GEOGloWS SFDC: **2 matches** (same)
+
+GEOGloWS does not improve on GloFAS at any cell of this table. SFDC correction does not rescue it. GRRR is incidentally the strongest performer in this validation, driven entirely by its Chisapani results — a finding worth surfacing for the framework even though it is tangential to the GEOGloWS question this book set out to answer.
+
+## Why Chisapani fails: a magnitude diagnostic
+
+The 0/7 result at Chisapani is bad enough to suspect a structural problem rather than a threshold one. For each DHM danger-level crossing, the maximum GEOGloWS discharge in a ±30 day window:
+
+```{python}
+diag = []
+for key, station in STATIONS.items():
+    rid = station.geoglows_river_id
+    retro = load_geoglows_retro(rid)
+    rp_pub = stratus.load_parquet_from_blob(
+        f"{BLOB_PREFIX}/geoglows_return_periods_{rid}.parquet", stage=BLOB_STAGE
+    ).iloc[:, 0].to_dict()
+    s = dhm[station.dhm_column].dropna()
+
+    for d in dhm_crossings[key]:
+        win = retro[
+            (retro.index >= d - pd.Timedelta(days=30))
+            & (retro.index <= d + pd.Timedelta(days=30))
+        ]
+        if win.empty:
+            continue
+        peak_val = win["discharge"].max()
+        peak_date = win["discharge"].idxmax()
+        diag.append({
+            "Station": station.name,
+            "DHM date": d.date(),
+            "DHM water level (m)": f"{s.loc[d]:.2f}",
+            "GEO peak (m³/s)": f"{peak_val:,.0f}",
+            "GEO peak date": peak_date.date(),
+            "Offset (days)": (peak_date - d).days,
+            "Reaches RP2?": "yes" if peak_val > rp_pub[2] else "—",
+            "Reaches RP5?": "yes" if peak_val > rp_pub[5] else "—",
+        })
+
+pd.DataFrame(diag)
+```
+
+For **Chatara**, GEOGloWS's nearby peak occurs within roughly a month of every DHM crossing. The miss rate is mostly a threshold problem: GEOGloWS's RP2 (14,459 m³/s) is high enough that only 2 of 9 nearby peaks clear it. Lowering to GloFAS's RP2 (8,113) would catch most of the rest — but as the next column shows, GEOGloWS already produces 42 false alarms at RP2, so the threshold cannot be lowered without making false-alarm performance even worse.
+
+For **Chisapani**, the picture is different. On the **2014-08-15** crossing — DHM's all-time water-level high at 13.77 m — GEOGloWS's peak is 4,054 m³/s, well below its RP2 of 6,745 and below the GloFAS RP2 of 5,664. On the **2013-06-18** crossing (water level 13.56 m) the peak is 1,843 m³/s. These are the two largest events in the DHM record and GEOGloWS treats them as ordinary monsoon flow. No threshold choice can fix this: there is no peak there to detect.
+
+## What this rules out, and what it does not
+
+Ruled out:
+
+- **Threshold too high**: lowering the threshold by 40% via SFDC produces no additional matches (still 0/7), only additional false alarms.
+- **Timing offset**: there is no Karnali peak within ±30 days of the 2013 or 2014 events.
+- **Picking the wrong candidate from the same drainage**: the four Karnali reaches with USContArea ≈ 40,000 km² produce essentially identical RPs (@sec-spatial-matching) and would all show the same problem.
+
+**Not ruled out**:
+
+- **Geographic alignment of the chosen reach**: the Ch2 match was made on upstream area + stream order. A coordinate-based `getriverid` lookup at the Chisapani DHM gauge does *not* return reach 441112306; it returns small local tributaries. The candidate reach has the right drainage size, but its actual position in the TDX-Hydro network may not coincide with where DHM measures. Confirming this would require checking the reach geometry against the gauge location in HydroViewer, which we have not done.
+
+What is consistent across both the geographic uncertainty and the magnitude evidence is that the GEOGloWS / RAPID retrospective for this stretch of the Karnali under-represents the flow regime DHM observed: mean discharge over 1979–2023 is ~28% of GloFAS's, peaks on the 2013 and 2014 record events are well below the model's own RP2, and the annual-max correlation with GloFAS is r = 0.07. Whether the root cause is a misaligned reach, a basin-specific RAPID/ERA5 deficiency, or some combination, the practical implication for the AA framework is the same.
+
+## What this means for the AA framework
+
+GEOGloWS RP exceedances cannot serve as a primary or backup trigger at either station as currently calibrated. At Chatara the underlying retrospective is reasonable but the published RPs are too high to use as triggers without producing more false alarms than GloFAS already does. At Chisapani the underlying retrospective is not reliable enough to use as a trigger at any threshold.
+
+Whether GEOGloWS could become useful with a different calibration strategy — a rating curve to unlock `correct_historical()`, or a regional bias correction tuned against GRRR rather than the global SABER scalars — is an open question. With the data currently available it is not a usable signal for this framework.

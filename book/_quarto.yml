@@ -1,0 +1,33 @@
+project:
+  type: book
+  output-dir: _book
+  execute-dir: project
+
+jupyter: ds-aa-npl-flooding
+
+execute:
+  enabled: true
+  cache: true
+
+book:
+  title: "GEOGloWS Evaluation for Nepal Flood AA Framework"
+  author: "CHD Data Science"
+  date: today
+  chapters:
+    - index.qmd
+    - 01-geoglows-overview.qmd
+    - 02-spatial-matching.qmd
+    - 03-return-periods.qmd
+    - 04-retrospective-comparison.qmd
+    - 05-event-detection.qmd
+    - 06-forecast-vs-retro.qmd
+    - 07-where-does-geoglows-fit.qmd
+  appendices:
+    - 08-appendix-zarr.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    code-tools: true
